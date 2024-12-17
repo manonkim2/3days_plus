@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
 
-const colors = require('tailwindcss/colors')
 
 export default {
   content: [
@@ -16,9 +15,8 @@ export default {
         fontPrimary: '#333333',
         fontSecondary: '#b6b3b3',
         bgPrimary: '#f4f6f9',
-        white: colors.white,
-        black: colors.black,
-      },      
+        white: '#ffffff',
+      },
       spacing: {
         xs: '4px',
         sm: '8px',
@@ -27,10 +25,13 @@ export default {
         xl: '24px',
         xxl: '32px',
       },
-      borderRadius: {
-        box: '32px',
-        btn: '36px',
-      },
+      fontSize: {
+        '3xl': ['32px', '52px'],
+        '2xl': ['24px', '36px'],
+        'xl': ['18px', '24px'],
+        'base': ['14px', '20px'],
+        'sm': ['10px', '16px']
+      }
     },
   },
   plugins: [],
