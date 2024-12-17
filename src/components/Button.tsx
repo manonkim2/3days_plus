@@ -26,7 +26,7 @@ const Button = ({
   return (
     <button
       onClick={onClick}
-      className={`${buttonTheme.variant[variant]} py-sm px-lg rounded-full text-base hover:font-medium `}
+      className={`${buttonTheme.variant[variant]} py-sm px-lg rounded-full text-base`}
       {...rest}
       disabled={disabled}
     >
