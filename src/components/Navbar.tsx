@@ -2,12 +2,11 @@
 
 import { UserCircleIcon } from '@heroicons/react/24/outline'
 import Button from './Button'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 const Navbar = () => {
   const pathName = usePathname()
-  const router = useRouter()
 
   const navButton = (menu: string) => {
     const _menu = menu.toLocaleLowerCase()
