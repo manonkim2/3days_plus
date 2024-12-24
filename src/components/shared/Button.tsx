@@ -27,8 +27,8 @@ const Button = ({
     <button
       onClick={onClick}
       className={`${buttonTheme.variant[variant]} py-sm px-lg rounded-full text-base`}
-      {...rest}
       disabled={disabled}
+      {...rest}
     >
       {text}
     </button>
