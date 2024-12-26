@@ -1,7 +1,35 @@
 import Image from 'next/image'
-import Box from '@/components/shared/Box'
-import Button from '@/components/shared/Button'
+import Box from '@/components/common/Box'
+import Button from '@/components/common/Button'
 import { formatDate } from '@/utils/formatDate'
+import Badge from '@/components/common/Badge'
+
+const NEWS_MOCK = [
+  {
+    title: '엿새째 꺼지지 않는 `탄핵 촛불`…與 지역구에도 쏟아진 분노',
+    date: '2424. 12. 19 AM 11:40',
+    section: '정치',
+    image: '/sample.jpg',
+  },
+  {
+    title: '7명이 사망한 감포항 전복 어선… 양포항 예인해 수색',
+    date: '2424. 12. 19 AM 11:40',
+    section: '사회',
+    image: '/sample.jpg',
+  },
+  {
+    title: '국민 10명 중 4명, 딥페이크 가짜뉴스 구별 못 해…“강력한 정책 필요”',
+    date: '2424. 12. 19 AM 11:40',
+    section: 'IT/과학',
+    image: '/sample.jpg',
+  },
+  {
+    title: '젤렌스키 "러시아 전사자 20만명 달해…우크라比 16만명↑"',
+    date: '2424. 12. 19 AM 11:40',
+    section: '세계',
+    image: '/sample.jpg',
+  },
+]
 
 export default function Home() {
   return (
@@ -36,7 +64,7 @@ export default function Home() {
       <div className="grid grid-cols-[2fr,3fr] gap-3 h-[740px]">
         <Box color="secondary">
           <span className="text-2xl pb-4">Top Stories</span>
-          <div className="border w-full relative h-full">
+          <div className="border w-full relative h-full rounded-xl overflow-hidden">
             <Image src="/sample.jpg" alt="sample-img" fill objectFit="cover" />
           </div>
           <div className="flex flex-col gap-3 pt-4">
@@ -55,10 +83,25 @@ export default function Home() {
           </div>
         </Box>
         <div className="grid grid-cols-2 gap-3">
-          <Box></Box>
-          <Box />
-          <Box />
-          <Box />
+          {NEWS_MOCK.map(({ title, date, section, image }) => (
+            <Box>
+              <div className="flex flex-col h-full gap-3">
+                <div className="border w-full relative h-full rounded-xl overflow-hidden">
+                  <Image
+                    src="/sample.jpg"
+                    alt="sample-img"
+                    fill
+                    objectFit="cover"
+                  />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-fontSecondary text-base">{date}</span>
+                  <Badge text={section} />
+                </div>
+                <span className="text-md">{title}</span>
+              </div>
+            </Box>
+          ))}
         </div>
       </div>
 

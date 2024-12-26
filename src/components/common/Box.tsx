@@ -13,7 +13,7 @@ const Box = ({
 }: PropsWithChildren<IBoxProps>) => {
   return (
     <div
-      className={`flex flex-col bg-${color} rounded-3xl border-${border} border-2 w-full h-full p-6`}
+      className={`flex flex-col bg-${color} rounded-3xl border-${border} border-2 w-full h-full p-4`}
       {...rest}
     >
       {children}
