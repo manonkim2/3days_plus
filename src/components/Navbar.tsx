@@ -22,14 +22,11 @@ const Navbar = () => {
 
   return (
     <div className="flex items-center w-full justify-between h-16 fixed top-0 left-0 px-6 z-40 bg-bgPrimary">
-      <span>Titile</span>
+      <Link href="/">
+        <span>Titile</span>
+      </Link>
       <div className="gap-10 flex">
-        <Link href="/">
-          <Button
-            text="Dashboard"
-            variant={pathName === '/' ? 'primary' : 'tertiary'}
-          />
-        </Link>
+        {navButton('Dashboard')}
         {navButton('Schedule')}
         {navButton('Routines')}
         {navButton('News')}
