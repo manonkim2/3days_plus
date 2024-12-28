@@ -3,38 +3,31 @@ import Image from 'next/image'
 import Badge from '@/components/common/Badge'
 import Box from '@/components/common/Box'
 import Button from '@/components/common/Button'
-import { formatDate } from '@/utils/formatDate'
+import Link from 'next/link'
 
-interface IPageProps {}
+interface NewsResponse {
+  status: string
+  totalResults: number
+  articles: {
+    author: string
+    title: string
+    description: string
+    url: string
+    urlToImage: string
+    publishedAt: string
+    content: string
+  }[]
+}
 
-const NEWS_MOCK = [
-  {
-    title: '엿새째 꺼지지 않는 `탄핵 촛불`…與 지역구에도 쏟아진 분노',
-    date: '2424. 12. 19 AM 11:40',
-    section: '정치',
-    image: '/sample.jpg',
-  },
-  {
-    title: '7명이 사망한 감포항 전복 어선… 양포항 예인해 수색',
-    date: '2424. 12. 19 AM 11:40',
-    section: '사회',
-    image: '/sample.jpg',
-  },
-  {
-    title: '국민 10명 중 4명, 딥페이크 가짜뉴스 구별 못 해…“강력한 정책 필요”',
-    date: '2424. 12. 19 AM 11:40',
-    section: 'IT/과학',
-    image: '/sample.jpg',
-  },
-  {
-    title: '젤렌스키 "러시아 전사자 20만명 달해…우크라比 16만명↑"',
-    date: '2424. 12. 19 AM 11:40',
-    section: '세계',
-    image: '/sample.jpg',
-  },
-]
+const getNews = async () => {
+  return await fetch(
+    `https://newsapi.org/v2/everything?q=사회&sortBy=publishedAt&pageSize=6&page=1&apiKey=${process.env.NEWS_API_KEY}`,
+  ).then((res) => res.json())
+}
 
-const DashBoardPage = ({}: IPageProps) => {
+const DashBoardPage = async () => {
+  const news: NewsResponse = await getNews()
+  console.log(news)
   return (
     <div>
       <div className="grid grid-cols-[2fr,1.5fr,3fr] h-[400px] gap-3">
@@ -51,7 +44,7 @@ const DashBoardPage = ({}: IPageProps) => {
         <Button text="Technology" variant="secondary" />
       </div>
       {/* news */}
-      <div className="grid grid-cols-[2fr,3fr] gap-3 h-[740px]">
+      {/* <div className="grid grid-cols-[2fr,3fr] gap-3 h-[740px]">
         <Box color="secondary">
           <span className="text-2xl pb-4">Top Stories</span>
           <div className="border w-full relative h-full rounded-xl overflow-hidden">
@@ -72,27 +65,31 @@ const DashBoardPage = ({}: IPageProps) => {
             </span>
           </div>
         </Box>
-        <div className="grid grid-cols-2 gap-3">
-          {NEWS_MOCK.map(({ title, date, section, image }) => (
+      </div> */}
+      <div className="grid grid-cols-2 gap-3 h-[1140px]">
+        {news.articles.map(({ title, urlToImage, publishedAt, url }) => (
+          <Link href={url} key={urlToImage} target="_blank">
             <Box>
               <div className="flex flex-col h-full gap-3">
                 <div className="border w-full relative h-full rounded-xl overflow-hidden">
                   <Image
-                    src="/sample.jpg"
+                    src={urlToImage}
                     alt="sample-img"
                     fill
                     objectFit="cover"
                   />
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-fontSecondary text-base">{date}</span>
-                  <Badge text={section} />
+                  <span className="text-fontSecondary text-base">
+                    {publishedAt}
+                  </span>
+                  {/* <Badge text={section} /> */}
                 </div>
                 <span className="text-md">{title}</span>
               </div>
             </Box>
-          ))}
-        </div>
+          </Link>
+        ))}
       </div>
       <div className="flex justify-center my-8">
         <Button text="more" variant="secondary" />
