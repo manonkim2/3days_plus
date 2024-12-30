@@ -11,8 +11,8 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const buttonTheme = {
   variant: {
     primary: 'bg-primary text-fontSecondary',
-    secondary: 'border-primary border',
-    tertiary: '',
+    secondary: 'border-primary border text-fontPrimary',
+    tertiary: 'text-fontPrimary',
   },
 }
 
@@ -26,7 +26,7 @@ const Button = ({
   return (
     <button
       onClick={onClick}
-      className={`${buttonTheme.variant[variant]} py-sm px-lg rounded-full text-base`}
+      className={`${buttonTheme.variant[variant]} py-sm px-lg rounded-full`}
       disabled={disabled}
       {...rest}
     >
