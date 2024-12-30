@@ -1,7 +1,7 @@
 'use client'
 
 import { UserCircleIcon } from '@heroicons/react/24/outline'
-import Button from './common/Button'
+import Button from './Button'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
