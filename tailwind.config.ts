@@ -11,10 +11,10 @@ export default {
     extend: {
       colors: {
         primary: '#020617',
-        secondary: '#d7ff00',
+        secondary: '#C6FB50',
         fontPrimary: '#333333',
         fontSecondary: '#b6b3b3',
-        bgPrimary: '#f4f6f9',
+        bgPrimary: '#f5f5f5',
         white: '#ffffff',
       },
       spacing: {

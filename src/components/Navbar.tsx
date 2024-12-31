@@ -21,7 +21,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="flex items-center w-full justify-between h-16 fixed top-0 left-0 px-6 z-40 bg-bgPrimary">
+    <nav className="flex items-center justify-between h-16 top-0 z-40 bg-bgPrimary container mx-auto">
       <Link href="/">
         <span>Titile</span>
       </Link>
@@ -34,7 +34,7 @@ const Navbar = () => {
       <div>
         <UserCircleIcon className="size-10" />
       </div>
-    </div>
+    </nav>
   )
 }
 
