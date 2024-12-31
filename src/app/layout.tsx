@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
 import './globals.css'
-import { formatDate } from '@/utils/formatDate'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,22 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
-        <Navbar />
-        <main className="container mx-auto">
-          <div className="mt-16 mb-7">
-            <div className="flex justify-end">
-              <span className="text-3xl font-extralight pr-2">Hello,</span>
-              <span className="text-3xl font-semibold">Manon</span>
-            </div>
-            <div className="flex justify-end">
-              <span className="text-3xl font-extralight pr-2">Today is</span>
-              <span className="text-3xl font-semibold">{formatDate()}</span>
-            </div>
-          </div>
-          {children}
-        </main>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
