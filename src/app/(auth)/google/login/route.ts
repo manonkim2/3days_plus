@@ -1,15 +1,11 @@
-import { supabase } from "@/utils/supabaseClient"
+import { supabase } from "@/utils/supabase/client"
 import { redirect } from "next/navigation"
 import { NextResponse } from "next/server"
 
 export async function GET() {
     const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: 'kakao',
         options: {
-            queryParams: {
-                access_type: 'offline',
-                prompt: 'consent',
-            },
             redirectTo: 'http://localhost:3000/dashboard',
         },
     })
