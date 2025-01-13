@@ -1,4 +1,3 @@
-import Navbar from '@/components/Navbar'
 import { formatDate } from '@/utils/formatDate'
 import { serverCreateClient } from '@/utils/supabase/server'
 
@@ -14,7 +13,6 @@ export default async function MainLayout({
 
   return (
     <div>
-      <Navbar />
       <main className="container mx-auto">
         <div className="mt-16 mb-7">
           <div className="flex justify-end">
