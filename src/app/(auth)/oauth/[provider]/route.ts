@@ -2,11 +2,14 @@ import { supabase } from "@/utils/supabase/client"
 import { redirect } from "next/navigation"
 import { NextResponse } from "next/server"
 
-export async function GET() {
+
+export async function GET(_: Request, { params }: { params: { provider: 'google' | 'kakao' } }) {
+    const { provider } = params
+
     const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'kakao',
+        provider,
         options: {
-            redirectTo: 'http://localhost:3000/dashboard',
+            redirectTo: 'http://localhost:3000/google/complete',
         },
     })
 

@@ -5,6 +5,8 @@ import {
   KeyIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline'
+import GoogleIcon from '@/components/icons/GoogleIcon'
+import KakaoIcon from '@/components/icons/KakaoIcon'
 
 const Signup = () => {
   return (
@@ -43,6 +45,15 @@ const Signup = () => {
         </div>
 
         <button className="btn btn-primary">Create Account</button>
+
+        <div className="flex gap-sm justify-center items-center py-md">
+          <Link href="/oauth/google">
+            <GoogleIcon />
+          </Link>
+          <Link href="/oauth/kakao">
+            <KakaoIcon />
+          </Link>
+        </div>
 
         <div className="flex justify-center mt-xl gap-xs ">
           <span className="text-xs">Already have an account?</span>
