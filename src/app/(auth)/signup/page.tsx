@@ -58,7 +58,7 @@ const Signup = () => {
         <div className="flex justify-center mt-xl gap-xs ">
           <span className="text-xs">Already have an account?</span>
           <Link href="/login" className="text-xs underline">
-            Sign up
+            Log in
           </Link>
         </div>
       </Box>

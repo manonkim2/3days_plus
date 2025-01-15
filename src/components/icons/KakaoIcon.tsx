@@ -1,7 +1,7 @@
 const KakaoIcon = () => {
   return (
     <svg
-      enable-background="new 0 0 24 512"
+      enableBackground="new 0 0 24 512"
       height="24px"
       id="Kakao_Talk_1_"
       version="1.1"

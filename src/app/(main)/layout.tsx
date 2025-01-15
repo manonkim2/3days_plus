@@ -1,15 +1,12 @@
 import { formatDate } from '@/utils/formatDate'
-import { serverCreateClient } from '@/utils/supabase/server'
+import { getUserInfo } from '@/utils/supabase/actions'
 
 export default async function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const supabase = await serverCreateClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const user = await getUserInfo()
 
   return (
     <div>

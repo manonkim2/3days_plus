@@ -4,10 +4,9 @@ import { useState } from 'react'
 
 interface ICheckboxProps {
   text: string
-  onClick?: () => void
 }
 
-const Checkbox = ({ text, onClick }: ICheckboxProps) => {
+const Checkbox = ({ text }: ICheckboxProps) => {
   const [checked, setChecked] = useState(false)
 
   const onClickCheckbox = () => {
@@ -22,6 +21,7 @@ const Checkbox = ({ text, onClick }: ICheckboxProps) => {
           type="checkbox"
           className="checkbox checkbox-sm border-primary [--chkbg:black] [--chkfg:white]"
           checked={checked}
+          readOnly
         />
         <span
           className={`label-text ${checked ? 'text-fontSecondary' : 'text-fontPrimary'} ${checked && 'line-through'}`}

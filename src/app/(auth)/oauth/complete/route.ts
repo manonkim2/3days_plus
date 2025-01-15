@@ -1,4 +1,5 @@
 import { serverCreateClient } from '@/utils/supabase/server'
+import { notFound } from 'next/navigation'
 import { NextResponse } from 'next/server'
 
 
@@ -15,5 +16,5 @@ export async function GET(request: Request) {
         }
     }
 
-    return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+    return notFound()
 }

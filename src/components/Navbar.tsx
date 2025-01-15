@@ -1,14 +1,12 @@
 import Link from 'next/link'
-import { UserCircleIcon } from '@heroicons/react/24/outline'
-import NavMenu from './NavMenu'
-import { serverCreateClient } from '@/utils/supabase/server'
 import Image from 'next/image'
 
+import { getUserInfo } from '@/utils/supabase/actions'
+import { UserCircleIcon } from '@heroicons/react/24/outline'
+import NavMenu from './NavMenu'
+
 const Navbar = async () => {
-  const supabase = await serverCreateClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const user = await getUserInfo()
 
   return (
     <nav className="flex items-center justify-between h-16 top-0 z-40 bg-bgPrimary container mx-auto">
@@ -18,7 +16,7 @@ const Navbar = async () => {
 
       <NavMenu />
 
-      <div className="rounded-full overflow-hidden">
+      <Link className="rounded-full overflow-hidden" href="/profile">
         {user ? (
           <Image
             src={user.user_metadata.avatar_url}
@@ -29,7 +27,7 @@ const Navbar = async () => {
         ) : (
           <UserCircleIcon className="size-10" />
         )}
-      </div>
+      </Link>
     </nav>
   )
 }

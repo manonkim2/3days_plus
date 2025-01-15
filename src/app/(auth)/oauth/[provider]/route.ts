@@ -2,9 +2,11 @@ import { redirect } from "next/navigation"
 import { NextResponse } from "next/server"
 
 import { serverCreateClient } from '@/utils/supabase/server';
+import { Provider } from "@supabase/supabase-js";
 
 
-export async function GET(_: Request, { params }: { params: { provider: 'google' | 'kakao' } }) {
+
+export async function GET(_: Request, { params }: { params: Promise<{ provider: Provider }> }) {
     const { provider } = await params
     const supabase = await serverCreateClient()
 

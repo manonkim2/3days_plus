@@ -33,12 +33,12 @@ const News = async () => {
           <Link href={url} key={urlToImage + index} target="_blank">
             <Box>
               <div className="flex flex-col h-full gap-3">
-                <div className="border w-full relative h-full rounded-xl overflow-hidden">
+                <div className="border w-full h-full relative rounded-xl overflow-hidden">
                   <Image
                     src={urlToImage}
                     alt="sample-img"
                     fill
-                    objectFit="cover"
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
                 <div className="flex justify-between items-center">

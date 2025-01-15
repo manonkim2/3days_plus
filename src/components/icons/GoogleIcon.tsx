@@ -1,7 +1,7 @@
 const GoogleIcon = () => {
   return (
     <svg
-      enable-background="new 0 0 24 24"
+      enableBackground="new 0 0 24 24"
       height={24}
       width={24}
       id="Layer_1"
