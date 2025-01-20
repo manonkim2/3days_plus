@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation"
-import { NextResponse } from "next/server"
 
 import { serverCreateClient } from '@/utils/supabase/server';
 import { Provider } from "@supabase/supabase-js";
