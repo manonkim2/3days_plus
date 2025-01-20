@@ -18,7 +18,8 @@ export async function GET(_: Request, { params }: { params: Promise<{ provider: 
     })
 
     if (error) {
-        return NextResponse.error()
+        console.error('인증 실패', error.message)
+        alert('인증에 실패했습니다. 다시 시도해 주세요.')
     }
 
     if (data.url) {
