@@ -19,7 +19,9 @@ const DashBoardPage = async () => {
         </div>
         <div className="flex justify-end">
           <span className="text-3xl font-extralight pr-2">Today is</span>
-          <span className="text-3xl font-semibold">{formatDate()}</span>
+          <span className="text-3xl font-semibold" suppressHydrationWarning>
+            {formatDate()}
+          </span>
         </div>
       </div>
 

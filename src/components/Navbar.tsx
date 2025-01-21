@@ -10,9 +10,7 @@ const Navbar = async () => {
 
   return (
     <nav className="flex items-center justify-between h-16 top-0 z-40 bg-bgPrimary container mx-auto">
-      <Link href="/">
-        <span>Titile</span>
-      </Link>
+      <Link href="/">Title</Link>
 
       <NavMenu />
 

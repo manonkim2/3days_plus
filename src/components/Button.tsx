@@ -1,10 +1,7 @@
-'use client'
-
 import { ButtonHTMLAttributes } from 'react'
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
-  onClick?: () => void
   variant?: 'primary' | 'secondary' | 'tertiary'
   size?: 'sm' | 'md' | 'lg'
 }
@@ -24,7 +21,6 @@ const buttonTheme = {
 
 const Button = ({
   text,
-  onClick,
   variant = 'primary',
   size = 'md',
   disabled,
@@ -32,7 +28,6 @@ const Button = ({
 }: IButtonProps) => {
   return (
     <button
-      onClick={onClick}
       className={`${buttonTheme.variant[variant]} ${buttonTheme.size[size]}  rounded-full text-base ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
       disabled={disabled}
       {...rest}

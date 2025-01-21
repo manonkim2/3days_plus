@@ -5,7 +5,6 @@
 export const formatDate = (): string => {
     const today = new Date()
 
-
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     const months = [

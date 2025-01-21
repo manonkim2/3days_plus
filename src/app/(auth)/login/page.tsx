@@ -32,9 +32,9 @@ const Login = () => {
 
       <div className="flex justify-center mt-xl">
         <span className="text-xs">Don&apos;t have an account?</span>
-        <a href="#" className="text-xs text-primary pl-xs">
-          <Link href="/signup">Sign up</Link>
-        </a>
+        <Link href="/signup" className="text-xs text-primary pl-xs underline">
+          Sign up
+        </Link>
       </div>
     </div>
   )
