@@ -16,4 +16,18 @@ model User {
   updated_at DateTime @updatedAt
   image_url  String?
   social     String?
+  Todo       Task[]
+}
+
+model Task {
+  id           Int      @id @default(autoincrement())
+  tag          String?
+  content      String
+  date         DateTime @default(now())
+  completed    Boolean  @default(false)
+  forThisMonth Boolean? @default(false) // 이번 달에 완료할 ToDo
+  forToday     Boolean? @default(false) // 오늘 완료할 ToDo
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 }
