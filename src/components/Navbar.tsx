@@ -17,7 +17,7 @@ const Navbar = async () => {
       <Link className="rounded-full overflow-hidden" href="/profile">
         {user ? (
           <Image
-            src={user.user_metadata.avatar_url}
+            src={user.image_url || ''}
             alt="user_image"
             width={36}
             height={36}

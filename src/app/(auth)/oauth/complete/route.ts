@@ -17,17 +17,22 @@ export async function GET(request: Request) {
             return NextResponse.redirect(`${origin}/login`)
         }
 
+        if (error) {
+            alert('로그인에 실패했습니다.')
+            return NextResponse.redirect(`${origin}/login`)
+        }
+
         // google, kakao 동일 email 일 때 identities[1]이 현재 login
         const identity = user.identities!
         const social_login = identity?.length > 1 ? identity[1] : identity[0]
 
-        const isUser = await db.user.findUnique({
+        const existingUsers = await db.user.findUnique({
             where: {
                 id: social_login.identity_id,
             }
         })
 
-        if (!isUser) {
+        if (!existingUsers) {
             await db.user.create({
                 data: {
                     id: social_login.identity_id,
@@ -37,15 +42,10 @@ export async function GET(request: Request) {
                     image_url: user.user_metadata.picture as string,
                     social: social_login.provider
                 },
-                select: {
-                    id: true,
-                },
             })
         }
 
-        if (!error) {
-            return NextResponse.redirect(`${origin}/dashboard`)
-        }
+        return NextResponse.redirect(`${origin}/dashboard`)
     }
 
     return notFound()

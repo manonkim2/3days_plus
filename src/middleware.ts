@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserInfo } from "./utils/supabase/actions";
+import { serverCreateClient } from "./utils/supabase/server";
 
 interface Routes {
     [key: string]: boolean
@@ -16,7 +16,10 @@ const publicOnlyUrl: Routes = {
 }
 
 export const middleware = async (request: NextRequest) => {
-    const user = await getUserInfo()
+    const supabase = await serverCreateClient()
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
 
     const isPublicPage = publicOnlyUrl[request.nextUrl.pathname]
 
