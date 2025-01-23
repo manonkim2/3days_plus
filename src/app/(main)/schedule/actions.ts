@@ -3,7 +3,13 @@
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 
-export const createTask = async (task: string) => {
+export const createTask = async (prev: void | null, formData: FormData) => {
+  const content = formData.get('content')
+
+  if (!content) {
+    return
+  }
+
   try {
     const user = await getUserInfo()
 
@@ -14,7 +20,7 @@ export const createTask = async (task: string) => {
 
     await db.task.create({
       data: {
-        content: task,
+        content: content as string,
         userId: user.id,
         forToday: true,
       },
@@ -26,4 +32,29 @@ export const createTask = async (task: string) => {
     console.error('Error creating task:', error)
     throw new Error('Task creation failed.')
   }
+}
+
+export interface ITask {
+  id: number
+  content: string
+  completed: boolean
+  forToday: boolean | null
+}
+
+export const getTask = async (): Promise<ITask[]> => {
+  const user = await getUserInfo()
+
+  const tasks = await db.task.findMany({
+    where: {
+      userId: user?.id,
+    },
+    select: {
+      id: true,
+      content: true,
+      forToday: true,
+      completed: true,
+    },
+  })
+
+  return tasks
 }

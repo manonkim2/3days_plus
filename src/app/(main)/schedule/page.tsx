@@ -1,8 +1,11 @@
 import Box from '@/components/Box'
 import TaskList from '@/components/TaskList'
 import TaskInput from './components/TaskInput'
+import { getTask, ITask } from './actions'
 
-const SchedulePage = () => {
+const SchedulePage = async () => {
+  const task: ITask[] = await getTask()
+
   return (
     <div>
       <div className="py-xxl grid grid-cols-2 gap-md">
@@ -12,7 +15,7 @@ const SchedulePage = () => {
         </Box>
 
         <Box>
-          <TaskList />
+          <TaskList tasks={task} />
           <TaskInput />
         </Box>
       </div>

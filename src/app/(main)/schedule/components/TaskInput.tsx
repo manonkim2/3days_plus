@@ -1,32 +1,18 @@
 'use client'
 
+import React, { useActionState } from 'react'
+import { createTask } from '../actions'
 import { PlusIcon } from '@heroicons/react/24/outline'
 
-import React, { useState } from 'react'
-import { createTask } from '../actions'
-
 const TaskInput = () => {
-  const [inputTask, setInputTask] = useState('')
-
-  const handleOnChangeTask = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = event
-
-    setInputTask(value)
-  }
-
-  const handleOnSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    await createTask(inputTask)
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, dispatch] = useActionState(createTask, null)
 
   return (
-    <form onSubmit={handleOnSubmit}>
+    <form action={dispatch}>
       <label className="input flex items-center gap-2">
         <input
-          value={inputTask}
-          onChange={handleOnChangeTask}
+          name="content"
           type="text"
           placeholder="Add your task"
           className="input-ghost input-sm w-full max-w-xs"
