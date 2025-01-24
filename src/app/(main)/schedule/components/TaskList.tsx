@@ -17,10 +17,7 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
       <form action={formAction}>
         <label className="input flex items-center gap-2">
           <input
-            // onChange={handleOnChange}
-            // onKeyDown={handleKeyPress}
             name="content"
-            // value={inputTask}
             type="text"
             placeholder="Add your task"
             className="input-ghost input-sm w-full max-w-xs"

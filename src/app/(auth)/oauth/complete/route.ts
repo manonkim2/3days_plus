@@ -29,43 +29,49 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/dashboard`)
   } catch (error) {
     console.error('Oauth login error:', error)
+    const { origin } = new URL(request.url)
     return redirectToLogin(origin)
   }
 }
 
 async function authenticateUser(
   code: string,
-): Promise<{ error: Error | null; user: ISessionUserType }> {
+): Promise<{ error: Error | null; user: ISessionUserType | null }> {
   const supabase = await serverCreateClient()
-  const {
-    error,
-    data: { user },
-  } = await supabase.auth.exchangeCodeForSession(code)
 
-  return { error, user: user as ISessionUserType }
+  try {
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code)
+    return { error, user: data?.user as ISessionUserType | null }
+  } catch (err) {
+    console.error('[Auth Error] Failed to authenticate user:', err)
+    return { error: err as Error, user: null }
+  }
 }
 
 async function ensureUserExists(user: ISessionUserType) {
   // google, kakao 동일 email 일 때 identities[1]이 현재 login
   const identity = user.identities!
-  const social_login = identity?.length > 1 ? identity[1] : identity[0]
+  const socialLogin = identity?.length > 1 ? identity[1] : identity[0]
 
-  const existingUsers = await db.user.findUnique({
-    where: {
-      id: social_login.identity_id,
-    },
-  })
-
-  if (!existingUsers) {
-    await db.user.create({
-      data: {
-        id: social_login.identity_id,
-        name: user.user_metadata.name,
-        email: user.email,
-        updated_at: user.updated_at,
-        image_url: user.user_metadata.avatar_url,
-        social: social_login.provider,
-      },
+  try {
+    const existingUser = await db.user.findUnique({
+      where: { id: socialLogin.identity_id },
     })
+
+    if (!existingUser) {
+      await db.user.create({
+        data: {
+          id: socialLogin.identity_id,
+          name: user.user_metadata.name,
+          email: user.email,
+          updated_at: user.updated_at,
+          image_url: user.user_metadata.avatar_url,
+          social: socialLogin.provider,
+        },
+      })
+    }
+  } catch (error) {
+    console.error('[DB Error] Failed to upsert user:', error)
+    throw error
   }
 }
