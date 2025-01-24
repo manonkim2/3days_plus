@@ -27,9 +27,6 @@ export const createTask = async (
         userId: user.id,
         forToday: true,
       },
-      select: {
-        id: true,
-      },
     })
 
     return await getTask()
@@ -62,6 +59,19 @@ export const getTask = async (): Promise<ITask[]> => {
   })
 
   return tasks
+}
+
+export const deleteTask = async (taskId: number) => {
+  try {
+    await db.task.delete({
+      where: { id: taskId },
+    })
+
+    return await getTask()
+  } catch (error) {
+    console.error('Error deleting task:', error)
+    throw new Error('Task deletion failed.')
+  }
 }
 
 // export const updateTask = async (prev: void | null, formData: FormData) => {
