@@ -3,13 +3,7 @@
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 
-export const createTask = async (prev: void | null, formData: FormData) => {
-  const content = formData.get('content')
-
-  if (!content) {
-    return
-  }
-
+export const createTask = async (content: string) => {
   try {
     const user = await getUserInfo()
 

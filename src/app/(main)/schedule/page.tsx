@@ -1,10 +1,10 @@
 import Box from '@/components/Box'
-import TaskList from '@/components/TaskList'
-import TaskInput from './components/TaskInput'
+
+import TaskList from './components/TaskList'
 import { getTask, ITask } from './actions'
 
 const SchedulePage = async () => {
-  const task: ITask[] = await getTask()
+  const tasks: ITask[] = await getTask()
 
   return (
     <div>
@@ -15,8 +15,7 @@ const SchedulePage = async () => {
         </Box>
 
         <Box>
-          <TaskList tasks={task} />
-          <TaskInput />
+          <TaskList tasks={tasks} />
         </Box>
       </div>
 
