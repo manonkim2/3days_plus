@@ -1,30 +1,26 @@
 'use client'
 
-import { useState } from 'react'
-
 interface ICheckboxProps {
-  text: string
+  text?: string
+  value?: boolean
+  onClick?: () => void
+  disabled?: boolean
 }
 
-const Checkbox = ({ text }: ICheckboxProps) => {
-  const [checked, setChecked] = useState(false)
-
-  const onClickCheckbox = () => {
-    setChecked(!checked)
-  }
-
+const Checkbox = ({ text, value, onClick, disabled }: ICheckboxProps) => {
   return (
     <div className="form-control flex items-start py-xs">
       <label className="label cursor-pointer gap-sm">
         <input
-          onClick={onClickCheckbox}
+          onClick={onClick}
           type="checkbox"
           className="checkbox checkbox-sm border-primary [--chkbg:black] [--chkfg:white]"
-          checked={checked}
+          checked={value}
+          disabled={disabled}
           readOnly
         />
         <span
-          className={`label-text ${checked ? 'text-fontSecondary' : 'text-fontPrimary'} ${checked && 'line-through'}`}
+          className={`label-text ${value ? 'text-fontSecondary' : 'text-fontPrimary'} ${value && 'line-through'}`}
         >
           {text}
         </span>

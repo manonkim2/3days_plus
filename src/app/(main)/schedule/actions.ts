@@ -1,7 +1,18 @@
 'use server'
 
+import { redirect } from 'next/navigation'
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
+
+const loginId = async () => {
+  const user = await getUserInfo()
+
+  if (!user?.id) {
+    return redirect('/login')
+  }
+
+  return user.id
+}
 
 export const createTask = async (
   prev: ITask[] | undefined,
@@ -14,17 +25,12 @@ export const createTask = async (
   }
 
   try {
-    const user = await getUserInfo()
-
-    if (!user?.id) {
-      alert('로그인을 진행해주세요')
-      return
-    }
+    const userId = await loginId()
 
     await db.task.create({
       data: {
         content: content as string,
-        userId: user.id,
+        userId,
         forToday: true,
       },
     })
@@ -44,11 +50,11 @@ export interface ITask {
 }
 
 export const getTask = async (): Promise<ITask[]> => {
-  const user = await getUserInfo()
+  const userId = await loginId()
 
   const tasks = await db.task.findMany({
     where: {
-      userId: user?.id,
+      userId,
     },
     select: {
       id: true,
@@ -74,18 +80,44 @@ export const deleteTask = async (taskId: number) => {
   }
 }
 
-// export const updateTask = async (prev: void | null, formData: FormData) => {
-//   const id = Number(formData.get('id'))
-//   const completed = formData.get('completed')
-//   const content = formData.get('content')
+export const updateCheckTask = async (id: number, completed: boolean) => {
+  const userId = await loginId()
 
-//   try {
-//     await db.task.update({
-//       where: { id },
-//       data: { completed, content },
-//     })
-//   } catch (error) {
-//     console.error('Error updating task:', error)
-//     throw new Error('Task update failed.')
-//   }
-// }
+  try {
+    await db.task.update({
+      where: { id, userId },
+      data: {
+        completed: !completed,
+      },
+    })
+
+    return await getTask()
+  } catch (error) {
+    console.error('Error creating task:', error)
+    throw new Error('Task creation failed.')
+  }
+}
+
+export const updateContentTask = async ({
+  id,
+  content,
+}: {
+  id: number
+  content: string
+}) => {
+  const userId = await loginId()
+
+  try {
+    await db.task.update({
+      where: { id, userId },
+      data: {
+        content,
+      },
+    })
+
+    return await getTask()
+  } catch (error) {
+    console.error('Error creating task:', error)
+    throw new Error('Task creation failed.')
+  }
+}
