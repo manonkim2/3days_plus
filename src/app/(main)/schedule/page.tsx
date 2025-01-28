@@ -1,7 +1,8 @@
 import Box from '@/components/Box'
 
 import TaskList from './components/TaskList'
-import { getTask, ITask } from './actions'
+import { getTask, ITask } from './taskActions'
+import Category from './components/Category'
 
 const SchedulePage = async () => {
   const tasks: ITask[] = await getTask()
@@ -11,7 +12,7 @@ const SchedulePage = async () => {
       <div className="py-xxl grid grid-cols-2 gap-md">
         <Box>
           <div className="border h-[280px]">달력</div>
-          <div>이달의 목표</div>
+          <div>month</div>
         </Box>
 
         <Box>
@@ -20,7 +21,7 @@ const SchedulePage = async () => {
       </div>
 
       <Box>
-        <div className="h-[300px]">category별 할일리스트</div>
+        <Category />
       </Box>
     </div>
   )

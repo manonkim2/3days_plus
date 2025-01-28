@@ -8,7 +8,7 @@ import {
   ITask,
   updateCheckTask,
   updateContentTask,
-} from '../actions'
+} from '../taskActions'
 import {
   CheckIcon,
   PencilSquareIcon,
@@ -16,6 +16,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import Checkbox from '@/components/Checkbox'
+import FormActionWrapper from '@/components/FormActionWrapper'
 
 const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
   const [taskList, setTaskList] = useState<ITask[]>(tasks)
@@ -129,19 +130,12 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
         ))}
       </div>
 
-      <form action={formAction}>
-        <label className="input flex items-center gap-2">
-          <input
-            name="content"
-            type="text"
-            placeholder="Add your task"
-            className="input-ghost input-sm w-full max-w-xs"
-          />
-          <button aria-label="Add Task" type="submit" disabled={isPending}>
-            <PlusIcon className="w-4 cursor-pointer" />
-          </button>
-        </label>
-      </form>
+      <FormActionWrapper
+        formAction={formAction}
+        placeholder="Add your task"
+        isPending={isPending}
+        button={<PlusIcon className="w-4 cursor-pointer" />}
+      />
     </div>
   )
 }
