@@ -62,3 +62,16 @@ export const getCategory = async (): Promise<ICategory[]> => {
 
   return category
 }
+
+export const deleteCategory = async (id: number) => {
+  try {
+    await db.category.delete({
+      where: { id },
+    })
+
+    return await getCategory()
+  } catch (error) {
+    console.error('Error deleting task:', error)
+    throw new Error('Task deletion failed.')
+  }
+}
