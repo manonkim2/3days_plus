@@ -4,6 +4,13 @@ import { redirect } from 'next/navigation'
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 
+export interface ITask {
+  id: number
+  content: string
+  completed: boolean
+  forToday: boolean | null
+}
+
 const loginId = async () => {
   const user = await getUserInfo()
 
@@ -40,13 +47,6 @@ export const createTask = async (
     console.error('Error creating task:', error)
     throw new Error('Task creation failed.')
   }
-}
-
-export interface ITask {
-  id: number
-  content: string
-  completed: boolean
-  forToday: boolean | null
 }
 
 export const getTask = async (): Promise<ITask[]> => {

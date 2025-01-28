@@ -3,9 +3,11 @@ import Box from '@/components/Box'
 import TaskList from './components/TaskList'
 import { getTask, ITask } from './taskActions'
 import Category from './components/Category'
+import { getCategory, ICategory } from './categoryActions'
 
 const SchedulePage = async () => {
   const tasks: ITask[] = await getTask()
+  const categories: ICategory[] = await getCategory()
 
   return (
     <div>
@@ -21,7 +23,7 @@ const SchedulePage = async () => {
       </div>
 
       <Box>
-        <Category />
+        <Category categories={categories} />
       </Box>
     </div>
   )

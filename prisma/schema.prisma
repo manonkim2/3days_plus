@@ -9,14 +9,15 @@ datasource db {
 }
 
 model User {
-  id         String   @id @unique
+  id         String     @id @unique
   name       String
   email      String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
   image_url  String?
   social     String?
   Task       Task[]
+  Category   Category[]
 }
 
 model Task {
@@ -38,6 +39,9 @@ model Category {
   id    Int     @id @default(autoincrement())
   title String
   color String?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   CategoryOnTask CategoryOnTask[]
 }

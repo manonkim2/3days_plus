@@ -63,7 +63,7 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
 
   const handleSaveEdit = async () => {
     if (editTask) {
-      const updatedTask = await updateContentTask(editTask) // 서버와 통신하여 업데이트
+      const updatedTask = await updateContentTask(editTask)
       if (updatedTask) {
         setTaskList((prev) =>
           prev.map((task) =>
@@ -73,7 +73,7 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
           ),
         )
       }
-      setEditTask(null) // 편집 모드 종료
+      setEditTask(null)
     }
   }
 
