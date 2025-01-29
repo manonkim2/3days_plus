@@ -1,32 +1,25 @@
 'use client'
 
+import { Checkbox } from './ui/checkbox'
+
 interface ICheckboxProps {
-  text?: string
+  text: string
   value?: boolean
-  onClick?: () => void
   disabled?: boolean
 }
 
-const Checkbox = ({ text, value, onClick, disabled }: ICheckboxProps) => {
+const Checkboxx = ({ text, value, disabled }: ICheckboxProps) => {
   return (
-    <div className="form-control flex items-start py-xs">
-      <label className="label cursor-pointer gap-sm">
-        <input
-          onClick={onClick}
-          type="checkbox"
-          className="checkbox checkbox-sm border-primary [--chkbg:black] [--chkfg:white]"
-          checked={value}
-          disabled={disabled}
-          readOnly
-        />
-        <span
-          className={`label-text ${value ? 'text-fontSecondary' : 'text-fontPrimary'} ${value && 'line-through'}`}
-        >
-          {text}
-        </span>
+    <div className="flex items-center space-x-2 py-sm">
+      <Checkbox id="terms" checked={value} disabled={disabled} />
+      <label
+        htmlFor="terms"
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      >
+        {text}
       </label>
     </div>
   )
 }
 
-export default Checkbox
+export default Checkboxx
