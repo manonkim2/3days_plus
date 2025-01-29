@@ -82,10 +82,6 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
       <div className="overflow-y-scroll h-[300px]">
         {taskList?.map(({ id, completed, content }) => (
           <div key={id} className="flex items-center w-full">
-            <div onClick={() => handleToggleTask(id, completed)}>
-              <Checkbox value={completed} />
-            </div>
-
             {editTask?.id === id ? (
               <label className="input flex items-center w-full">
                 <input
@@ -103,13 +99,9 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
               </label>
             ) : (
               <div className="flex justify-between w-full">
-                <p
-                  className={`text-base ${
-                    completed ? 'line-through text-gray-500' : ''
-                  }`}
-                >
-                  {content}
-                </p>
+                <div onClick={() => handleToggleTask(id, completed)}>
+                  <Checkbox checked={completed} text={content} />
+                </div>
                 <div className="flex items-center gap-sm">
                   <div
                     onClick={() => startEditingTask(id, content)}
