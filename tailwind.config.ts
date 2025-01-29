@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import daisyui from 'daisyui'
 import tailwindcssAnimate from 'tailwindcss-animate'
 
 export default {
@@ -79,8 +78,5 @@ export default {
       },
     },
   },
-  plugins: [daisyui, tailwindcssAnimate],
-  daisyui: {
-    themes: ['emrald'],
-  },
+  plugins: [tailwindcssAnimate],
 } satisfies Config
