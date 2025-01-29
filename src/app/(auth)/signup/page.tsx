@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import GoogleIcon from '@/components/icons/GoogleIcon'
 import KakaoIcon from '@/components/icons/KakaoIcon'
+import { Input } from '@/components/ui'
 
 const Signup = () => {
   return (
@@ -14,36 +15,27 @@ const Signup = () => {
       <Box>
         <span className="text-xl pt-sm">Create Account</span>
         <div className="flex flex-col py-xl gap-sm">
-          <label className="input input-bordered flex items-center">
-            <UserCircleIcon className="size-4 border-white" />
-            <input
-              type="text"
-              className="grow input-xs"
-              placeholder="Username"
-            />
-          </label>
-          <label className="input input-bordered flex items-center">
-            <EnvelopeIcon className="size-4" />
-            <input type="text" className="grow input-xs" placeholder="Email" />
-          </label>
-          <label className="input input-bordered flex items-center">
-            <KeyIcon className="size-4" />
-            <input
-              type="text"
-              className="grow input-xs"
-              placeholder="Password"
-            />
-          </label>
-          <label className="input input-bordered flex items-center">
-            <KeyIcon className="size-4" />
-            <input
-              type="text"
-              className="grow input-xs"
-              placeholder="Password"
-            />
-          </label>
+          <Input
+            type="text"
+            placeholder="Username"
+            icon={<UserCircleIcon className="size-4 border-white" />}
+          />
+          <Input
+            type="text"
+            placeholder="Email"
+            icon={<EnvelopeIcon className="size-4" />}
+          />
+          <Input
+            type="text"
+            placeholder="Password"
+            icon={<KeyIcon className="size-4" />}
+          />
+          <Input
+            type="text"
+            placeholder="Password Confirm"
+            icon={<KeyIcon className="size-4" />}
+          />
         </div>
-
         <button className="btn btn-primary">Create Account</button>
 
         <div className="flex gap-sm justify-center items-center py-md">

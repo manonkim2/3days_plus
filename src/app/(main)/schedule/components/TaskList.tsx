@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline'
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
+import { Input } from '@/components/ui'
 
 const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
   const [taskList, setTaskList] = useState<ITask[]>(tasks)
@@ -83,20 +84,21 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
         {taskList?.map(({ id, completed, content }) => (
           <div key={id} className="flex items-center w-full">
             {editTask?.id === id ? (
-              <label className="input flex items-center w-full">
-                <input
-                  className="input-ghost input-xs w-full"
-                  value={editTask.content}
-                  onChange={(event) => handleChangeTask(event)}
-                />
-                <button
-                  aria-label="edit Task"
-                  type="submit"
-                  onClick={handleSaveEdit}
-                >
-                  <CheckIcon className="w-4 cursor-pointer" />
-                </button>
-              </label>
+              <Input
+                type="text"
+                placeholder="Password"
+                value={editTask.content}
+                onChange={(event) => handleChangeTask(event)}
+                button={
+                  <button
+                    aria-label="edit Task"
+                    type="submit"
+                    onClick={handleSaveEdit}
+                  >
+                    <CheckIcon className="w-4 cursor-pointer" />
+                  </button>
+                }
+              />
             ) : (
               <div className="flex justify-between w-full">
                 <div onClick={() => handleToggleTask(id, completed)}>
