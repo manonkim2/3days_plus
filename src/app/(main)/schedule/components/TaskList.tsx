@@ -5,6 +5,7 @@ import React, { useActionState, useState } from 'react'
 import {
   createTask,
   deleteTask,
+  getTask,
   ITask,
   updateCheckTask,
   updateContentTask,
@@ -19,41 +20,49 @@ import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Calendar, Input } from '@/components/ui'
 import Box from '@/components/Box'
+import { formatKstTime } from '@/utils/formatKstTime'
 
 const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [date, setDate] = useState<Date>(formatKstTime(new Date()))
   const [taskList, setTaskList] = useState<ITask[]>(tasks)
   const [editTask, setEditTask] = useState<{
     id: number
     content: string
   } | null>(null)
 
+  const handleChangeDate = async (date: Date | undefined) => {
+    if (date) {
+      setDate(date)
+    }
+
+    const tasks = await getTask(date)
+    setTaskList(tasks)
+  }
+
   const [, formAction, isPending] = useActionState(
-    async (prevTasks: ITask[] | undefined, formData: FormData) => {
-      const updatedTasks = await createTask(prevTasks, formData)
-      if (updatedTasks) {
-        setTaskList(updatedTasks)
-      }
-      return updatedTasks
+    async (_: void, formData: FormData) => {
+      await createTask(undefined, formData, date)
+
+      const tasks = await getTask(date)
+      setTaskList(tasks)
     },
-    taskList,
+    undefined,
   )
 
   const handleDeleteTask = async (id: number) => {
-    const updatedTasks = await deleteTask(id)
-    setTaskList(updatedTasks)
+    await deleteTask(id)
+
+    const tasks = await getTask(date)
+    setTaskList(tasks)
   }
 
   const handleToggleTask = async (id: number, completed: boolean) => {
-    const updatedTask = await updateCheckTask(id, completed)
-    if (updatedTask) {
-      setTaskList((prev) =>
-        prev.map((task) =>
-          task.id === id ? { ...task, completed: !completed } : task,
-        ),
-      )
-    }
+    await updateCheckTask(id, completed)
+
+    const tasks = await getTask(date)
+    setTaskList(tasks)
   }
+
   const startEditingTask = (id: number, content: string) => {
     setEditTask({ id, content })
   }
@@ -66,16 +75,11 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
 
   const handleSaveEdit = async () => {
     if (editTask) {
-      const updatedTask = await updateContentTask(editTask)
-      if (updatedTask) {
-        setTaskList((prev) =>
-          prev.map((task) =>
-            task.id === editTask.id
-              ? { ...task, content: editTask.content }
-              : task,
-          ),
-        )
-      }
+      await updateContentTask(editTask)
+
+      const tasks = await getTask(date)
+      setTaskList(tasks)
+
       setEditTask(null)
     }
   }
@@ -86,7 +90,7 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={(date) => handleChangeDate(date)}
           className="rounded-md border shadow"
         />
       </Box>

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import Box from '@/components/Box'
 import Button from '@/components/Button'
-import Calender from '@/components/Calender'
 
 import News from '@/components/News'
 import { formatDate } from '@/utils/formatDate'
@@ -29,8 +28,6 @@ const DashBoardPage = async () => {
 
       <div className="grid gap-8">
         <div className="grid grid-cols-[2fr,1.5fr,3fr] h-[400px] gap-3">
-          <Calender />
-
           <Box>
             <div className="flex justify-between items-center">
               <span className="text-xl">TASK</span>
@@ -38,7 +35,6 @@ const DashBoardPage = async () => {
                 <Button text="바로가기" size="sm" variant="secondary" />
               </Link>
             </div>
-            {/* <TaskList /> */}
           </Box>
 
           <Box />
