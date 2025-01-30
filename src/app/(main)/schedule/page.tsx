@@ -1,8 +1,8 @@
 import Box from '@/components/Box'
 
 import TaskList from './components/TaskList'
-import { getTask, ITask } from './taskActions'
 import Category from './components/Category'
+import { getTask, ITask } from './taskActions'
 import { getCategory, ICategory } from './categoryActions'
 
 const SchedulePage = async () => {
@@ -11,16 +11,9 @@ const SchedulePage = async () => {
 
   return (
     <div>
-      <div className="py-xxl grid grid-cols-2 gap-md">
-        <Box>
-          <div className="border h-[280px]">달력</div>
-          <div>month</div>
-        </Box>
-
-        <Box>
-          <TaskList tasks={tasks} />
-        </Box>
-      </div>
+      <Box>
+        <TaskList tasks={tasks} />
+      </Box>
 
       <Box>
         <Category categories={categories} />

@@ -17,9 +17,11 @@ import {
 } from '@heroicons/react/24/outline'
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
-import { Input } from '@/components/ui'
+import { Calendar, Input } from '@/components/ui'
+import Box from '@/components/Box'
 
 const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
+  const [date, setDate] = useState<Date | undefined>(new Date())
   const [taskList, setTaskList] = useState<ITask[]>(tasks)
   const [editTask, setEditTask] = useState<{
     id: number
@@ -79,57 +81,66 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="overflow-y-scroll h-[300px]">
-        {taskList?.map(({ id, completed, content }) => (
-          <div key={id} className="flex items-center w-full">
-            {editTask?.id === id ? (
-              <Input
-                type="text"
-                placeholder="Password"
-                value={editTask.content}
-                onChange={(event) => handleChangeTask(event)}
-                button={
-                  <button
-                    aria-label="edit Task"
-                    type="submit"
-                    onClick={handleSaveEdit}
-                  >
-                    <CheckIcon className="w-4 cursor-pointer" />
-                  </button>
-                }
-              />
-            ) : (
-              <div className="flex justify-between w-full">
-                <div onClick={() => handleToggleTask(id, completed)}>
-                  <Checkbox checked={completed} text={content} />
-                </div>
-                <div className="flex items-center gap-sm">
-                  <div
-                    onClick={() => startEditingTask(id, content)}
-                    className="cursor-pointer"
-                  >
-                    <PencilSquareIcon className="w-4" />
+    <div className="flex">
+      <Box>
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          className="rounded-md border shadow"
+        />
+      </Box>
+      <Box>
+        <div className="flex flex-col overflow-y-scroll h-[300px]">
+          {taskList?.map(({ id, completed, content }) => (
+            <div key={id} className="flex items-center w-full">
+              {editTask?.id === id ? (
+                <Input
+                  type="text"
+                  placeholder="Password"
+                  value={editTask.content}
+                  onChange={(event) => handleChangeTask(event)}
+                  button={
+                    <button
+                      aria-label="edit Task"
+                      type="submit"
+                      onClick={handleSaveEdit}
+                    >
+                      <CheckIcon className="w-4 cursor-pointer" />
+                    </button>
+                  }
+                />
+              ) : (
+                <div className="flex justify-between w-full">
+                  <div onClick={() => handleToggleTask(id, completed)}>
+                    <Checkbox checked={completed} text={content} />
                   </div>
-                  <div
-                    onClick={() => handleDeleteTask(id)}
-                    className="cursor-pointer"
-                  >
-                    <XMarkIcon className="w-4" />
+                  <div className="flex items-center gap-sm">
+                    <div
+                      onClick={() => startEditingTask(id, content)}
+                      className="cursor-pointer"
+                    >
+                      <PencilSquareIcon className="w-4" />
+                    </div>
+                    <div
+                      onClick={() => handleDeleteTask(id)}
+                      className="cursor-pointer"
+                    >
+                      <XMarkIcon className="w-4" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <FormActionWrapper
-        formAction={formAction}
-        placeholder="Add your task"
-        isPending={isPending}
-        button={<PlusIcon className="w-4 cursor-pointer" />}
-      />
+              )}
+            </div>
+          ))}
+          <FormActionWrapper
+            formAction={formAction}
+            placeholder="Add your task"
+            isPending={isPending}
+            button={<PlusIcon className="w-4 cursor-pointer" />}
+          />
+        </div>
+      </Box>
     </div>
   )
 }
