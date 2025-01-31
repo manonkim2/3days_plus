@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 import { formatKstTime } from '@/utils/formatKstTime'
+import { endOfDay, startOfDay } from 'date-fns'
 
 export interface ITask {
   id: number
@@ -54,12 +55,17 @@ export const createTask = async (
 export const getTask = async (date?: Date): Promise<ITask[]> => {
   const userId = await loginId()
 
-  const kstTime = formatKstTime(date || new Date())
+  const selectedDate = date || new Date()
+  const startDate = formatKstTime(startOfDay(selectedDate))
+  const endDate = formatKstTime(endOfDay(selectedDate))
 
   const tasks = await db.task.findMany({
     where: {
       userId,
-      date: kstTime,
+      date: {
+        gte: startDate,
+        lt: endDate,
+      },
     },
     select: {
       id: true,
