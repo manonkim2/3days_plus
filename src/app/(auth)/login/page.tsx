@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import GoogleIcon from '@/components/icons/GoogleIcon'
 import KakaoIcon from '@/components/icons/KakaoIcon'
-import { EnvelopeIcon, KeyIcon } from '@heroicons/react/24/outline'
 import { Input } from '@/components/ui'
+import { KeyRound, Mail } from 'lucide-react'
 
 const Login = () => {
   return (
@@ -14,12 +14,12 @@ const Login = () => {
         <Input
           type="text"
           placeholder="Email"
-          icon={<EnvelopeIcon className="size-4" />}
+          icon={<Mail className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
         />
         <Input
           type="text"
-          placeholder="Email"
-          icon={<KeyIcon className="size-4" />}
+          placeholder="Password"
+          icon={<KeyRound className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
         />
         <button className="btn btn-primary">Login</button>
       </div>

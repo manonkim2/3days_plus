@@ -2,8 +2,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 import { getUserInfo } from '@/utils/supabase/actions'
-import { UserCircleIcon } from '@heroicons/react/24/outline'
+
 import NavMenu from './NavMenu'
+import { CircleUser } from 'lucide-react'
 
 const Navbar = async () => {
   const user = await getUserInfo()
@@ -23,7 +24,7 @@ const Navbar = async () => {
             height={36}
           />
         ) : (
-          <UserCircleIcon className="size-10" />
+          <CircleUser className="h-8 w-8 opacity-70" strokeWidth={1.3} />
         )}
       </Link>
     </nav>

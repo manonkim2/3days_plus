@@ -1,13 +1,9 @@
 import Link from 'next/link'
 import Box from '@/components/Box'
-import {
-  EnvelopeIcon,
-  KeyIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/outline'
 import GoogleIcon from '@/components/icons/GoogleIcon'
 import KakaoIcon from '@/components/icons/KakaoIcon'
 import { Input } from '@/components/ui'
+import { KeyRound, Mail, UserRound } from 'lucide-react'
 
 const Signup = () => {
   return (
@@ -18,22 +14,22 @@ const Signup = () => {
           <Input
             type="text"
             placeholder="Username"
-            icon={<UserCircleIcon className="size-4 border-white" />}
+            icon={<UserRound className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
           />
           <Input
             type="text"
             placeholder="Email"
-            icon={<EnvelopeIcon className="size-4" />}
+            icon={<Mail className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
           />
           <Input
             type="text"
             placeholder="Password"
-            icon={<KeyIcon className="size-4" />}
+            icon={<KeyRound className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
           />
           <Input
             type="text"
             placeholder="Password Confirm"
-            icon={<KeyIcon className="size-4" />}
+            icon={<KeyRound className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
           />
         </div>
         <button className="btn btn-primary">Create Account</button>

@@ -1,25 +1,12 @@
 'use client'
 
-import React, { useActionState, useState } from 'react'
+import React, { useState } from 'react'
 
-import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import FormActionWrapper from '@/components/FormActionWrapper'
-import { createCategory, deleteCategory, ICategory } from '../categoryActions'
+import { deleteCategory, ICategory } from '../categoryActions'
+import { Trash2 } from 'lucide-react'
 
 const Category = ({ categories }: { categories: ICategory[] }) => {
   const [categoryList, setCategoryList] = useState<ICategory[]>(categories)
-
-  const [, formAction, isPending] = useActionState(
-    async (prevTasks: ICategory[] | undefined, formData: FormData) => {
-      const updatedCategory = await createCategory(prevTasks, formData)
-
-      if (updatedCategory) {
-        setCategoryList(updatedCategory)
-      }
-      return updatedCategory
-    },
-    categories,
-  )
 
   const handleDeleteCategory = async (id: number) => {
     const updatedTasks = await deleteCategory(id)
@@ -38,16 +25,10 @@ const Category = ({ categories }: { categories: ICategory[] }) => {
             onClick={() => handleDeleteCategory(id)}
             className="cursor-pointer"
           >
-            <XMarkIcon className="w-3" />
+            <Trash2 className="h-4 w-4 opacity-50" />
           </div>
         </div>
       ))}
-      <FormActionWrapper
-        placeholder="Add category name"
-        button={<PlusIcon className="w-4 cursor-pointer" />}
-        formAction={formAction}
-        isPending={isPending}
-      />
     </div>
   )
 }
