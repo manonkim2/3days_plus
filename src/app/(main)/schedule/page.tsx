@@ -13,7 +13,7 @@ const SchedulePage = async () => {
   return (
     <div>
       <Box>
-        <TaskList tasks={tasks} />
+        <TaskList tasks={tasks} categories={categories} />
       </Box>
 
       <Box>

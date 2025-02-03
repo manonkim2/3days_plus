@@ -9,7 +9,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
@@ -20,12 +19,21 @@ import {
 } from '@/components/ui/popover'
 
 interface ICheckbox {
-  items: { value: string; label: string }[]
+  items: { value: string; id: number }[]
+  commandInput: React.ReactNode
+  value: { value: string; id: number } | null
+  setStateAction: React.Dispatch<
+    React.SetStateAction<{ value: string; id: number } | null>
+  >
 }
 
-export function Combobox({ items }: ICheckbox) {
+export function Combobox({
+  items,
+  commandInput,
+  value,
+  setStateAction,
+}: ICheckbox) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState('')
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -37,31 +45,31 @@ export function Combobox({ items }: ICheckbox) {
           className="w-[200px] justify-between"
         >
           {value
-            ? items.find((items) => items.value === value)?.label
+            ? items.find((items) => items.id === value.id)?.value
             : 'Select category...'}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search category..." className="h-9" />
+          {commandInput}
           <CommandList>
             <CommandEmpty>No category found.</CommandEmpty>
             <CommandGroup>
               {items?.map((item) => (
                 <CommandItem
-                  key={item.value}
+                  key={item.id}
                   value={item.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? '' : currentValue)
+                  onSelect={() => {
+                    setStateAction(item)
                     setOpen(false)
                   }}
                 >
-                  {item.label}
+                  {item.value}
                   <Check
                     className={cn(
                       'ml-auto',
-                      value === item.value ? 'opacity-100' : 'opacity-0',
+                      value?.id === item.id ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                 </CommandItem>

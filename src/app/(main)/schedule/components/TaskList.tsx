@@ -10,20 +10,28 @@ import {
   updateCheckTask,
   updateContentTask,
 } from '../taskActions'
-import {
-  CheckIcon,
-  PencilSquareIcon,
-  PlusIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Calendar, Input } from '@/components/ui'
 import Box from '@/components/Box'
 import { formatKstTime } from '@/utils/formatKstTime'
+import { Combobox } from '@/components/Combobox'
+import { createCategory, ICategory } from '../categoryActions'
+import { Pencil, Plus, Save, Trash2 } from 'lucide-react'
 
-const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
+const TaskInput = ({
+  tasks,
+  categories,
+}: {
+  tasks: ITask[]
+  categories: ICategory[]
+}) => {
   const [date, setDate] = useState<Date>(formatKstTime(new Date()))
+  const [category, setCategory] = useState<{
+    value: string
+    id: number
+  } | null>(null)
+  const [categoryList, setCategoryList] = useState<ICategory[]>(categories)
   const [taskList, setTaskList] = useState<ITask[]>(tasks)
   const [editTask, setEditTask] = useState<{
     id: number
@@ -39,9 +47,21 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
     setTaskList(tasks)
   }
 
+  const [, categoryFormAction, isPendingCategory] = useActionState(
+    async (prevTasks: ICategory[] | undefined, formData: FormData) => {
+      const updatedCategory = await createCategory(prevTasks, formData)
+
+      if (updatedCategory) {
+        setCategoryList(updatedCategory)
+      }
+      return updatedCategory
+    },
+    categories,
+  )
+
   const [, formAction, isPending] = useActionState(
     async (_: void, formData: FormData) => {
-      await createTask(undefined, formData, date)
+      await createTask(undefined, formData, date, category?.id)
 
       const tasks = await getTask(date)
       setTaskList(tasks)
@@ -94,11 +114,58 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
           className="rounded-md border shadow"
         />
       </Box>
+
+      {/* category */}
       <Box>
-        <div className="flex flex-col overflow-y-scroll h-[300px]">
+        <Combobox
+          items={categoryList.map((item) => {
+            return { value: item.title, id: item.id }
+          })}
+          value={category}
+          setStateAction={setCategory}
+          commandInput={
+            <FormActionWrapper
+              placeholder="Add category name"
+              button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
+              formAction={categoryFormAction}
+              isPending={isPendingCategory}
+            />
+          }
+        />
+      </Box>
+
+      {/* task */}
+      <Box>
+        <FormActionWrapper
+          formAction={formAction}
+          placeholder="Add your task"
+          isPending={isPending}
+          button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
+        />
+        <div className="flex flex-col overflow-y-scroll h-[300px] gap-xs pt-sm">
           {taskList?.map(({ id, completed, content }) => (
             <div key={id} className="flex items-center w-full">
-              {editTask?.id === id ? (
+              {editTask?.id !== id ? (
+                <div className="flex justify-between w-full">
+                  <div onClick={() => handleToggleTask(id, completed)}>
+                    <Checkbox checked={completed} text={content} />
+                  </div>
+                  <div className="flex items-center gap-sm">
+                    <div
+                      onClick={() => startEditingTask(id, content)}
+                      className="cursor-pointer"
+                    >
+                      <Pencil className="h-4 w-4 opacity-50" />
+                    </div>
+                    <div
+                      onClick={() => handleDeleteTask(id)}
+                      className="cursor-pointer"
+                    >
+                      <Trash2 className="h-4 w-4 opacity-50" />
+                    </div>
+                  </div>
+                </div>
+              ) : (
                 <Input
                   type="text"
                   placeholder="Password"
@@ -110,39 +177,14 @@ const TaskInput = ({ tasks }: { tasks: ITask[] }) => {
                       type="submit"
                       onClick={handleSaveEdit}
                     >
-                      <CheckIcon className="w-4 cursor-pointer" />
+                      <Save className="h-4 w-4 opacity-70" />
+                      {/* <CheckIcon className="w-4 cursor-pointer" /> */}
                     </button>
                   }
                 />
-              ) : (
-                <div className="flex justify-between w-full">
-                  <div onClick={() => handleToggleTask(id, completed)}>
-                    <Checkbox checked={completed} text={content} />
-                  </div>
-                  <div className="flex items-center gap-sm">
-                    <div
-                      onClick={() => startEditingTask(id, content)}
-                      className="cursor-pointer"
-                    >
-                      <PencilSquareIcon className="w-4" />
-                    </div>
-                    <div
-                      onClick={() => handleDeleteTask(id)}
-                      className="cursor-pointer"
-                    >
-                      <XMarkIcon className="w-4" />
-                    </div>
-                  </div>
-                </div>
               )}
             </div>
           ))}
-          <FormActionWrapper
-            formAction={formAction}
-            placeholder="Add your task"
-            isPending={isPending}
-            button={<PlusIcon className="w-4 cursor-pointer" />}
-          />
         </div>
       </Box>
     </div>

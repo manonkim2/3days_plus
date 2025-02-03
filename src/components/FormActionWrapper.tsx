@@ -31,7 +31,7 @@ const FormActionWrapper = ({
           aria-label={placeholder}
           type="submit"
           disabled={isPending}
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-1 py-1 transition-opacity disabled:opacity-50"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md transition-opacity disabled:opacity-50"
         >
           {button}
         </button>

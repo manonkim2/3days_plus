@@ -27,6 +27,7 @@ export const createTask = async (
   prev: ITask[] | undefined,
   formData: FormData,
   date: Date,
+  categoryId?: number,
 ) => {
   const content = formData.get('content') as string
   const kstTime = formatKstTime(date)
@@ -44,6 +45,15 @@ export const createTask = async (
         userId,
         forToday: true,
         date: kstTime,
+        categoryId: categoryId,
+
+        CategoryOnTask: {
+          create: {
+            category: {
+              connect: { id: categoryId },
+            },
+          },
+        },
       },
     })
   } catch (error) {
