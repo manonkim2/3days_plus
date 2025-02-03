@@ -11,6 +11,7 @@ export interface ITask {
   content: string
   completed: boolean
   forToday: boolean | null
+  categoryId: number | null
 }
 
 const loginId = async () => {
@@ -45,15 +46,19 @@ export const createTask = async (
         userId,
         forToday: true,
         date: kstTime,
-        categoryId: categoryId,
+        categoryId: categoryId || null,
 
-        CategoryOnTask: {
-          create: {
-            category: {
-              connect: { id: categoryId },
-            },
-          },
-        },
+        ...(categoryId
+          ? {
+              CategoryOnTask: {
+                create: {
+                  category: {
+                    connect: { id: categoryId },
+                  },
+                },
+              },
+            }
+          : {}),
       },
     })
   } catch (error) {
@@ -82,6 +87,10 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
       content: true,
       forToday: true,
       completed: true,
+      categoryId: true,
+    },
+    orderBy: {
+      id: 'asc',
     },
   })
 
@@ -115,13 +124,11 @@ export const updateCheckTask = async (id: number, completed: boolean) => {
   }
 }
 
-export const updateContentTask = async ({
-  id,
-  content,
-}: {
-  id: number
-  content: string
-}) => {
+export const updateContentTask = async (
+  id: number,
+  content: string,
+  categoryId: number | undefined,
+) => {
   const userId = await loginId()
 
   try {
@@ -129,6 +136,7 @@ export const updateContentTask = async ({
       where: { id, userId },
       data: {
         content,
+        categoryId,
       },
     })
   } catch (error) {

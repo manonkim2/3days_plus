@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useActionState, useState } from 'react'
-
 import {
   createTask,
   deleteTask,
@@ -37,6 +36,10 @@ const TaskInput = ({
     id: number
     content: string
   } | null>(null)
+  const [editCategory, setEditCategory] = useState<{
+    value: string
+    id: number
+  } | null>(null)
 
   const handleChangeDate = async (date: Date | undefined) => {
     if (date) {
@@ -65,6 +68,7 @@ const TaskInput = ({
 
       const tasks = await getTask(date)
       setTaskList(tasks)
+      setCategory(null)
     },
     undefined,
   )
@@ -83,8 +87,17 @@ const TaskInput = ({
     setTaskList(tasks)
   }
 
-  const startEditingTask = (id: number, content: string) => {
+  const startEditingTask = (
+    id: number,
+    content: string,
+    categoryId: number | null,
+  ) => {
     setEditTask({ id, content })
+
+    if (categoryId) {
+      const category = categoryList.find((c) => c.id === categoryId)
+      setEditCategory({ id: category?.id ?? 0, value: category?.title ?? '' })
+    }
   }
 
   const handleChangeTask = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +108,7 @@ const TaskInput = ({
 
   const handleSaveEdit = async () => {
     if (editTask) {
-      await updateContentTask(editTask)
+      await updateContentTask(editTask.id, editTask.content, editCategory?.id)
 
       const tasks = await getTask(date)
       setTaskList(tasks)
@@ -117,42 +130,48 @@ const TaskInput = ({
 
       {/* category */}
       <Box>
-        <Combobox
-          items={categoryList.map((item) => {
-            return { value: item.title, id: item.id }
-          })}
-          value={category}
-          setStateAction={setCategory}
-          commandInput={
-            <FormActionWrapper
-              placeholder="Add category name"
-              button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
-              formAction={categoryFormAction}
-              isPending={isPendingCategory}
-            />
-          }
-        />
-      </Box>
+        <div className="flex gap-xs">
+          <Combobox
+            items={categoryList.map((item) => {
+              return { value: item.title, id: item.id }
+            })}
+            value={category}
+            setStateAction={setCategory}
+            commandInput={
+              <FormActionWrapper
+                placeholder="Add category name"
+                button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
+                formAction={categoryFormAction}
+                isPending={isPendingCategory}
+              />
+            }
+          />
+          <FormActionWrapper
+            formAction={formAction}
+            placeholder="Add your task"
+            isPending={isPending}
+            button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
+          />
+        </div>
 
-      {/* task */}
-      <Box>
-        <FormActionWrapper
-          formAction={formAction}
-          placeholder="Add your task"
-          isPending={isPending}
-          button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
-        />
-        <div className="flex flex-col overflow-y-scroll h-[300px] gap-xs pt-sm">
-          {taskList?.map(({ id, completed, content }) => (
+        {/* task */}
+        {taskList?.map(({ id, completed, content, categoryId }) => {
+          const category = categoryList.find((c) => c.id === categoryId)
+
+          return (
             <div key={id} className="flex items-center w-full">
               {editTask?.id !== id ? (
                 <div className="flex justify-between w-full">
                   <div onClick={() => handleToggleTask(id, completed)}>
-                    <Checkbox checked={completed} text={content} />
+                    <Checkbox
+                      checked={completed}
+                      text={content}
+                      badge={category?.title}
+                    />
                   </div>
                   <div className="flex items-center gap-sm">
                     <div
-                      onClick={() => startEditingTask(id, content)}
+                      onClick={() => startEditingTask(id, content, categoryId)}
                       className="cursor-pointer"
                     >
                       <Pencil className="h-4 w-4 opacity-50" />
@@ -166,26 +185,44 @@ const TaskInput = ({
                   </div>
                 </div>
               ) : (
-                <Input
-                  type="text"
-                  placeholder="Password"
-                  value={editTask.content}
-                  onChange={(event) => handleChangeTask(event)}
-                  button={
-                    <button
-                      aria-label="edit Task"
-                      type="submit"
-                      onClick={handleSaveEdit}
-                    >
-                      <Save className="h-4 w-4 opacity-70" />
-                      {/* <CheckIcon className="w-4 cursor-pointer" /> */}
-                    </button>
-                  }
-                />
+                <div className="flex gap-xs">
+                  <Combobox
+                    items={categoryList.map((item) => {
+                      return { value: item.title, id: item.id }
+                    })}
+                    value={editCategory}
+                    setStateAction={setEditCategory}
+                    commandInput={
+                      <FormActionWrapper
+                        placeholder="Add category name"
+                        button={
+                          <Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                        }
+                        formAction={categoryFormAction}
+                        isPending={isPendingCategory}
+                      />
+                    }
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Password"
+                    value={editTask.content}
+                    onChange={(event) => handleChangeTask(event)}
+                    button={
+                      <button
+                        aria-label="edit Task"
+                        type="submit"
+                        onClick={handleSaveEdit}
+                      >
+                        <Save className="h-4 w-4 opacity-70" />
+                      </button>
+                    }
+                  />
+                </div>
               )}
             </div>
-          ))}
-        </div>
+          )
+        })}
       </Box>
     </div>
   )
