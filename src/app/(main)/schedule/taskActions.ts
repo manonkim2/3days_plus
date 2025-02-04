@@ -3,8 +3,8 @@
 import { redirect } from 'next/navigation'
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
-import { formatKstTime } from '@/utils/formatKstTime'
 import { endOfDay, startOfDay } from 'date-fns'
+import { getKoreanTime } from '@/utils/useFormmattedDate'
 
 export interface ITask {
   id: number
@@ -31,7 +31,7 @@ export const createTask = async (
   categoryId?: number,
 ) => {
   const content = formData.get('content') as string
-  const kstTime = formatKstTime(date)
+  const kstTime = getKoreanTime(date)
 
   if (!content || content.trim() === '') {
     return
@@ -71,8 +71,8 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
   const userId = await loginId()
 
   const selectedDate = date || new Date()
-  const startDate = formatKstTime(startOfDay(selectedDate))
-  const endDate = formatKstTime(endOfDay(selectedDate))
+  const startDate = getKoreanTime(startOfDay(selectedDate))
+  const endDate = getKoreanTime(endOfDay(selectedDate))
 
   const tasks = await db.task.findMany({
     where: {

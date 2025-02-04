@@ -1,13 +1,13 @@
 import Box from '@/components/Box'
 
 import TaskList from './components/TaskList'
-import Category from './components/Category'
+import CategoryList from './components/CategoryList'
 import { getTask, ITask } from './taskActions'
 import { getCategory, ICategory } from './categoryActions'
-import { formatKstTime } from '@/utils/formatKstTime'
+import { getKoreanTime } from '@/utils/useFormmattedDate'
 
 const SchedulePage = async () => {
-  const tasks: ITask[] = await getTask(formatKstTime(new Date()))
+  const tasks: ITask[] = await getTask(getKoreanTime(new Date()))
   const categories: ICategory[] = await getCategory()
 
   return (
@@ -17,7 +17,7 @@ const SchedulePage = async () => {
       </Box>
 
       <Box>
-        <Category categories={categories} />
+        <CategoryList categories={categories} />
       </Box>
     </div>
   )
