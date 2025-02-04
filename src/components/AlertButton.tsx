@@ -1,6 +1,4 @@
-'use client'
-
-import { Badge } from './ui'
+import React from 'react'
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -14,34 +12,36 @@ import {
 } from './ui/alert-dialog'
 
 interface IAlertButton {
-  buttonText: string
-  title: string
+  button: React.ReactElement
+  alertTitle: string
   description?: string
   cancelButton?: string
-  continueButton?: string
+  action: () => void
 }
 
 const AlertButton = ({
-  buttonText,
-  title,
+  button,
+  alertTitle,
   description,
-  cancelButton = 'cancel',
-  continueButton = 'continue',
+  cancelButton = 'Cancel',
+  action,
 }: IAlertButton) => {
   return (
     <>
       <AlertDialog>
-        <AlertDialogTrigger>
-          <Badge>{buttonText}</Badge>
-        </AlertDialogTrigger>
+        <AlertDialogTrigger>{button}</AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{title}</AlertDialogTitle>
+            <AlertDialogTitle>{alertTitle}</AlertDialogTitle>
             <AlertDialogDescription>{description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{cancelButton}</AlertDialogCancel>
-            <AlertDialogAction>{continueButton}</AlertDialogAction>
+            <AlertDialogAction asChild>
+              <button className="Button red" onClick={action}>
+                Continue
+              </button>
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

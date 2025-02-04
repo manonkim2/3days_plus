@@ -75,3 +75,22 @@ export const deleteCategory = async (id: number) => {
     throw new Error('Task deletion failed.')
   }
 }
+
+export const getTaskInCategory = async (id: number) => {
+  try {
+    return await db.task.findMany({
+      where: { categoryId: id },
+      select: {
+        id: true,
+        content: true,
+        completed: true,
+        date: true,
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    })
+  } catch (error) {
+    console.error('Error get task:', error)
+  }
+}
