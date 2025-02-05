@@ -1,7 +1,12 @@
-const NewsPage = () => {
+import { getNewsKeyword } from './actions'
+import KeywordInput from './components/keywordInput'
+
+const NewsPage = async () => {
+  const keywords = await getNewsKeyword()
+
   return (
     <>
-      <div>NewsPage</div>
+      <KeywordInput keywordsData={keywords} />
     </>
   )
 }

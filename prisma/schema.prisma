@@ -10,15 +10,16 @@ datasource db {
 }
 
 model User {
-  id         String     @id @unique
-  name       String
-  email      String
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  image_url  String?
-  social     String?
-  Task       Task[]
-  Category   Category[]
+  id          String        @id @unique
+  name        String
+  email       String
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  image_url   String?
+  social      String?
+  Task        Task[]
+  Category    Category[]
+  NewsKeyword NewsKeyword[]
 }
 
 model Task {
@@ -60,4 +61,12 @@ model CategoryOnTask {
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@unique([taskId, categoryId])
+}
+
+model NewsKeyword {
+  id      Int    @id @default(autoincrement())
+  keyword String
+  userId  String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
