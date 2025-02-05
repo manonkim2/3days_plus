@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Navbar from '@/components/Navbar'
+import ReactQueryProvider from '@/components/ReactQueryProvider'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Navbar />
-        <main className="pb-[80px]">{children}</main>
+        <ReactQueryProvider>
+          <Navbar />
+          <main className="pb-[80px]">{children}</main>
+        </ReactQueryProvider>
       </body>
     </html>
   )

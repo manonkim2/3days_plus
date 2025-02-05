@@ -4,9 +4,12 @@ import FormActionWrapper from '@/components/FormActionWrapper'
 import { Plus } from 'lucide-react'
 import { useActionState, useState } from 'react'
 import { createNewsKeyword, INewsKeyword } from '../actions'
+import { Badge } from '@/components/ui'
+import { useSelectedKeyword } from '../context'
 
 const KeywordInput = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
   const [keywords, setKeywords] = useState<INewsKeyword[]>(keywordsData)
+  const { selectedKeyword, setSelectedKeyword } = useSelectedKeyword()
 
   const [, formAction, isPending] = useActionState(
     async (prev: void | null, formData: FormData) => {
@@ -19,19 +22,30 @@ const KeywordInput = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
     null,
   )
 
+  const handleClickKeyword = (keyword: string) => {
+    setSelectedKeyword(keyword)
+  }
+
   return (
-    <div>
+    <div className="flex flex-col gap-sm pt-md">
       <FormActionWrapper
         formAction={formAction}
-        placeholder="Add your task"
+        placeholder="Add news keyword"
         isPending={isPending}
         button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
       />
-      <ul>
-        {keywords.map((keyword) => (
-          <li key={keyword.id}>{keyword.keyword}</li>
+      <div className="flex gap-xs pb-sm">
+        {keywords.map(({ id, keyword }) => (
+          <Badge
+            key={id}
+            className="cursor-pointer"
+            onClick={() => handleClickKeyword(keyword)}
+            variant={selectedKeyword === keyword ? 'default' : 'outline'}
+          >
+            {keyword}
+          </Badge>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
