@@ -1,10 +1,9 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 import { endOfDay, startOfDay } from 'date-fns'
-import { getKoreanTime } from '@/utils/useFormmattedDate'
+import { getKoreanTime } from '@/utils/formmattedDate'
 
 export interface ITask {
   id: number
@@ -12,16 +11,6 @@ export interface ITask {
   completed: boolean
   forToday: boolean | null
   categoryId: number | null
-}
-
-const loginId = async () => {
-  const user = await getUserInfo()
-
-  if (!user?.id) {
-    return redirect('/login')
-  }
-
-  return user.id
 }
 
 export const createTask = async (
@@ -38,12 +27,12 @@ export const createTask = async (
   }
 
   try {
-    const userId = await loginId()
+    const user = await getUserInfo()
 
     await db.task.create({
       data: {
         content: content as string,
-        userId,
+        userId: user?.id as string,
         forToday: true,
         date: kstTime,
         categoryId: categoryId || null,
@@ -68,7 +57,7 @@ export const createTask = async (
 }
 
 export const getTask = async (date?: Date): Promise<ITask[]> => {
-  const userId = await loginId()
+  const user = await getUserInfo()
 
   const selectedDate = date || new Date()
   const startDate = getKoreanTime(startOfDay(selectedDate))
@@ -76,7 +65,7 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
 
   const tasks = await db.task.findMany({
     where: {
-      userId,
+      userId: user?.id as string,
       date: {
         gte: startDate,
         lt: endDate,
@@ -109,11 +98,11 @@ export const deleteTask = async (taskId: number) => {
 }
 
 export const updateCheckTask = async (id: number, completed: boolean) => {
-  const userId = await loginId()
+  const user = await getUserInfo()
 
   try {
     await db.task.update({
-      where: { id, userId },
+      where: { id, userId: user?.id },
       data: {
         completed: !completed,
       },
@@ -129,11 +118,11 @@ export const updateContentTask = async (
   content: string,
   categoryId: number | undefined,
 ) => {
-  const userId = await loginId()
+  const user = await getUserInfo()
 
   try {
     await db.task.update({
-      where: { id, userId },
+      where: { id, userId: user?.id },
       data: {
         content,
         categoryId,

@@ -4,7 +4,7 @@ import TaskList from './components/TaskList'
 import CategoryList from './components/CategoryList'
 import { getTask, ITask } from './taskActions'
 import { getCategory, ICategory } from './categoryActions'
-import { getKoreanTime } from '@/utils/useFormmattedDate'
+import { getKoreanTime } from '@/utils/formmattedDate'
 
 const SchedulePage = async () => {
   const tasks: ITask[] = await getTask(getKoreanTime(new Date()))

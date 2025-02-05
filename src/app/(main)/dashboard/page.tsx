@@ -4,7 +4,7 @@ import News from '@/components/News'
 
 import { getUserInfo } from '@/utils/supabase/actions'
 import { Button } from '@/components/ui'
-import { getFullDate } from '@/utils/useFormmattedDate'
+import { getFullDate } from '@/utils/formmattedDate'
 
 const DashBoardPage = async () => {
   const user = await getUserInfo()

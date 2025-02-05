@@ -2,7 +2,6 @@
 
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
-import { redirect } from 'next/navigation'
 
 export interface ICategory {
   id: number
@@ -20,13 +19,13 @@ export const createCategory = async (
     return
   }
 
-  const userId = await loginId()
+  const user = await getUserInfo()
 
   try {
     await db.category.create({
       data: {
         title: content as string,
-        userId,
+        userId: user?.id as string,
       },
     })
 
@@ -36,22 +35,12 @@ export const createCategory = async (
   }
 }
 
-const loginId = async () => {
-  const user = await getUserInfo()
-
-  if (!user?.id) {
-    return redirect('/login')
-  }
-
-  return user.id
-}
-
 export const getCategory = async (): Promise<ICategory[]> => {
-  const userId = await loginId()
+  const user = await getUserInfo()
 
   const category = await db.category.findMany({
     where: {
-      userId,
+      userId: user?.id,
     },
     select: {
       id: true,

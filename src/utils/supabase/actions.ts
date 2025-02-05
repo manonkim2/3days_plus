@@ -32,6 +32,10 @@ const getUserInfo = async () => {
       },
     })
 
+    if (!userInfo?.id) {
+      return redirect('/login')
+    }
+
     return userInfo
   } catch (error) {
     console.error('Error fetching user info:', error)

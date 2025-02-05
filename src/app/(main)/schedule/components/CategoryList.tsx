@@ -10,7 +10,7 @@ import {
 import { Trash2 } from 'lucide-react'
 import AlertButton from '@/components/AlertButton'
 import { Badge } from '@/components/ui'
-import { getShortDate } from '@/utils/useFormmattedDate'
+import { getShortDate } from '@/utils/formmattedDate'
 
 const CategoryList = ({ categories }: { categories: ICategory[] }) => {
   const [categoryList, setCategoryList] = useState<ICategory[]>(categories)
