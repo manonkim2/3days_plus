@@ -1,22 +1,19 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import { useSelectedKeyword } from '../context'
 import { getNews, INaverNews } from '../actions'
-import { useState } from 'react'
 import { Pagination } from '@/components/Pagination'
+import NewsCardSkeleton from './skeleton'
 
 const NewsList = () => {
   const { selectedKeyword } = useSelectedKeyword()
   const [page, setPage] = useState(1)
 
-  const {
-    data: news,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: news, isLoading } = useQuery({
     queryKey: ['news', selectedKeyword, page],
     queryFn: () => getNews(selectedKeyword, page),
     enabled: !!selectedKeyword,
@@ -25,27 +22,29 @@ const NewsList = () => {
   const removeHtmlTags = (str: string) =>
     str.replace(/<[^>]+>/g, '').replace(/&quot;/g, '"')
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error loading news.</div>
+  if (isLoading) return <NewsCardSkeleton />
 
   return (
     <div>
-      {isLoading && <p className="text-center text-gray-500">Loading...</p>}
-      {error && <p className="text-center text-red-500">Error loading news.</p>}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {news?.items.map((item, index) => (
-          <NewsCard key={index} news={item} removeHtmlTags={removeHtmlTags} />
+          <NewsCard
+            key={`${index} ${item.link}`}
+            news={item}
+            removeHtmlTags={removeHtmlTags}
+          />
         ))}
       </div>
 
-      <div className="flex w-full mt-8">
-        <Pagination
-          totalPages={20}
-          currentPage={page}
-          setCurrentPage={setPage}
-        />
-      </div>
+      {news && (
+        <div className="flex w-full mt-8">
+          <Pagination
+            totalPages={20}
+            currentPage={page}
+            setCurrentPage={setPage}
+          />
+        </div>
+      )}
     </div>
   )
 }

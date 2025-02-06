@@ -25,7 +25,7 @@ export const getNews = async (
   page: number,
 ): Promise<INaverNews | undefined> => {
   try {
-    const display = 18
+    const display = 12
     const start = (page - 1) * display + 1
     const query = encodeURIComponent(keyword)
     const url = `https://openapi.naver.com/v1/search/news?query=${query}&start=${start}&display=${display}`
