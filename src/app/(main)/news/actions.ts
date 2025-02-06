@@ -101,3 +101,14 @@ export const getNewsKeyword = async (): Promise<INewsKeyword[]> => {
 
   return keywords
 }
+
+export const deleteNewsCategory = async (id: number) => {
+  try {
+    await db.newsKeyword.delete({
+      where: { id },
+    })
+  } catch (error) {
+    console.error('Error deleting category:', error)
+    throw new Error('Category deletion failed.')
+  }
+}

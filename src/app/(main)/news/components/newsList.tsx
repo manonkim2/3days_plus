@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useSelectedKeyword } from '../context'
 import { getNews, INaverNews } from '../actions'
-import NewsCardSkeleton from './skeleton'
+import NewsCardSkeleton from './NewsSkeleton'
 import { Pagination } from '@/components/Pagination'
 import { getFormattedDate } from '@/utils/formmattedDate'
 import { RefreshCcw } from 'lucide-react'
