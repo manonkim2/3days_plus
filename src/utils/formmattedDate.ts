@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import { ko } from 'date-fns/locale'
 
 /**
  * @returns 요일 + 월 + 일 형식 변환 (예: "Tuesday, February 4th")
@@ -12,6 +13,21 @@ export function getFullDate(date: Date = new Date()): string {
  */
 export function getShortDate(date: Date = new Date()): string {
   return format(date, 'MM/dd')
+}
+
+/**
+ * @returns yyyy년 MM월 dd일 a hh시 mm분
+ */
+export function getFormattedDate(dateString: string | undefined): string {
+  if (!dateString) return ''
+
+  try {
+    const parsedDate = new Date(dateString)
+    return format(parsedDate, 'yyyy년 MM월 dd일 a hh시 mm분', { locale: ko })
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return '날짜 형식 오류'
+  }
 }
 
 /**

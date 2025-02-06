@@ -12,7 +12,7 @@ export interface INaverNews {
     description: string
     pubDate: string
   }[]
-  lasBuildDate: string
+  lastBuildDate: string
   start: number
   total: number
 }

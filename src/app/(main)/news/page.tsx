@@ -1,14 +1,14 @@
 import { getNewsKeyword } from './actions'
 import { SelectedKeywordProvider } from './context'
-import KeywordInput from './components/keywordInput'
-import NewsList from './components/newsList'
+import NewsKeyword from './components/NewsKeyword'
+import NewsList from './components/NewsList'
 
 const NewsPage = async () => {
   const keywords = await getNewsKeyword()
 
   return (
     <SelectedKeywordProvider>
-      <KeywordInput keywordsData={keywords} />
+      <NewsKeyword keywordsData={keywords} />
       <NewsList />
     </SelectedKeywordProvider>
   )

@@ -69,7 +69,8 @@ export default {
         '2xl': ['24px', '36px'],
         xl: ['18px', '24px'],
         base: ['14px', '20px'],
-        sm: ['10px', '16px'],
+        sm: ['12px', '18px'],
+        xs: ['10px', '16px'],
       },
       borderRadius: {
         lg: 'var(--radius)',
