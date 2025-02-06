@@ -59,6 +59,18 @@ function Calendar({
         day_hidden: 'invisible',
         ...classNames,
       }}
+      modifiers={{
+        saturday: (date) => date.getDay() === 6,
+        sunday: (date) => date.getDay() === 0,
+      }}
+      modifiersStyles={{
+        saturday: {
+          color: 'blue',
+        },
+        sunday: {
+          color: 'red',
+        },
+      }}
       components={{
         IconLeft: ({ className, ...props }) => (
           <ChevronLeft className={cn('h-4 w-4', className)} {...props} />

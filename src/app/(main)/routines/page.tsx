@@ -1,7 +1,9 @@
+import RoutinesTable from './components/RoutinesTable'
+
 const RoutinesPage = () => {
   return (
     <>
-      <div>RoutinesPage</div>
+      <RoutinesTable />
     </>
   )
 }
