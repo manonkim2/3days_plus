@@ -3,7 +3,7 @@
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 
-interface INaverNews {
+export interface INaverNews {
   display: number
   items: {
     title: string
@@ -22,10 +22,13 @@ const client_secret = process.env.NEXT_PUBLIC_NAVER_NEWS_CLIENT_SECRET!
 
 export const getNews = async (
   keyword: string,
+  page: number,
 ): Promise<INaverNews | undefined> => {
   try {
+    const display = 18
+    const start = (page - 1) * display + 1
     const query = encodeURIComponent(keyword)
-    const url = `https://openapi.naver.com/v1/search/news?query=${query}`
+    const url = `https://openapi.naver.com/v1/search/news?query=${query}&start=${start}&display=${display}`
 
     const response = await fetch(url, {
       method: 'GET',
