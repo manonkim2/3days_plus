@@ -10,7 +10,7 @@ const Navbar = async () => {
   const user = await getUserInfo()
 
   return (
-    <nav className="flex items-center justify-between h-16 top-0 z-40 bg-bgPrimary container mx-auto">
+    <nav className="flex items-center justify-between h-16 top-0 z-40 mb-8">
       <Link href="/">Title</Link>
 
       <NavMenu />

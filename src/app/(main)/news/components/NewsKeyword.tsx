@@ -40,7 +40,7 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
   }
 
   return (
-    <div className="flex items-center justify-between gap-sm py-md h-[100px]">
+    <div className="flex items-center justify-between gap-sm pb-xxl">
       <div className="flex flex-wrap gap-sm">
         {keywords.map(({ id, keyword }) => (
           <Button

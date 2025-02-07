@@ -11,7 +11,7 @@ const DashBoardPage = async () => {
 
   return (
     <div>
-      <div className="my-xxl">
+      <div className="mb-xxl">
         <div className="flex justify-end">
           <span className="text-3xl font-extralight pr-2">Hello,</span>
           <span className="text-3xl font-semibold">

@@ -15,10 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className="container mx-auto">
         <ReactQueryProvider>
           <Navbar />
-          <main className="pb-[80px]">{children}</main>
+          <main>{children}</main>
         </ReactQueryProvider>
       </body>
     </html>

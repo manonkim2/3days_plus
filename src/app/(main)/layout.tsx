@@ -3,9 +3,5 @@ export default async function MainLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <div>
-      <main className="container mx-auto">{children}</main>
-    </div>
-  )
+  return <main>{children}</main>
 }
