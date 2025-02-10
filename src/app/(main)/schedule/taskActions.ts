@@ -14,7 +14,6 @@ export interface ITask {
 }
 
 export const createTask = async (
-  prev: ITask[] | undefined,
   formData: FormData,
   date: Date,
   categoryId?: number,
@@ -58,6 +57,8 @@ export const createTask = async (
 
 export const getTask = async (date?: Date): Promise<ITask[]> => {
   const user = await getUserInfo()
+
+  if (!user) return []
 
   const selectedDate = date || new Date()
   const startDate = getKoreanTime(startOfDay(selectedDate))

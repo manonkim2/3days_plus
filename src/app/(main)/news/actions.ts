@@ -54,7 +54,6 @@ export interface INewsKeyword {
 }
 
 export const createNewsKeyword = async (
-  prev: void | null,
   formData: FormData,
 ): Promise<INewsKeyword | undefined> => {
   const user = await getUserInfo()

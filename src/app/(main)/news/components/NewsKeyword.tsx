@@ -3,12 +3,7 @@
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Plus, Trash2 } from 'lucide-react'
 import React, { useActionState, useState } from 'react'
-import {
-  createNewsKeyword,
-  deleteNewsCategory,
-  getNewsKeyword,
-  INewsKeyword,
-} from '../actions'
+import { createNewsKeyword, deleteNewsCategory, INewsKeyword } from '../actions'
 import { Button } from '@/components/ui'
 import { useSelectedKeyword } from '../context'
 
@@ -17,8 +12,8 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
   const { selectedKeyword, setSelectedKeyword } = useSelectedKeyword()
 
   const [, formAction, isPending] = useActionState(
-    async (prev: void | null, formData: FormData) => {
-      const newKeyword = await createNewsKeyword(prev, formData)
+    async (_: void | null, formData: FormData) => {
+      const newKeyword = await createNewsKeyword(formData)
 
       if (newKeyword) {
         setKeywords((prev) => [...prev, newKeyword])
@@ -35,8 +30,7 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
     event.stopPropagation()
 
     await deleteNewsCategory(id)
-    const updatedKeywords = await getNewsKeyword()
-    setKeywords(updatedKeywords)
+    setKeywords((prev) => prev.filter((k) => k.id !== id))
   }
 
   return (

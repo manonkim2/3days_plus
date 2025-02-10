@@ -9,10 +9,7 @@ export interface ICategory {
   color: string | null
 }
 
-export const createCategory = async (
-  prev: ICategory[] | undefined,
-  formData: FormData,
-) => {
+export const createCategory = async (formData: FormData) => {
   const content = formData.get('content') as string
 
   if (!content || content.trim() === '') {

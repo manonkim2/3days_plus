@@ -1,3 +1,5 @@
+'use server'
+
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 
@@ -8,7 +10,6 @@ export interface IRoutine {
 }
 
 export const createRoutine = async (
-  prev: void | null,
   formData: FormData,
 ): Promise<IRoutine | undefined> => {
   const user = await getUserInfo()

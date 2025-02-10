@@ -49,27 +49,30 @@ const TaskInput = ({
     setTaskList(tasks)
   }
 
-  const [, categoryFormAction, isPendingCategory] = useActionState(
-    async (prevTasks: ICategory[] | undefined, formData: FormData) => {
-      const updatedCategory = await createCategory(prevTasks, formData)
+  const [, categoryFormAction, isPendingCategory] = useActionState<
+    ICategory[],
+    FormData
+  >(async (prevCategories, formData) => {
+    const updatedCategories = await createCategory(formData)
 
-      if (updatedCategory) {
-        setCategoryList(updatedCategory)
-      }
-      return updatedCategory
-    },
-    categories,
-  )
+    if (updatedCategories) {
+      setCategoryList(updatedCategories)
+    }
 
-  const [, formAction, isPending] = useActionState(
-    async (_: void, formData: FormData) => {
-      await createTask(undefined, formData, date, category?.id)
+    return updatedCategories ?? prevCategories
+  }, categories)
+
+  const [, formAction, isPending] = useActionState<ITask[], FormData>(
+    async (prevTasks, formData) => {
+      await createTask(formData, date, category?.id)
 
       const tasks = await getTask(date)
       setTaskList(tasks)
       setCategory(null)
+
+      return tasks ?? prevTasks
     },
-    undefined,
+    tasks ?? [],
   )
 
   const handleDeleteTask = async (id: number) => {
@@ -113,6 +116,7 @@ const TaskInput = ({
       setTaskList(tasks)
 
       setEditTask(null)
+      setEditCategory(null)
     }
   }
 

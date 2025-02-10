@@ -13,8 +13,8 @@ const RoutineManager = ({}: IRoutineManagerProps) => {
   const [routines, setRoutines] = useState<IRoutine[]>([])
 
   const [, formAction, isPending] = useActionState(
-    async (prev: void | null, formData: FormData) => {
-      const newKeyword = await createRoutine(prev, formData)
+    async (_: void | null, formData: FormData) => {
+      const newKeyword = await createRoutine(formData)
 
       if (newKeyword) {
         setRoutines((prev) => [...prev, newKeyword])
