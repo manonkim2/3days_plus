@@ -1,26 +1,14 @@
 'use client'
 
 import { Calendar } from '@/components/ui'
-import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
-import React, { useState, useEffect, useCallback } from 'react'
-
-const getWeekDays = (date: Date) =>
-  eachDayOfInterval({ start: startOfWeek(date), end: endOfWeek(date) })
+import { useSelectedWeek } from '../context'
 
 const WeekSelectCalendar = () => {
-  const [selectedDays, setSelectedDays] = useState<Date[]>([])
-
-  const handleDayClick = useCallback((day: Date) => {
-    setSelectedDays(getWeekDays(day))
-  }, [])
-
-  useEffect(() => {
-    setSelectedDays(getWeekDays(new Date()))
-  }, [])
+  const { selectedDays, setWeek } = useSelectedWeek()
 
   return (
     <Calendar
-      onDayClick={handleDayClick}
+      onDayClick={setWeek}
       modifiers={{ selected: selectedDays }}
       modifiersStyles={{
         selected: {

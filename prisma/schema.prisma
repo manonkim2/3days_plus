@@ -20,6 +20,7 @@ model User {
   Task        Task[]
   Category    Category[]
   NewsKeyword NewsKeyword[]
+  Routine     Routine[]
 }
 
 model Task {
@@ -67,6 +68,16 @@ model NewsKeyword {
   id      Int    @id @default(autoincrement())
   keyword String
   userId  String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Routine {
+  id       Int      @id @default(autoincrement())
+  userId   String
+  name     String
+  createAt DateTime @default(now())
+  color    String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -54,7 +54,7 @@ const NewsList = () => {
       </div>
 
       {news && (
-        <div className="flex w-full mt-8">
+        <div className="flex w-full my-16">
           <Pagination
             totalPages={20}
             currentPage={page}

@@ -2,10 +2,14 @@
 
 import { createContext, useContext, useState } from 'react'
 
-const SelectedKeywordContext = createContext<{
+interface SelectedKeywordContextType {
   selectedKeyword: string
   setSelectedKeyword: (keyword: string) => void
-} | null>(null)
+}
+
+const SelectedKeywordContext = createContext<SelectedKeywordContextType | null>(
+  null,
+)
 
 export const SelectedKeywordProvider = ({
   children,
