@@ -21,6 +21,7 @@ model User {
   Category    Category[]
   NewsKeyword NewsKeyword[]
   Routine     Routine[]
+  RoutineLog  RoutineLog[]
 }
 
 model Task {
@@ -79,5 +80,18 @@ model Routine {
   createAt DateTime @default(now())
   color    String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  RoutineLog RoutineLog[]
+}
+
+model RoutineLog {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  routineId Int
+  date      DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routine Routine @relation(fields: [routineId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, routineId, date])
 }

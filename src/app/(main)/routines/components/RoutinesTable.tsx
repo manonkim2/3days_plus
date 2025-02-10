@@ -1,20 +1,28 @@
 'use client'
 
-import { getShortDate } from '@/utils/formmattedDate'
+import { getDateWithWeek } from '@/utils/formmattedDate'
 import { useSelectedWeek } from '../context'
 import Box from '@/components/Box'
+import { IRoutine } from '../actions'
 
-const RoutinesTable = () => {
+const RoutinesTable = ({ routinesData }: { routinesData: IRoutine[] }) => {
   const { selectedDays, setWeek } = useSelectedWeek()
 
   return (
     <Box>
-      <div>
-        {selectedDays.map((date, index) => (
-          <div key={index}>
-            <span>{getShortDate(date)}</span>
-          </div>
-        ))}
+      <div className="flex">
+        <div>
+          {routinesData.map((item) => (
+            <div key={item.id}>{item.name}</div>
+          ))}
+        </div>
+        <div className="flex gap-md">
+          {selectedDays.map((date, index) => (
+            <div key={index}>
+              <span>{getDateWithWeek(date)}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </Box>
   )

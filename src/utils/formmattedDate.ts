@@ -16,6 +16,13 @@ export function getShortDate(date: Date = new Date()): string {
 }
 
 /**
+ * @returns MM/DD ccc 형식 변환 (예: "02/04 Mon")
+ */
+export function getDateWithWeek(date: Date = new Date()): string {
+  return format(date, 'MM/dd ccc')
+}
+
+/**
  * @returns yyyy년 MM월 dd일 a hh시 mm분
  */
 export function getFormattedDate(dateString: string | undefined): string {

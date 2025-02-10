@@ -7,6 +7,7 @@ export interface IRoutine {
   id: number
   name: string
   color?: string
+  complete?: boolean
 }
 
 export const createRoutine = async (
@@ -66,5 +67,27 @@ export const deleteRoutine = async (id: number) => {
   } catch (error) {
     console.error('Error deleting routine:', error)
     throw new Error('Routine deletion failed.')
+  }
+}
+
+export const completeRoutine = async (routineId: number) => {
+  const user = await getUserInfo()
+
+  try {
+    const log = await db.routineLog.create({
+      data: {
+        userId: user?.id as string,
+        routineId,
+      },
+      select: {
+        routineId: true,
+        date: true,
+      },
+    })
+
+    return log
+  } catch (error) {
+    console.error('Error completing routine:', error)
+    throw new Error('Failed to complete routine')
   }
 }
