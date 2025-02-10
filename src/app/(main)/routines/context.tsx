@@ -11,8 +11,9 @@ import {
 } from 'react'
 
 interface WeekContextType {
-  selectedDays: Date[]
-  setWeek: (day: Date) => void
+  week: Date[]
+  day: Date
+  handleClickDate: (day: Date) => void
 }
 
 const WeekContext = createContext<WeekContextType | null>(null)
@@ -21,18 +22,20 @@ export const WeekProvider = ({ children }: { children: ReactNode }) => {
   const getWeekDays = (date: Date) =>
     eachDayOfInterval({ start: startOfWeek(date), end: endOfWeek(date) })
 
-  const [selectedDays, setSelectedDays] = useState<Date[]>([])
+  const [day, setDay] = useState<Date>(new Date())
+  const [week, setWeek] = useState<Date[]>([])
 
   useEffect(() => {
-    setSelectedDays(getWeekDays(new Date()))
+    setWeek(getWeekDays(new Date()))
   }, [])
 
-  const setWeek = useCallback((day: Date) => {
-    setSelectedDays(getWeekDays(day))
+  const handleClickDate = useCallback((day: Date) => {
+    setDay(day)
+    setWeek(getWeekDays(day))
   }, [])
 
   return (
-    <WeekContext.Provider value={{ selectedDays, setWeek }}>
+    <WeekContext.Provider value={{ day, week, handleClickDate }}>
       {children}
     </WeekContext.Provider>
   )

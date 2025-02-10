@@ -6,7 +6,7 @@ import Box from '@/components/Box'
 import { IRoutine } from '../actions'
 
 const RoutinesTable = ({ routinesData }: { routinesData: IRoutine[] }) => {
-  const { selectedDays, setWeek } = useSelectedWeek()
+  const { week } = useSelectedWeek()
 
   return (
     <Box>
@@ -17,7 +17,7 @@ const RoutinesTable = ({ routinesData }: { routinesData: IRoutine[] }) => {
           ))}
         </div>
         <div className="flex gap-md">
-          {selectedDays.map((date, index) => (
+          {week.map((date, index) => (
             <div key={index}>
               <span>{getDateWithWeek(date)}</span>
             </div>

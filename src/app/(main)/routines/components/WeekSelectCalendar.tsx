@@ -4,12 +4,12 @@ import { Calendar } from '@/components/ui'
 import { useSelectedWeek } from '../context'
 
 const WeekSelectCalendar = () => {
-  const { selectedDays, setWeek } = useSelectedWeek()
+  const { week, handleClickDate } = useSelectedWeek()
 
   return (
     <Calendar
-      onDayClick={setWeek}
-      modifiers={{ selected: selectedDays }}
+      onDayClick={handleClickDate}
+      modifiers={{ selected: week }}
       modifiersStyles={{
         selected: {
           borderRadius: 0,
