@@ -1,14 +1,23 @@
 'use client'
 
 import { useActionState, useState } from 'react'
-import { Check, Plus } from 'lucide-react'
+import { Check, Plus, Undo2 } from 'lucide-react'
 
-import { completeRoutine, createRoutine, IRoutine } from '../actions'
+import { useSelectedWeek } from '../context'
+import {
+  completeRoutine,
+  createRoutine,
+  IRoutine,
+  unCompleteRoutine,
+} from '../actions'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import Box from '@/components/Box'
 import { Button } from '@/components/ui'
+import { getDateWithWeek } from '@/utils/formmattedDate'
 
 const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
+  const { day } = useSelectedWeek()
+
   const [routines, setRoutines] = useState<IRoutine[]>(routinesData)
 
   const [, formAction, isPending] = useActionState(
@@ -23,7 +32,7 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
   )
 
   const handleClickComplete = async (id: number) => {
-    const completedLog = await completeRoutine(id)
+    const completedLog = await completeRoutine(id, day)
 
     if (completedLog) {
       setRoutines((prev) =>
@@ -33,9 +42,15 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
       )
     }
   }
+
+  const handleClickUndo = async (id: number) => {
+    const undoLog = await unCompleteRoutine(id)
+  }
+
   return (
     <Box>
       <div className="flex flex-col gap-md">
+        <span>{getDateWithWeek(day)}</span>
         <FormActionWrapper
           formAction={formAction}
           placeholder="Add your routine"
@@ -47,6 +62,7 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
             key={routine.id}
             routine={routine}
             onClickComplete={handleClickComplete}
+            onClickUndo={handleClickUndo}
           />
         ))}
       </div>
@@ -57,9 +73,11 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
 const RoutineItem = ({
   routine,
   onClickComplete,
+  onClickUndo,
 }: {
   routine: IRoutine
   onClickComplete: (id: number) => void
+  onClickUndo: (id: number) => void
 }) => {
   return (
     <div className="flex flex-col border p-md gap-sm">
@@ -73,9 +91,18 @@ const RoutineItem = ({
           Complete
         </Button>
       ) : (
-        <div className="flex items-center gap-xs bg-black">
-          <Check className="h-4 w-4" color="white" />
-          <p className="text-sm text-white ">Completed</p>
+        <div className="flex items-center justify-between gap-xs bg-black">
+          <div className="flex items-center">
+            <Check className="h-3 w-3" color="white" />
+            <p className="text-xs text-white ">Completed</p>
+          </div>
+          <div
+            className="flex items-center"
+            onClick={() => onClickUndo(routine.id)}
+          >
+            <Undo2 className="h-3 w-3" color="white" />
+            <p className="text-xs text-white ">Undo</p>
+          </div>
         </div>
       )}
     </div>

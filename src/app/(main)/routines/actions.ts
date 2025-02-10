@@ -1,6 +1,8 @@
 'use server'
 
 import db from '@/utils/db'
+import { startOfDay } from 'date-fns'
+import { getKoreanTime } from '@/utils/formmattedDate'
 import { getUserInfo } from '@/utils/supabase/actions'
 
 export interface IRoutine {
@@ -70,14 +72,16 @@ export const deleteRoutine = async (id: number) => {
   }
 }
 
-export const completeRoutine = async (routineId: number) => {
+export const completeRoutine = async (routineId: number, day: Date) => {
   const user = await getUserInfo()
+  const date = getKoreanTime(startOfDay(day))
 
   try {
     const log = await db.routineLog.create({
       data: {
         userId: user?.id as string,
         routineId,
+        date,
       },
       select: {
         routineId: true,
@@ -89,5 +93,16 @@ export const completeRoutine = async (routineId: number) => {
   } catch (error) {
     console.error('Error completing routine:', error)
     throw new Error('Failed to complete routine')
+  }
+}
+
+export const unCompleteRoutine = async (routineId: number) => {
+  try {
+    await db.routineLog.delete({
+      where: { id: 20, routineId },
+    })
+  } catch (error) {
+    console.error('Error deleting routine:', error)
+    throw new Error('Failed to delete routine')
   }
 }
