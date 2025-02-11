@@ -1,10 +1,10 @@
 import Link from 'next/link'
+import { format } from 'date-fns'
+
 import Box from '@/components/Box'
 import News from '@/components/News'
-
 import { getUserInfo } from '@/utils/supabase/actions'
 import { Button } from '@/components/ui'
-import { getFullDate } from '@/utils/formmattedDate'
 
 const DashBoardPage = async () => {
   const user = await getUserInfo()
@@ -21,7 +21,7 @@ const DashBoardPage = async () => {
         <div className="flex justify-end">
           <span className="text-3xl font-extralight pr-2">Today is</span>
           <span className="text-3xl font-semibold" suppressHydrationWarning>
-            {getFullDate()}
+            {format(new Date(), 'EEEE, MMMM do')}
           </span>
         </div>
       </div>

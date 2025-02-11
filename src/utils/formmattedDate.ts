@@ -2,13 +2,6 @@ import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 
 /**
- * @returns 요일 + 월 + 일 형식 변환 (예: "Tuesday, February 4th")
- */
-export function getFullDate(date: Date = new Date()): string {
-  return format(date, 'EEEE, MMMM do')
-}
-
-/**
  * @returns MM/DD 형식 변환 (예: "02/04")
  */
 export function getShortDate(date: Date = new Date()): string {
