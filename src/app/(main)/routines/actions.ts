@@ -10,6 +10,7 @@ export interface IRoutine {
   name: string
   color?: string
   complete?: boolean
+  logId?: number
 }
 
 export const createRoutine = async (
@@ -61,6 +62,26 @@ export const getRoutines = async (): Promise<IRoutine[]> => {
   return routines
 }
 
+export const getRoutineLog = async (
+  day: Date,
+): Promise<{ id: number; routineId: number }[]> => {
+  const user = await getUserInfo()
+  const date = getKoreanTime(startOfDay(day))
+
+  const completedRoutine = await db.routineLog.findMany({
+    where: {
+      userId: user?.id,
+      date,
+    },
+    select: {
+      id: true,
+      routineId: true,
+    },
+  })
+
+  return completedRoutine
+}
+
 export const deleteRoutine = async (id: number) => {
   try {
     await db.routine.delete({
@@ -84,6 +105,7 @@ export const completeRoutine = async (routineId: number, day: Date) => {
         date,
       },
       select: {
+        id: true,
         routineId: true,
         date: true,
       },
@@ -99,7 +121,7 @@ export const completeRoutine = async (routineId: number, day: Date) => {
 export const unCompleteRoutine = async (routineId: number) => {
   try {
     await db.routineLog.delete({
-      where: { id: 20, routineId },
+      where: { id: routineId },
     })
   } catch (error) {
     console.error('Error deleting routine:', error)

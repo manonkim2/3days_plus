@@ -1,12 +1,13 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { Check, Plus, Undo2 } from 'lucide-react'
 
 import { useSelectedWeek } from '../context'
 import {
   completeRoutine,
   createRoutine,
+  getRoutineLog,
   IRoutine,
   unCompleteRoutine,
 } from '../actions'
@@ -37,15 +38,46 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
     if (completedLog) {
       setRoutines((prev) =>
         prev.map((routine) =>
-          routine.id === id ? { ...routine, complete: true } : routine,
+          routine.id === id
+            ? { ...routine, complete: true, logId: completedLog.id }
+            : routine,
         ),
       )
     }
   }
 
-  const handleClickUndo = async (id: number) => {
-    const undoLog = await unCompleteRoutine(id)
+  const handleClickUndo = async (id: number | undefined) => {
+    if (id) {
+      await unCompleteRoutine(id)
+
+      setRoutines((prev) =>
+        prev.map((routine) =>
+          routine.logId === id
+            ? { ...routine, complete: false, logId: undefined }
+            : routine,
+        ),
+      )
+    }
   }
+
+  useEffect(() => {
+    const fetchRoutines = async () => {
+      const dayRoutineLog = await getRoutineLog(day)
+
+      setRoutines((prev) =>
+        prev.map((routine) => {
+          const log = dayRoutineLog.find((log) => log.routineId === routine.id)
+          return {
+            ...routine,
+            complete: !!log,
+            logId: log ? log.id : undefined,
+          }
+        }),
+      )
+    }
+
+    fetchRoutines()
+  }, [day])
 
   return (
     <Box>
@@ -77,12 +109,12 @@ const RoutineItem = ({
 }: {
   routine: IRoutine
   onClickComplete: (id: number) => void
-  onClickUndo: (id: number) => void
+  onClickUndo: (id: number | undefined) => void
 }) => {
   return (
     <div className="flex flex-col border p-md gap-sm">
       <span>{routine.name}</span>
-      {!routine.complete ? (
+      {!routine.logId ? (
         <Button
           variant="outline"
           size="sm"
@@ -97,8 +129,8 @@ const RoutineItem = ({
             <p className="text-xs text-white ">Completed</p>
           </div>
           <div
-            className="flex items-center"
-            onClick={() => onClickUndo(routine.id)}
+            className="flex items-center cursor-pointer"
+            onClick={() => onClickUndo(routine.logId)}
           >
             <Undo2 className="h-3 w-3" color="white" />
             <p className="text-xs text-white ">Undo</p>
