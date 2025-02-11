@@ -5,6 +5,7 @@ import { endOfDay, startOfDay } from 'date-fns'
 import { Prisma } from '../../../../prisma/client'
 import { getKoreanTime } from '@/utils/formmattedDate'
 import { getUserInfo } from '@/utils/supabase/actions'
+import { cache } from 'react'
 
 export interface IRoutine {
   id: number
@@ -44,7 +45,7 @@ export const createRoutine = async (
   }
 }
 
-export const getRoutines = async (): Promise<IRoutine[]> => {
+export const getRoutines = cache(async (): Promise<IRoutine[]> => {
   const user = await getUserInfo()
 
   const routines = await db.routine.findMany({
@@ -61,37 +62,39 @@ export const getRoutines = async (): Promise<IRoutine[]> => {
   })
 
   return routines
-}
+})
 
-export const getRoutineLog = async (
-  day?: Date,
-  week?: Date[],
-): Promise<{ id: number; routineId: number; date: Date }[]> => {
-  const user = await getUserInfo()
+export const getRoutineLog = cache(
+  async (
+    day?: Date,
+    week?: Date[],
+  ): Promise<{ id: number; routineId: number; date: Date }[]> => {
+    const user = await getUserInfo()
 
-  const whereCondition: Prisma.RoutineLogWhereInput = {
-    userId: user?.id,
-  }
-
-  if (day) {
-    whereCondition.date = getKoreanTime(startOfDay(day))
-  } else if (week && week.length > 0) {
-    whereCondition.date = {
-      gte: getKoreanTime(startOfDay(week[0])), // 주의 첫날 (일요일)
-      lt: getKoreanTime(endOfDay(week[6])), // 토요일까지
+    const whereCondition: Prisma.RoutineLogWhereInput = {
+      userId: user?.id,
     }
-  }
-  const completedRoutine = await db.routineLog.findMany({
-    where: whereCondition,
-    select: {
-      id: true,
-      routineId: true,
-      date: true,
-    },
-  })
 
-  return completedRoutine
-}
+    if (day) {
+      whereCondition.date = getKoreanTime(startOfDay(day))
+    } else if (week && week.length > 0) {
+      whereCondition.date = {
+        gte: getKoreanTime(startOfDay(week[0])), // 주의 첫날 (일요일)
+        lt: getKoreanTime(endOfDay(week[6])), // 토요일까지
+      }
+    }
+    const completedRoutine = await db.routineLog.findMany({
+      where: whereCondition,
+      select: {
+        id: true,
+        routineId: true,
+        date: true,
+      },
+    })
+
+    return completedRoutine
+  },
+)
 
 export const deleteRoutine = async (id: number) => {
   try {

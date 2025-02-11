@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
 import { Check } from 'lucide-react'
 
@@ -29,12 +29,31 @@ const RoutinesTable = ({ routinesData }: { routinesData: IRoutine[] }) => {
 
       setCompletedLogs(logMap)
     })()
-  }, [week, routinesData])
+  }, [week])
+
+  const memoizedRoutines = useMemo(
+    () =>
+      routinesData.map((routine) => (
+        <div
+          key={routine.id}
+          className="grid grid-cols-[1fr_repeat(7,minmax(0,1fr))] items-center gap-md border-b pb-md"
+        >
+          <div>{routine.name}</div>
+          {week.map((date, index) => (
+            <div key={index} className="flex justify-center">
+              {completedLogs[format(date, 'yyyy-MM-dd')]?.has(routine.id) && (
+                <Check className="h-4 w-4 text-green-500" />
+              )}
+            </div>
+          ))}
+        </div>
+      )),
+    [routinesData, week, completedLogs],
+  )
 
   return (
     <Box>
       <div className="flex flex-col gap-md">
-        {/* 헤더 */}
         <div className="grid grid-cols-[1fr_repeat(7,minmax(0,1fr))] items-center gap-md border-b pb-md">
           <div className="font-semibold">Routine</div>
           {week.map((date, index) => (
@@ -43,22 +62,7 @@ const RoutinesTable = ({ routinesData }: { routinesData: IRoutine[] }) => {
             </div>
           ))}
         </div>
-
-        {routinesData.map((routine) => (
-          <div
-            key={routine.id}
-            className="grid grid-cols-[1fr_repeat(7,minmax(0,1fr))] items-center gap-md border-b pb-md "
-          >
-            <div>{routine.name}</div>
-            {week.map((date, index) => (
-              <div key={index} className="flex justify-center">
-                {completedLogs[format(date, 'yyyy-MM-dd')]?.has(routine.id) && (
-                  <Check className="h-4 w-4 text-green-500" />
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
+        {memoizedRoutines}
       </div>
     </Box>
   )

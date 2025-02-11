@@ -27,32 +27,30 @@ const News = async () => {
   const news: NewsResponse = await getNews()
 
   return (
-    <>
-      <div className="grid grid-cols-2 gap-3 h-[1140px]">
-        {news.articles.map(({ title, urlToImage, publishedAt, url }, index) => (
-          <Link href={url} key={urlToImage + index} target="_blank">
-            <Box>
-              <div className="flex flex-col h-full gap-3">
-                <div className="border w-full h-full relative rounded-xl overflow-hidden">
-                  <Image
-                    src={urlToImage}
-                    alt="sample-img"
-                    fill
-                    sizes="(min-width: 640px) 640px, 100vw"
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-fontSecondary">{publishedAt}</span>
-                  {/* <Badge text={section} /> */}
-                </div>
-                <span>{title}</span>
+    <div className="grid grid-cols-2 gap-3 h-[1140px]">
+      {news.articles.map(({ title, urlToImage, publishedAt, url }, index) => (
+        <Link href={url} key={urlToImage + index} target="_blank">
+          <Box>
+            <div className="flex flex-col h-full gap-3">
+              <div className="border w-full h-full relative rounded-xl overflow-hidden">
+                <Image
+                  src={urlToImage}
+                  alt="sample-img"
+                  fill
+                  sizes="(min-width: 640px) 640px, 100vw"
+                  style={{ objectFit: 'cover' }}
+                />
               </div>
-            </Box>
-          </Link>
-        ))}
-      </div>
-    </>
+              <div className="flex justify-between items-center">
+                <span className="text-fontSecondary">{publishedAt}</span>
+                {/* <Badge text={section} /> */}
+              </div>
+              <span>{title}</span>
+            </div>
+          </Box>
+        </Link>
+      ))}
+    </div>
   )
 }
 
