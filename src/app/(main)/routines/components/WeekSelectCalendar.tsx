@@ -1,11 +1,11 @@
 'use client'
 
-import { Calendar } from '@/components/ui'
-import { useSelectedWeek } from '../context'
 import { useMemo } from 'react'
+import { Calendar } from '@/components/ui'
+import { useRoutineWeekContext } from '../context'
 
 const WeekSelectCalendar = () => {
-  const { week, handleClickDate } = useSelectedWeek()
+  const { week, handleClickDate } = useRoutineWeekContext()
 
   const memoizedModifiers = useMemo(() => ({ selected: week }), [week])
 

@@ -1,9 +1,9 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { Check, Plus, Undo2 } from 'lucide-react'
 
-import { useSelectedWeek } from '../context'
+import { useRoutineWeekContext } from '../context'
 import {
   completeRoutine,
   createRoutine,
@@ -17,9 +17,7 @@ import { Button } from '@/components/ui'
 import { getDateWithWeek } from '@/utils/formmattedDate'
 
 const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
-  const { day } = useSelectedWeek()
-
-  const [routines, setRoutines] = useState<IRoutine[]>(routinesData)
+  const { day, setRoutines, routines } = useRoutineWeekContext()
 
   const [, formAction, isPending] = useActionState(
     async (_: void | null, formData: FormData) => {
@@ -61,6 +59,8 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
   }
 
   useEffect(() => {
+    setRoutines(routinesData)
+
     const fetchRoutines = async () => {
       const dayRoutineLog = await getRoutineLog(day)
 
@@ -69,27 +69,26 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
           const log = dayRoutineLog.find((log) => log.routineId === routine.id)
           return {
             ...routine,
-            complete: !!log,
-            logId: log ? log.id : undefined,
+            complete: Boolean(log),
+            logId: log?.id,
           }
         }),
       )
     }
 
     fetchRoutines()
-  }, [day])
+  }, [day, routinesData, setRoutines])
 
   return (
-    <Box>
-      <div className="flex flex-col gap-md">
-        <span>{getDateWithWeek(day)}</span>
+    <Box title={getDateWithWeek(day)}>
+      <div className="flex flex-col gap-md py-lg">
         <FormActionWrapper
           formAction={formAction}
           placeholder="Add your routine"
           isPending={isPending}
           button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
         />
-        {routines.map((routine) => (
+        {routines?.map((routine) => (
           <RoutineItem
             key={routine.id}
             routine={routine}

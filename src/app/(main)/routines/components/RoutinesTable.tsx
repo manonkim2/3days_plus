@@ -4,13 +4,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
 import { Check } from 'lucide-react'
 
-import { useSelectedWeek } from '../context'
+import { useRoutineWeekContext } from '../context'
 import { getRoutineLog, IRoutine } from '../actions'
 import { getDateWithWeek } from '@/utils/formmattedDate'
 import Box from '@/components/Box'
 
 const RoutinesTable = ({ routinesData }: { routinesData: IRoutine[] }) => {
-  const { week } = useSelectedWeek()
+  const { week } = useRoutineWeekContext()
 
   const [completedLogs, setCompletedLogs] = useState<
     Record<string, Set<number>>
