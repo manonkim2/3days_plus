@@ -3,7 +3,8 @@ import { getRoutines } from './actions'
 import RoutinesTable from './components/RoutinesTable'
 import WeekSelectCalendar from './components/WeekSelectCalendar'
 import RoutineManager from './components/RoutineManager'
-import Chart from './components/Chart'
+import TodayChart from './components/TodayChart'
+import WeekChart from './components/WeekChart'
 
 const RoutinesPage = async () => {
   const routinesData = await getRoutines()
@@ -12,9 +13,10 @@ const RoutinesPage = async () => {
     <WeekProvider>
       <div className="grid grid-cols-[2fr_1fr] gap-md">
         <section className="flex flex-col gap-md">
-          <div className="flex gap-sm">
+          <div className="flex gap-sm sm:flex-col">
             <WeekSelectCalendar />
-            <Chart />
+            <TodayChart />
+            <WeekChart />
           </div>
           <RoutinesTable routinesData={routinesData} />
         </section>

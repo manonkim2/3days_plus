@@ -32,11 +32,9 @@ const Box = ({
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
 
-      <CardContent className="flex-1 pb-0">{children}</CardContent>
+      <CardContent className="flex-1">{children}</CardContent>
 
-      {footer && (
-        <CardFooter className="flex-col gap-sm text-sm">{footer}</CardFooter>
-      )}
+      {footer && <CardFooter className="flex-col text-sm">{footer}</CardFooter>}
     </Card>
   )
 }
