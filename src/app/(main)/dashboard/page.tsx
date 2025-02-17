@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 
 import Box from '@/components/Box'
-import News from '@/components/News'
+import News from '@/app/(main)/dashboard/compnents/News'
 import { getUserInfo } from '@/utils/supabase/actions'
 import { Button } from '@/components/ui'
 
@@ -11,7 +11,7 @@ const DashBoardPage = async () => {
 
   return (
     <div>
-      <div className="mb-xxl">
+      <div className="mb-xxl font-poppins">
         <div className="flex justify-end">
           <span className="text-3xl font-extralight pr-2">Hello,</span>
           <span className="text-3xl font-semibold">

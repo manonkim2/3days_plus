@@ -1,7 +1,22 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Montserrat, Poppins } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import ReactQueryProvider from '@/components/ReactQueryProvider'
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['200', '400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--montserrat-text',
+})
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['100', '200', '400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--poppins-text',
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,7 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="container mx-auto">
+      <body
+        className={`container mx-auto ${montserrat.variable} ${poppins.variable}`}
+      >
         <ReactQueryProvider>
           <Navbar />
           <main>{children}</main>
