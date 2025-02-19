@@ -19,7 +19,7 @@ const NavMenu = () => {
     )
   }
   return (
-    <div className="gap-10 flex">
+    <div className="gap-2 sm:gap-10 flex">
       {navButton('Dashboard')}
       {navButton('Schedule')}
       {navButton('Routines')}

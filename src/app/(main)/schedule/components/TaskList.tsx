@@ -121,15 +121,13 @@ const TaskInput = ({
   }
 
   return (
-    <div className="flex">
-      <Box>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(date) => handleChangeDate(date)}
-          className="rounded-md border shadow"
-        />
-      </Box>
+    <div className="flex gap-md w-full">
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={(date) => handleChangeDate(date)}
+        className="rounded-md border shadow"
+      />
 
       {/* category */}
       <Box>

@@ -11,9 +11,9 @@ const RoutinesPage = async () => {
 
   return (
     <WeekProvider>
-      <div className="grid grid-cols-[2fr_1fr] gap-md">
+      <div className="grid grid-cols-[3fr_1fr] gap-md">
         <section className="flex flex-col gap-md">
-          <div className="flex gap-sm sm:flex-col">
+          <div className="flex gap-sm">
             <WeekSelectCalendar />
             <TodayChart />
             <WeekChart />

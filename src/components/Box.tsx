@@ -1,6 +1,6 @@
 'use client'
 
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
 import { cn } from '@/utils/cn'
 
 interface IBoxProps {
-  title?: string
+  title?: string | ReactElement
   description?: string
   footer?: React.ReactNode
   className?: string
@@ -27,7 +27,7 @@ const Box = ({
 }: PropsWithChildren<IBoxProps>) => {
   return (
     <Card className={cn('flex flex-col', className)}>
-      <CardHeader className="items-center pb-0">
+      <CardHeader className="pb-0">
         {title && <CardTitle>{title}</CardTitle>}
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
