@@ -16,14 +16,14 @@ export function getDateWithWeek(date: Date = new Date()): string {
 }
 
 /**
- * @returns yyyy년 MM월 dd일 a hh시 mm분
+ * @returns yyyy-MM-dd hh:mm
  */
 export function getFormattedDate(dateString: string | undefined): string {
   if (!dateString) return ''
 
   try {
     const parsedDate = new Date(dateString)
-    return format(parsedDate, 'yyyy년 MM월 dd일 a hh시 mm분', { locale: ko })
+    return format(parsedDate, 'yyyy-MM-dd hh:mm', { locale: ko })
   } catch (error) {
     console.error('Error formatting date:', error)
     return '날짜 형식 오류'

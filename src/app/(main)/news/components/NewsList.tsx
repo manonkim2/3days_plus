@@ -38,15 +38,17 @@ const NewsList = () => {
           <span className="text-sm">
             last update : {getFormattedDate(news?.lastBuildDate)}
           </span>
-          <div className="cursor-pointer" onClick={() => refetch()}>
-            <RefreshCcw className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-          </div>
+
+          <RefreshCcw
+            className="mr-2 h-4 w-4 shrink-0 opacity-70 cursor-pointer"
+            onClick={() => refetch()}
+          />
         </div>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {news?.items.map((item, index) => (
+        {news?.items.map((item) => (
           <NewsCard
-            key={`${index} ${item.link}`}
+            key={item.link}
             news={item}
             removeHtmlTags={removeHtmlTags}
           />
@@ -78,7 +80,7 @@ const NewsCard = ({
       href={news.link}
       target="_blank"
       rel="noopener noreferrer"
-      className="bg-white border rounded-md p-4 shadow-lg hover:shadow-xl transition-all cursor-pointer"
+      className="flex flex-col justify-between bg-white border rounded-md p-4 shadow-lg hover:shadow-xl transition-all cursor-pointer min-h-[200px]"
     >
       <div>
         <h3 className="text-md font-semibold text-gray-800">
@@ -88,7 +90,7 @@ const NewsCard = ({
           {getFormattedDate(news.pubDate)}
         </p>
         <p
-          className="text-sm text-gray-700 mb-4"
+          className="text-sm text-gray-700 mb-md"
           dangerouslySetInnerHTML={{ __html: news.description }}
         />
       </div>

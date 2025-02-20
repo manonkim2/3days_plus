@@ -26,6 +26,7 @@ const FormActionWrapper = ({
           type="text"
           placeholder={placeholder}
           className="pr-12"
+          disabled={isPending}
         />
         <button
           aria-label={placeholder}

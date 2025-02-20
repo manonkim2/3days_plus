@@ -7,6 +7,8 @@ interface SelectedKeywordContextType {
   setSelectedKeyword: (keyword: string) => void
 }
 
+export const DEFAULT_KEYWORD = '오늘의뉴스'
+
 const SelectedKeywordContext = createContext<SelectedKeywordContextType | null>(
   null,
 )
@@ -16,7 +18,7 @@ export const SelectedKeywordProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const [selectedKeyword, setSelectedKeyword] = useState('')
+  const [selectedKeyword, setSelectedKeyword] = useState(DEFAULT_KEYWORD)
 
   return (
     <SelectedKeywordContext.Provider

@@ -2,24 +2,25 @@
 
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Plus, Trash2 } from 'lucide-react'
-import React, { useActionState, useState } from 'react'
-import { createNewsKeyword, deleteNewsCategory, INewsKeyword } from '../actions'
+import React, { startTransition, useActionState } from 'react'
+import {
+  createNewsKeyword,
+  deleteNewsCategory,
+  getNewsKeyword,
+  INewsKeyword,
+} from '../actions'
 import { Button } from '@/components/ui'
-import { useSelectedKeyword } from '../context'
+import { DEFAULT_KEYWORD, useSelectedKeyword } from '../context'
 
 const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
-  const [keywords, setKeywords] = useState<INewsKeyword[]>(keywordsData)
   const { selectedKeyword, setSelectedKeyword } = useSelectedKeyword()
 
-  const [, formAction, isPending] = useActionState(
-    async (_: void | null, formData: FormData) => {
-      const newKeyword = await createNewsKeyword(formData)
-
-      if (newKeyword) {
-        setKeywords((prev) => [...prev, newKeyword])
-      }
+  const [keywords, formAction, isPending] = useActionState(
+    async (_: INewsKeyword[], formData: FormData) => {
+      await createNewsKeyword(formData)
+      return await getNewsKeyword()
     },
-    null,
+    keywordsData,
   )
 
   const handleClickKeyword = (keyword: string) => {
@@ -30,29 +31,43 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
     event.stopPropagation()
 
     await deleteNewsCategory(id)
-    setKeywords((prev) => prev.filter((k) => k.id !== id))
+
+    startTransition(() => {
+      formAction(new FormData())
+      setSelectedKeyword(DEFAULT_KEYWORD)
+    })
   }
 
   return (
     <div className="flex items-center justify-between gap-sm pb-xxl">
       <div className="flex flex-wrap gap-sm">
-        {keywords.map(({ id, keyword }) => (
-          <Button
-            key={id}
-            className="cursor-pointer text-sm"
-            onClick={() => handleClickKeyword(keyword)}
-            variant={selectedKeyword === keyword ? 'default' : 'outline'}
-            size={'sm'}
-          >
-            {keyword}
-            <div
-              onClick={(event) => handleDeleteTask(id, event)}
-              className="cursor-pointer"
+        <Button
+          className="cursor-pointer text-sm"
+          onClick={() => handleClickKeyword(DEFAULT_KEYWORD)}
+          variant={selectedKeyword === DEFAULT_KEYWORD ? 'default' : 'outline'}
+          size={'sm'}
+        >
+          {DEFAULT_KEYWORD}
+        </Button>
+        {keywords.map(({ id, keyword }) => {
+          return (
+            <Button
+              key={id}
+              className="cursor-pointer text-sm"
+              onClick={() => handleClickKeyword(keyword)}
+              variant={selectedKeyword === keyword ? 'default' : 'outline'}
+              size={'sm'}
             >
-              <Trash2 className="h-4 w-4 opacity-50" />
-            </div>
-          </Button>
-        ))}
+              {keyword}
+              <div
+                onClick={(event) => handleDeleteTask(id, event)}
+                className="cursor-pointer"
+              >
+                <Trash2 className="h-4 w-4 opacity-50" />
+              </div>
+            </Button>
+          )
+        })}
       </div>
       <div className="w-[200px]">
         <FormActionWrapper
