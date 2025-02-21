@@ -141,7 +141,6 @@ const TaskInput = ({
             commandInput={
               <FormActionWrapper
                 placeholder="Add category name"
-                button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
                 formAction={categoryFormAction}
                 isPending={isPendingCategory}
               />
@@ -151,7 +150,6 @@ const TaskInput = ({
             formAction={formAction}
             placeholder="Add your task"
             isPending={isPending}
-            button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
           />
         </div>
 
@@ -196,9 +194,6 @@ const TaskInput = ({
                     commandInput={
                       <FormActionWrapper
                         placeholder="Add category name"
-                        button={
-                          <Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-                        }
                         formAction={categoryFormAction}
                         isPending={isPendingCategory}
                       />

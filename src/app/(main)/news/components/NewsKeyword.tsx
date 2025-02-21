@@ -1,7 +1,7 @@
 'use client'
 
 import FormActionWrapper from '@/components/FormActionWrapper'
-import { Plus, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import React, { startTransition, useActionState } from 'react'
 import {
   createNewsKeyword,
@@ -16,11 +16,15 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
   const { selectedKeyword, setSelectedKeyword } = useSelectedKeyword()
 
   const [keywords, formAction, isPending] = useActionState(
-    async (_: INewsKeyword[], formData: FormData) => {
-      await createNewsKeyword(formData)
-      return await getNewsKeyword()
+    async (
+      _: { keywords: INewsKeyword[]; errors: string[] },
+      formData: FormData,
+    ) => {
+      const response = await createNewsKeyword(formData)
+      const updatedKeywords = await getNewsKeyword()
+      return { keywords: updatedKeywords, errors: response?.errors || [] }
     },
-    keywordsData,
+    { keywords: keywordsData, errors: [] },
   )
 
   const handleClickKeyword = (keyword: string) => {
@@ -39,7 +43,14 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
   }
 
   return (
-    <div className="flex items-center justify-between gap-sm pb-xxl">
+    <div className="flex flex-col items-center gap-md py-xxl">
+      <FormActionWrapper
+        formAction={formAction}
+        placeholder="관심 있는 뉴스 키워드를 등록하고 소식을 받아보세요."
+        isPending={isPending}
+        errors={keywords.errors}
+      />
+
       <div className="flex flex-wrap gap-sm">
         <Button
           className="cursor-pointer text-sm"
@@ -49,7 +60,12 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
         >
           {DEFAULT_KEYWORD}
         </Button>
-        {keywords.map(({ id, keyword }) => {
+        {keywords.keywords.length === 0 && (
+          <div className="border border-dashed rounded-md text-sm text-gray-400 px-sm flex items-center justify-center">
+            ex. 삼성전자
+          </div>
+        )}
+        {keywords.keywords.map(({ id, keyword }) => {
           return (
             <Button
               key={id}
@@ -68,14 +84,6 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
             </Button>
           )
         })}
-      </div>
-      <div className="w-[200px]">
-        <FormActionWrapper
-          formAction={formAction}
-          placeholder="Add news keyword"
-          isPending={isPending}
-          button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
-        />
       </div>
     </div>
   )

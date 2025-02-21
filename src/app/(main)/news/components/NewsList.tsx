@@ -34,11 +34,10 @@ const NewsList = () => {
   return (
     <div>
       {news && (
-        <div className="flex justify-end pb-sm gap-sm">
-          <span className="text-sm">
+        <div className="flex justify-end items-center pb-sm gap-sm">
+          <span className="text-sm text-gray-400">
             last update : {getFormattedDate(news?.lastBuildDate)}
           </span>
-
           <RefreshCcw
             className="mr-2 h-4 w-4 shrink-0 opacity-70 cursor-pointer"
             onClick={() => refetch()}

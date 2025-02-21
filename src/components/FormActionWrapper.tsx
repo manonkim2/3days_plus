@@ -1,24 +1,22 @@
 import React from 'react'
 import { Input } from '@ui'
+import { Plus } from 'lucide-react'
 
 interface IFormActionWrapperProps {
   formAction: (payload: FormData) => void
   placeholder: string
-  button: React.ReactNode
   isPending: boolean
+  errors?: string[]
 }
 
 const FormActionWrapper = ({
   formAction,
   placeholder,
-  button,
   isPending,
+  errors,
 }: IFormActionWrapperProps) => {
   return (
     <form action={formAction} className="relative w-full max-w-md">
-      <label className="sr-only" htmlFor="content">
-        {placeholder}
-      </label>
       <div className="relative flex items-center">
         <Input
           id="content"
@@ -27,15 +25,9 @@ const FormActionWrapper = ({
           placeholder={placeholder}
           className="pr-12"
           disabled={isPending}
+          errors={errors}
+          button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
         />
-        <button
-          aria-label={placeholder}
-          type="submit"
-          disabled={isPending}
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md transition-opacity disabled:opacity-50"
-        >
-          {button}
-        </button>
       </div>
     </form>
   )

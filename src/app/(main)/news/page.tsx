@@ -8,6 +8,7 @@ const NewsPage = async () => {
 
   return (
     <SelectedKeywordProvider>
+      <h1 className="text-6xl font-poppins text-center py-8">Keyword News</h1>
       <NewsKeyword keywordsData={keywords} />
       <NewsList />
     </SelectedKeywordProvider>

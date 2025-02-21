@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect } from 'react'
-import { Check, Plus, Undo2 } from 'lucide-react'
+import { Check, Undo2 } from 'lucide-react'
 
 import { useRoutineWeekContext } from '../context'
 import {
@@ -86,7 +86,6 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
           formAction={formAction}
           placeholder="Add your routine"
           isPending={isPending}
-          button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
         />
         {routines?.map((routine) => (
           <RoutineItem
