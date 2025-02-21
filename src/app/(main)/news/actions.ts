@@ -69,15 +69,15 @@ export const createNewsKeyword = async (formData: FormData) => {
   const keyword = formData.get('content') as string | null
   const result = await formSchema.spa(keyword)
 
+  if (!keyword || keyword.trim() === '') {
+    return { errors: [] }
+  }
+
   if (!result.success) {
     return { errors: result.error.flatten().formErrors }
   }
 
   try {
-    if (!keyword || keyword.trim() === '') {
-      return
-    }
-
     const newKeyword = await db.newsKeyword.create({
       data: {
         keyword,
