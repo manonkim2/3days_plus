@@ -10,7 +10,7 @@ import {
   getRoutineLog,
   IRoutine,
   unCompleteRoutine,
-} from '../actions'
+} from '../routineActions'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import Box from '@/components/Box'
 import { Button } from '@/components/ui'
@@ -81,7 +81,7 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
 
   return (
     <Box title={getDateWithWeek(day)}>
-      <div className="flex flex-col gap-md py-lg">
+      <div className="flex flex-col gap-sm py-lg">
         <FormActionWrapper
           formAction={formAction}
           placeholder="Add your routine"

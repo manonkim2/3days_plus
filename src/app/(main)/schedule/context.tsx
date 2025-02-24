@@ -10,7 +10,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { IRoutine } from './actions'
+import { IRoutine } from './routineActions'
 
 interface WeekContextType {
   week: Date[]

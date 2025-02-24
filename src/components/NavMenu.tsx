@@ -22,7 +22,7 @@ const NavMenu = () => {
     <div className="gap-2 sm:gap-10 flex">
       {navButton('Dashboard')}
       {navButton('Schedule')}
-      {navButton('Routines')}
+      {/* {navButton('Routines')} */}
       {navButton('News')}
     </div>
   )

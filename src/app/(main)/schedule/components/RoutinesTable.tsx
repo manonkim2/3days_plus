@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import { Check } from 'lucide-react'
 
 import { useRoutineWeekContext } from '../context'
-import { getRoutineLog, IRoutine } from '../actions'
+import { getRoutineLog, IRoutine } from '../routineActions'
 import { getDateWithWeek } from '@/utils/formmattedDate'
 import Box from '@/components/Box'
 

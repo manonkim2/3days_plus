@@ -77,6 +77,7 @@ export default {
         '3xl': ['32px', '52px'],
         '2xl': ['24px', '36px'],
         xl: ['18px', '24px'],
+        lg: ['16px', '22px'],
         base: ['14px', '20px'],
         sm: ['12px', '18px'],
         xs: ['10px', '16px'],
