@@ -5,13 +5,20 @@ import { Calendar } from '@/components/ui'
 import { useRoutineWeekContext } from '../context'
 
 const WeekSelectCalendar = () => {
-  const { week, handleClickDate } = useRoutineWeekContext()
+  const { day, week, handleClickDate } = useRoutineWeekContext()
 
-  const memoizedModifiers = useMemo(() => ({ selected: week }), [week])
+  const memoizedModifiers = useMemo(
+    () => ({
+      selectedDay: day ? [day] : [],
+      selectedWeek: week || [],
+    }),
+    [day, week],
+  )
 
   const memoizedModifiersStyles = useMemo(
     () => ({
-      selected: { borderRadius: 0 },
+      selectedDay: { backgroundColor: 'black', color: 'white' },
+      selectedWeek: { border: '1px solid black' },
     }),
     [],
   )

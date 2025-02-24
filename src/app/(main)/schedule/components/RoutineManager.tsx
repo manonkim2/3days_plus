@@ -10,7 +10,7 @@ import {
   getRoutineLog,
   IRoutine,
   unCompleteRoutine,
-} from '../routineActions'
+} from '../actions/routineActions'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import Box from '@/components/Box'
 import { Button } from '@/components/ui'

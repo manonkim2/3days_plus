@@ -6,14 +6,15 @@ import {
   deleteCategory,
   getTaskInCategory,
   ICategory,
-} from '../categoryActions'
+} from '../actions/categoryActions'
 import { Trash2 } from 'lucide-react'
 import AlertButton from '@/components/AlertButton'
 import { Badge } from '@/components/ui'
 import { getShortDate } from '@/utils/formmattedDate'
 
-const CategoryList = ({ categories }: { categories: ICategory[] }) => {
+const TaskCategory = ({ categories }: { categories: ICategory[] }) => {
   const [categoryList, setCategoryList] = useState<ICategory[]>(categories)
+
   const [taskList, setTaskList] = useState<
     | {
         id: number
@@ -38,9 +39,19 @@ const CategoryList = ({ categories }: { categories: ICategory[] }) => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="flex gap-sm">
-        {categoryList?.map(({ id, title }) => (
+    <div className="flex flex-col border-r-2 pr-sm">
+      <span className="text-sm font-semibold py-sm">Task Category</span>
+      <div className="flex flex-col gap-sm ">
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Is it accessible?</AccordionTrigger>
+            <AccordionContent>
+              Yes. It adheres to the WAI-ARIA design pattern.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        {/* {categoryList?.map(({ id, title }) => (
           <Badge
             key={id}
             className="flex gap-sm cursor-pointer"
@@ -55,7 +66,7 @@ const CategoryList = ({ categories }: { categories: ICategory[] }) => {
               action={() => handleDeleteCategory(id)}
             />
           </Badge>
-        ))}
+        ))} */}
       </div>
 
       <div className="flex flex-col gap-sm px-sm py-md ">
@@ -72,4 +83,4 @@ const CategoryList = ({ categories }: { categories: ICategory[] }) => {
   )
 }
 
-export default CategoryList
+export default TaskCategory

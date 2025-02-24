@@ -8,14 +8,13 @@ import {
   ITask,
   updateCheckTask,
   updateContentTask,
-} from '../taskActions'
+} from '../actions/taskActions'
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
-import { Calendar, Input } from '@/components/ui'
-import Box from '@/components/Box'
+import { Input } from '@/components/ui'
 import { Combobox } from '@/components/Combobox'
-import { createCategory, ICategory } from '../categoryActions'
-import { Pencil, Plus, Save, Trash2 } from 'lucide-react'
+import { createCategory, ICategory } from '../actions/categoryActions'
+import { Pencil, Save, Trash2 } from 'lucide-react'
 
 const TaskInput = ({
   tasks,

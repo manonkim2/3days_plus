@@ -13,7 +13,7 @@ import {
 import Box from '@/components/Box'
 import { useRoutineWeekContext } from '../context'
 import { useEffect, useState } from 'react'
-import { getRoutineLog } from '../routineActions'
+import { getRoutineLog } from '../actions/routineActions'
 import { format } from 'date-fns'
 
 const chartConfig = {

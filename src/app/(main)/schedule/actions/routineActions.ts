@@ -2,7 +2,7 @@
 
 import db from '@/utils/db'
 import { endOfDay, startOfDay } from 'date-fns'
-import { Prisma } from '../../../../prisma/client'
+import { Prisma } from '../../../../../prisma/client'
 import { getKoreanTime } from '@/utils/formmattedDate'
 import { getUserInfo } from '@/utils/supabase/actions'
 import { cache } from 'react'

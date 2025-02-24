@@ -2,9 +2,8 @@
 
 import { useMemo } from 'react'
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts'
-
-import { useRoutineWeekContext } from '../context'
 import { ChartContainer } from '@/components/ui/chart'
+import { useRoutineWeekContext } from '../context'
 
 const chartConfig = {
   completed: {
@@ -52,7 +51,7 @@ const TodayChart = () => {
   }, [percentage])
 
   return (
-    <div className="flex flex-col items-center">
+    <div>
       <ChartContainer
         config={chartConfig}
         className="mx-auto aspect-square max-w-[300px]"
@@ -109,7 +108,7 @@ const TodayChart = () => {
           </PolarRadiusAxis>
         </RadialBarChart>
       </ChartContainer>
-      <p className="leading-none text-muted-foreground text-sm">
+      <p className="leading-none text-muted-foreground text-sm text-center">
         {footerMessage}
       </p>
     </div>
