@@ -1,20 +1,17 @@
 'use client'
 
 import React, { useState } from 'react'
-
-import {
-  deleteCategory,
-  getTaskInCategory,
-  ICategory,
-} from '../actions/categoryActions'
-import { Trash2 } from 'lucide-react'
-import AlertButton from '@/components/AlertButton'
-import { Badge } from '@/components/ui'
+import { getTaskInCategory, ICategory } from '../actions/categoryActions'
 import { getShortDate } from '@/utils/formmattedDate'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Badge } from '@/components/ui'
 
 const TaskCategory = ({ categories }: { categories: ICategory[] }) => {
-  const [categoryList, setCategoryList] = useState<ICategory[]>(categories)
-
   const [taskList, setTaskList] = useState<
     | {
         id: number
@@ -24,61 +21,52 @@ const TaskCategory = ({ categories }: { categories: ICategory[] }) => {
       }[]
     | null
   >(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const handleSelectCategory = async (id: number) => {
-    const filteredTasks = await getTaskInCategory(id)
-
-    if (filteredTasks) {
-      setTaskList(filteredTasks)
+    if (selectedCategory === String(id)) {
+      setSelectedCategory(null)
+      setTaskList(null) // 선택 해제 시 taskList 초기화
+      return
     }
-  }
 
-  const handleDeleteCategory = async (id: number) => {
-    const updatedTasks = await deleteCategory(id)
-    setCategoryList(updatedTasks)
+    setSelectedCategory(String(id))
+    setTaskList(null) // 새로운 카테고리를 선택할 때 기존 taskList를 즉시 초기화
+
+    const filteredTasks = await getTaskInCategory(id)
+    setTaskList(filteredTasks) // 새로운 taskList를 불러온 후 업데이트
   }
 
   return (
-    <div className="flex flex-col border-r-2 pr-sm">
+    <div className="flex flex-col border-r-2 pr-md min-w-[180px]">
       <span className="text-sm font-semibold py-sm">Task Category</span>
-      <div className="flex flex-col gap-sm ">
-        <Accordion type="single" collapsible>
-          <AccordionItem value="item-1">
-            <AccordionTrigger>Is it accessible?</AccordionTrigger>
+
+      <Accordion
+        type="single"
+        collapsible
+        value={selectedCategory}
+        onValueChange={setSelectedCategory}
+      >
+        {categories?.map(({ id, title }) => (
+          <AccordionItem key={id} value={String(id)}>
+            <AccordionTrigger onClick={() => handleSelectCategory(id)}>
+              {title}
+            </AccordionTrigger>
             <AccordionContent>
-              Yes. It adheres to the WAI-ARIA design pattern.
+              {selectedCategory === String(id) && taskList && (
+                <div className="flex flex-col gap-xs">
+                  {taskList.map((task) => (
+                    <div key={task.id} className="flex gap-xs items-center">
+                      <Badge variant="outline">{getShortDate(task.date)}</Badge>
+                      <p className="text-sm">{task.content}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
-
-        {/* {categoryList?.map(({ id, title }) => (
-          <Badge
-            key={id}
-            className="flex gap-sm cursor-pointer"
-            variant={'outline'}
-            onClick={() => handleSelectCategory(id)}
-          >
-            {title}
-            <AlertButton
-              button={<Trash2 className="h-4 w-4" />}
-              alertTitle="Are you sure you want to delete the category?"
-              description="The category is removed from all tasks."
-              action={() => handleDeleteCategory(id)}
-            />
-          </Badge>
-        ))} */}
-      </div>
-
-      <div className="flex flex-col gap-sm px-sm py-md ">
-        {taskList?.map((task) => {
-          return (
-            <div key={task.id} className="flex gap-sm">
-              <span>{getShortDate(task.date)}</span>
-              <span>{task.content}</span>
-            </div>
-          )
-        })}
-      </div>
+        ))}
+      </Accordion>
     </div>
   )
 }

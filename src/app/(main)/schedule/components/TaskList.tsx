@@ -15,6 +15,7 @@ import { Input } from '@/components/ui'
 import { Combobox } from '@/components/Combobox'
 import { createCategory, ICategory } from '../actions/categoryActions'
 import { Pencil, Save, Trash2 } from 'lucide-react'
+import { useDateContext } from '../context'
 
 const TaskInput = ({
   tasks,
@@ -23,12 +24,12 @@ const TaskInput = ({
   tasks: ITask[]
   categories: ICategory[]
 }) => {
-  const [date, setDate] = useState<Date>(new Date())
+  const { date } = useDateContext()
+
   const [category, setCategory] = useState<{
     value: string
     id: number
   } | null>(null)
-  const [categoryList, setCategoryList] = useState<ICategory[]>(categories)
   const [taskList, setTaskList] = useState<ITask[]>(tasks)
   const [editTask, setEditTask] = useState<{
     id: number
@@ -39,27 +40,10 @@ const TaskInput = ({
     id: number
   } | null>(null)
 
-  const handleChangeDate = async (date: Date | undefined) => {
-    if (date) {
-      setDate(date)
-    }
-
-    const tasks = await getTask(date)
-    setTaskList(tasks)
-  }
-
-  const [, categoryFormAction, isPendingCategory] = useActionState<
-    ICategory[],
-    FormData
-  >(async (prevCategories, formData) => {
-    const updatedCategories = await createCategory(formData)
-
-    if (updatedCategories) {
-      setCategoryList(updatedCategories)
-    }
-
-    return updatedCategories ?? prevCategories
-  }, categories)
+  const [categoryList, categoryFormAction, isPendingCategory] = useActionState(
+    createCategory,
+    categories,
+  )
 
   const [, formAction, isPending] = useActionState<ITask[], FormData>(
     async (prevTasks, formData) => {
@@ -121,13 +105,6 @@ const TaskInput = ({
 
   return (
     <div className="flex gap-md w-full h-[250px]">
-      {/* <Calendar
-        mode="single"
-        selected={date}
-        onSelect={(date) => handleChangeDate(date)}
-        className="rounded-md border shadow"
-      /> */}
-
       {/* category */}
       <div className="flex gap-sm h-9">
         <Combobox

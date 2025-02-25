@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from 'react'
 import { Check, Undo2 } from 'lucide-react'
 
-import { useRoutineWeekContext } from '../context'
+import { useDateContext } from '../context'
 import {
   completeRoutine,
   createRoutine,
@@ -17,7 +17,7 @@ import { Button } from '@/components/ui'
 import { getDateWithWeek } from '@/utils/formmattedDate'
 
 const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
-  const { day, setRoutines, routines } = useRoutineWeekContext()
+  const { date, setRoutines, routines } = useDateContext()
 
   const [, formAction, isPending] = useActionState(
     async (_: void | null, formData: FormData) => {
@@ -31,7 +31,7 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
   )
 
   const handleClickComplete = async (id: number) => {
-    const completedLog = await completeRoutine(id, day)
+    const completedLog = await completeRoutine(id, date)
 
     if (completedLog) {
       setRoutines((prev) =>
@@ -62,7 +62,7 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
     setRoutines(routinesData)
 
     const fetchRoutines = async () => {
-      const dayRoutineLog = await getRoutineLog(day)
+      const dayRoutineLog = await getRoutineLog(date)
 
       setRoutines((prev) =>
         prev.map((routine) => {
@@ -77,10 +77,10 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
     }
 
     fetchRoutines()
-  }, [day, routinesData, setRoutines])
+  }, [date, routinesData, setRoutines])
 
   return (
-    <Box title={getDateWithWeek(day)}>
+    <Box title={getDateWithWeek(date)}>
       <div className="flex flex-col gap-sm py-lg">
         <FormActionWrapper
           formAction={formAction}

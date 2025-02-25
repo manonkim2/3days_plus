@@ -1,5 +1,7 @@
 'use server'
 
+import { cache } from 'react'
+import { unstable_cache as nextCache, revalidateTag } from 'next/cache'
 import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 
@@ -9,11 +11,14 @@ export interface ICategory {
   color: string | null
 }
 
-export const createCategory = async (formData: FormData) => {
+export const createCategory = async (
+  prev: ICategory[],
+  formData: FormData,
+): Promise<ICategory[]> => {
   const content = formData.get('content') as string
 
   if (!content || content.trim() === '') {
-    return
+    return prev
   }
 
   const user = await getUserInfo()
@@ -26,9 +31,11 @@ export const createCategory = async (formData: FormData) => {
       },
     })
 
+    revalidateTag('category_task')
     return await getCategory()
   } catch (error) {
     console.error('Error creating category:', error)
+    return prev
   }
 }
 
@@ -62,21 +69,25 @@ export const deleteCategory = async (id: number) => {
   }
 }
 
-export const getTaskInCategory = async (id: number) => {
-  try {
-    return await db.task.findMany({
-      where: { categoryId: id },
-      select: {
-        id: true,
-        content: true,
-        completed: true,
-        date: true,
-      },
-      orderBy: {
-        date: 'asc',
-      },
-    })
-  } catch (error) {
-    console.error('Error get task:', error)
-  }
-}
+export const getTaskInCategory = nextCache(
+  cache(async (id: number) => {
+    try {
+      return await db.task.findMany({
+        where: { categoryId: id },
+        select: {
+          id: true,
+          content: true,
+          completed: true,
+          date: true,
+        },
+        orderBy: {
+          date: 'asc',
+        },
+      })
+    } catch (error) {
+      console.error('Error get task:', error)
+    }
+  }),
+  ['categoryTask'],
+  { tags: ['category_task'] },
+)

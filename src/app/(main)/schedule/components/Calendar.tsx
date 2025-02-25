@@ -1,18 +1,18 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Calendar } from '@/components/ui'
-import { useRoutineWeekContext } from '../context'
+import { Calendar as CalendarUI } from '@/components/ui'
+import { useDateContext } from '../context'
 
-const WeekSelectCalendar = () => {
-  const { day, week, handleClickDate } = useRoutineWeekContext()
+const Calendar = () => {
+  const { date, week, handleClickDate } = useDateContext()
 
   const memoizedModifiers = useMemo(
     () => ({
-      selectedDay: day ? [day] : [],
+      selectedDay: date ? [date] : [],
       selectedWeek: week || [],
     }),
-    [day, week],
+    [date, week],
   )
 
   const memoizedModifiersStyles = useMemo(
@@ -24,7 +24,7 @@ const WeekSelectCalendar = () => {
   )
 
   return (
-    <Calendar
+    <CalendarUI
       onDayClick={handleClickDate}
       modifiers={memoizedModifiers}
       modifiersStyles={memoizedModifiersStyles}
@@ -32,4 +32,4 @@ const WeekSelectCalendar = () => {
   )
 }
 
-export default WeekSelectCalendar
+export default Calendar

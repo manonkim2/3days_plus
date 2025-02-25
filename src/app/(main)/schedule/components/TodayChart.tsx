@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts'
 import { ChartContainer } from '@/components/ui/chart'
-import { useRoutineWeekContext } from '../context'
+import { useDateContext } from '../context'
 
 const chartConfig = {
   completed: {
@@ -13,7 +13,7 @@ const chartConfig = {
 }
 
 const TodayChart = () => {
-  const { routines, day } = useRoutineWeekContext()
+  const { routines, date } = useDateContext()
 
   const completedRoutineRatio = useMemo(() => {
     if (routines.length === 0) return 0
@@ -21,7 +21,7 @@ const TodayChart = () => {
     const completedCount = routines.filter((item) => item.complete).length
     return completedCount / routines.length
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routines, day])
+  }, [routines, date])
 
   const chartData = useMemo(() => {
     const completedCount = routines.filter((item) => item.complete).length

@@ -12,40 +12,40 @@ import {
 } from 'react'
 import { IRoutine } from './actions/routineActions'
 
-interface WeekContextType {
+interface DateContextType {
   week: Date[]
-  day: Date
+  date: Date
   routines: IRoutine[]
   setRoutines: Dispatch<SetStateAction<IRoutine[]>>
-  handleClickDate: (day: Date) => void
+  handleClickDate: (date: Date) => void
 }
 
-const WeekContext = createContext<WeekContextType | null>(null)
+const WeekContext = createContext<DateContextType | null>(null)
 
-export const WeekProvider = ({ children }: { children: ReactNode }) => {
-  const [day, setDay] = useState(new Date())
+export const DateProvider = ({ children }: { children: ReactNode }) => {
+  const [date, setDate] = useState(new Date())
   const [routines, setRoutines] = useState<IRoutine[]>([])
 
   const week = useMemo(
-    () => eachDayOfInterval({ start: startOfWeek(day), end: endOfWeek(day) }),
-    [day],
+    () => eachDayOfInterval({ start: startOfWeek(date), end: endOfWeek(date) }),
+    [date],
   )
 
-  const handleClickDate = (selectedDay: Date) => setDay(selectedDay)
+  const handleClickDate = (selectedDay: Date) => setDate(selectedDay)
 
   return (
     <WeekContext.Provider
-      value={{ day, week, handleClickDate, setRoutines, routines }}
+      value={{ date, week, handleClickDate, setRoutines, routines }}
     >
       {children}
     </WeekContext.Provider>
   )
 }
 
-export const useRoutineWeekContext = () => {
+export const useDateContext = () => {
   const context = useContext(WeekContext)
   if (!context) {
-    throw new Error('useRoutineWeekContext must be used within a WeekProvider')
+    throw new Error('useDateContext must be used within a WeekProvider')
   }
   return context
 }
