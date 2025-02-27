@@ -1,7 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
-import { getTaskInCategory, ICategory } from '../actions/categoryActions'
+import React, { useEffect, useState } from 'react'
+import {
+  deleteCategory,
+  getTaskInCategory,
+  ICategory,
+  ITaskInCategory,
+} from '../actions/categoryActions'
 import { getShortDate } from '@/utils/formmattedDate'
 import {
   Accordion,
@@ -10,32 +15,33 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Badge } from '@/components/ui'
+import AlertButton from '@/components/AlertButton'
+import { Trash2 } from 'lucide-react'
 
 const TaskCategory = ({ categories }: { categories: ICategory[] }) => {
-  const [taskList, setTaskList] = useState<
-    | {
-        id: number
-        content: string
-        completed: boolean
-        date: Date
-      }[]
-    | null
-  >(null)
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [taskList, setTaskList] = useState<ITaskInCategory[] | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    undefined,
+  )
 
-  const handleSelectCategory = async (id: number) => {
-    if (selectedCategory === String(id)) {
-      setSelectedCategory(null)
-      setTaskList(null) // 선택 해제 시 taskList 초기화
+  const handleDeleteCategory = async (id: number) => {
+    await deleteCategory(id)
+  }
+
+  useEffect(() => {
+    setTaskList(null)
+
+    if (!selectedCategory) {
       return
     }
 
-    setSelectedCategory(String(id))
-    setTaskList(null) // 새로운 카테고리를 선택할 때 기존 taskList를 즉시 초기화
+    const fetchTasks = async () => {
+      const tasks = await getTaskInCategory(Number(selectedCategory))
+      setTaskList(tasks)
+    }
 
-    const filteredTasks = await getTaskInCategory(id)
-    setTaskList(filteredTasks) // 새로운 taskList를 불러온 후 업데이트
-  }
+    fetchTasks()
+  }, [selectedCategory])
 
   return (
     <div className="flex flex-col border-r-2 pr-md min-w-[180px]">
@@ -49,18 +55,34 @@ const TaskCategory = ({ categories }: { categories: ICategory[] }) => {
       >
         {categories?.map(({ id, title }) => (
           <AccordionItem key={id} value={String(id)}>
-            <AccordionTrigger onClick={() => handleSelectCategory(id)}>
-              {title}
-            </AccordionTrigger>
+            <AccordionTrigger>{title}</AccordionTrigger>
             <AccordionContent>
               {selectedCategory === String(id) && taskList && (
-                <div className="flex flex-col gap-xs">
+                <div className="flex flex-col gap-sm">
                   {taskList.map((task) => (
-                    <div key={task.id} className="flex gap-xs items-center">
-                      <Badge variant="outline">{getShortDate(task.date)}</Badge>
-                      <p className="text-sm">{task.content}</p>
+                    <div key={task.id}>
+                      <div className="flex gap-xs items-center">
+                        <Badge variant="outline">
+                          {getShortDate(task.date)}
+                        </Badge>
+                        <p className="text-sm">{task.content}</p>
+                      </div>
                     </div>
                   ))}
+
+                  <AlertButton
+                    alertTitle="Delete Category"
+                    description="Deleting a category will also delete all of its to-do lists. Are you sure you want to proceed?"
+                    action={() => handleDeleteCategory(id)}
+                    button={
+                      <div className="flex gap-xs items-center justify-center cursor-pointer pt-md">
+                        <Trash2 className="opacity-50 w-3 h-3" />
+                        <span className="text-xs text-fontSecondary">
+                          Delete category
+                        </span>
+                      </div>
+                    }
+                  />
                 </div>
               )}
             </AccordionContent>

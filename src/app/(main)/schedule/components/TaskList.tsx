@@ -1,6 +1,11 @@
 'use client'
 
-import React, { useActionState, useState } from 'react'
+import React, {
+  startTransition,
+  useActionState,
+  useEffect,
+  useState,
+} from 'react'
 import {
   createTask,
   deleteTask,
@@ -12,7 +17,7 @@ import {
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Input } from '@/components/ui'
-import { Combobox } from '@/components/Combobox'
+import { Combobox } from '@/app/(main)/schedule/components/TaskCategoryCombobox'
 import { createCategory, ICategory } from '../actions/categoryActions'
 import { Pencil, Save, Trash2 } from 'lucide-react'
 import { useDateContext } from '../context'
@@ -30,7 +35,6 @@ const TaskInput = ({
     value: string
     id: number
   } | null>(null)
-  const [taskList, setTaskList] = useState<ITask[]>(tasks)
   const [editTask, setEditTask] = useState<{
     id: number
     content: string
@@ -45,31 +49,27 @@ const TaskInput = ({
     categories,
   )
 
-  const [, formAction, isPending] = useActionState<ITask[], FormData>(
-    async (prevTasks, formData) => {
-      await createTask(formData, date, category?.id)
-
-      const tasks = await getTask(date)
-      setTaskList(tasks)
+  const [taskList, formAction, isPending] = useActionState<ITask[], FormData>(
+    async (_, formData) => {
+      createTask(formData, date, category?.id)
       setCategory(null)
-
-      return tasks ?? prevTasks
+      return await getTask(date)
     },
-    tasks ?? [],
+    tasks,
   )
 
   const handleDeleteTask = async (id: number) => {
     await deleteTask(id)
-
-    const tasks = await getTask(date)
-    setTaskList(tasks)
+    startTransition(() => {
+      formAction(new FormData())
+    })
   }
 
   const handleToggleTask = async (id: number, completed: boolean) => {
     await updateCheckTask(id, completed)
-
-    const tasks = await getTask(date)
-    setTaskList(tasks)
+    startTransition(() => {
+      formAction(new FormData())
+    })
   }
 
   const startEditingTask = (
@@ -95,20 +95,26 @@ const TaskInput = ({
     if (editTask) {
       await updateContentTask(editTask.id, editTask.content, editCategory?.id)
 
-      const tasks = await getTask(date)
-      setTaskList(tasks)
-
-      setEditTask(null)
-      setEditCategory(null)
+      startTransition(() => {
+        formAction(new FormData())
+        setEditTask(null)
+        setEditCategory(null)
+      })
     }
   }
 
+  useEffect(() => {
+    startTransition(() => {
+      formAction(new FormData())
+    })
+  }, [date, formAction])
+
   return (
-    <div className="flex gap-md w-full h-[250px]">
-      {/* category */}
-      <div className="flex gap-sm h-9">
+    <div className="flex flex-col gap-md w-full pl-md">
+      {/* category/Task create */}
+      <div className="grid grid-cols-[1fr_3fr] gap-sm h-9">
         <Combobox
-          items={categoryList.map((item) => {
+          items={categories?.map((item) => {
             return { value: item.title, id: item.id }
           })}
           value={category}
@@ -128,7 +134,7 @@ const TaskInput = ({
         />
       </div>
 
-      {/* task */}
+      {/* taskList */}
       {taskList?.map(({ id, completed, content, categoryId }) => {
         const category = categoryList.find((c) => c.id === categoryId)
 
@@ -159,35 +165,21 @@ const TaskInput = ({
                 </div>
               </div>
             ) : (
-              <div className="flex gap-xs">
+              <div className="grid grid-cols-[1fr_3fr] gap-sm">
                 <Combobox
                   items={categoryList.map((item) => {
                     return { value: item.title, id: item.id }
                   })}
                   value={editCategory}
                   setStateAction={setEditCategory}
-                  commandInput={
-                    <FormActionWrapper
-                      placeholder="Add category name"
-                      formAction={categoryFormAction}
-                      isPending={isPendingCategory}
-                    />
-                  }
                 />
                 <Input
                   type="text"
                   placeholder="Password"
                   value={editTask.content}
                   onChange={(event) => handleChangeTask(event)}
-                  button={
-                    <button
-                      aria-label="edit Task"
-                      type="submit"
-                      onClick={handleSaveEdit}
-                    >
-                      <Save className="h-4 w-4 opacity-70" />
-                    </button>
-                  }
+                  onSave={handleSaveEdit}
+                  button={<Save className="h-4 w-4 opacity-50" />}
                 />
               </div>
             )}

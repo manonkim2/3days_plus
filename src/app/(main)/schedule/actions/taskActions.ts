@@ -4,14 +4,16 @@ import db from '@/utils/db'
 import { getUserInfo } from '@/utils/supabase/actions'
 import { endOfDay, startOfDay } from 'date-fns'
 import { getKoreanTime } from '@/utils/formmattedDate'
+import { revalidateTag } from 'next/cache'
 
 export interface ITask {
   id: number
   content: string
   completed: boolean
-  forToday: boolean | null
   categoryId: number | null
 }
+
+const user = await getUserInfo()
 
 export const createTask = async (
   formData: FormData,
@@ -26,13 +28,10 @@ export const createTask = async (
   }
 
   try {
-    const user = await getUserInfo()
-
     await db.task.create({
       data: {
         content: content as string,
         userId: user?.id as string,
-        forToday: true,
         date: kstTime,
         categoryId: categoryId || null,
 
@@ -49,6 +48,8 @@ export const createTask = async (
           : {}),
       },
     })
+
+    revalidateTag('task_in_category')
   } catch (error) {
     console.error('Error creating task:', error)
     throw new Error('Task creation failed.')
@@ -56,8 +57,6 @@ export const createTask = async (
 }
 
 export const getTask = async (date?: Date): Promise<ITask[]> => {
-  const user = await getUserInfo()
-
   if (!user) return []
 
   const selectedDate = date || new Date()
@@ -75,7 +74,6 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
     select: {
       id: true,
       content: true,
-      forToday: true,
       completed: true,
       categoryId: true,
     },
@@ -99,8 +97,6 @@ export const deleteTask = async (taskId: number) => {
 }
 
 export const updateCheckTask = async (id: number, completed: boolean) => {
-  const user = await getUserInfo()
-
   try {
     await db.task.update({
       where: { id, userId: user?.id },
@@ -119,8 +115,6 @@ export const updateContentTask = async (
   content: string,
   categoryId: number | undefined,
 ) => {
-  const user = await getUserInfo()
-
   try {
     await db.task.update({
       where: { id, userId: user?.id },
@@ -129,6 +123,7 @@ export const updateContentTask = async (
         categoryId,
       },
     })
+    revalidateTag('task_in_category')
   } catch (error) {
     console.error('Error creating task:', error)
     throw new Error('Task creation failed.')

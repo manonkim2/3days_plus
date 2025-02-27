@@ -1,8 +1,7 @@
 'use client'
 
-import * as React from 'react'
+import { useState } from 'react'
 import { Check, ChevronsUpDown } from 'lucide-react'
-
 import { cn } from '@/utils/cn'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,7 +19,7 @@ import {
 
 interface ICheckbox {
   items: { value: string; id: number }[]
-  commandInput: React.ReactNode
+  commandInput?: React.ReactNode
   value: { value: string; id: number } | null
   setStateAction: React.Dispatch<
     React.SetStateAction<{ value: string; id: number } | null>
@@ -33,7 +32,7 @@ export function Combobox({
   value,
   setStateAction,
 }: ICheckbox) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,17 +41,17 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-[160px] justify-between"
         >
           {value
             ? items.find((items) => items.id === value.id)?.value
-            : 'Select category...'}
+            : 'Select category'}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[160px] p-0">
+        {commandInput}
         <Command>
-          {commandInput}
           <CommandList>
             <CommandEmpty>No category found.</CommandEmpty>
             <CommandGroup>

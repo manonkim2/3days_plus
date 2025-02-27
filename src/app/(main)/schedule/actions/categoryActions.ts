@@ -11,6 +11,8 @@ export interface ICategory {
   color: string | null
 }
 
+const user = await getUserInfo()
+
 export const createCategory = async (
   prev: ICategory[],
   formData: FormData,
@@ -21,8 +23,6 @@ export const createCategory = async (
     return prev
   }
 
-  const user = await getUserInfo()
-
   try {
     await db.category.create({
       data: {
@@ -31,7 +31,7 @@ export const createCategory = async (
       },
     })
 
-    revalidateTag('category_task')
+    revalidateTag('task_category')
     return await getCategory()
   } catch (error) {
     console.error('Error creating category:', error)
@@ -39,22 +39,24 @@ export const createCategory = async (
   }
 }
 
-export const getCategory = async (): Promise<ICategory[]> => {
-  const user = await getUserInfo()
+export const getCategory = nextCache(
+  cache(async (): Promise<ICategory[]> => {
+    const category = await db.category.findMany({
+      where: {
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+        title: true,
+        color: true,
+      },
+    })
 
-  const category = await db.category.findMany({
-    where: {
-      userId: user?.id,
-    },
-    select: {
-      id: true,
-      title: true,
-      color: true,
-    },
-  })
-
-  return category
-}
+    return category
+  }),
+  ['task_category'],
+  { tags: ['task_category'] },
+)
 
 export const deleteCategory = async (id: number) => {
   try {
@@ -62,15 +64,22 @@ export const deleteCategory = async (id: number) => {
       where: { id },
     })
 
-    return await getCategory()
+    revalidateTag('task_category')
   } catch (error) {
     console.error('Error deleting task:', error)
     throw new Error('Task deletion failed.')
   }
 }
 
+export type ITaskInCategory = {
+  id: number
+  content: string
+  completed: boolean
+  date: Date
+}
+
 export const getTaskInCategory = nextCache(
-  cache(async (id: number) => {
+  cache(async (id: number): Promise<ITaskInCategory[]> => {
     try {
       return await db.task.findMany({
         where: { categoryId: id },
@@ -86,8 +95,9 @@ export const getTaskInCategory = nextCache(
       })
     } catch (error) {
       console.error('Error get task:', error)
+      return []
     }
   }),
-  ['categoryTask'],
-  { tags: ['category_task'] },
+  ['task_in_category'],
+  { tags: ['task_in_category'] },
 )

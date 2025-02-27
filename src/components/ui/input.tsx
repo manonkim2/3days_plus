@@ -5,10 +5,17 @@ interface InputProps extends React.ComponentProps<'input'> {
   icon?: React.ReactNode
   errors?: string[]
   button?: React.ReactNode
+  onSave?: () => void
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, icon, button, errors, ...props }, ref) => {
+  ({ className, type, icon, button, errors, onSave, ...props }, ref) => {
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' && onSave) {
+        onSave() // 엔터 키를 누르면 onSave 함수 호출
+      }
+    }
+
     return (
       <div className="w-full flex flex-col">
         <div className="relative">
@@ -28,12 +35,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className,
             )}
             ref={ref}
+            onKeyDown={handleKeyDown}
             {...props}
           />
           {button && (
             <button
               type="submit"
-              className="absolute right-1 top-1/2 -translate-y-1/2 transition-opacity disabled:opacity-50"
+              className="absolute right-2 top-1/2 -translate-y-1/2 transition-opacity disabled:opacity-50"
+              onClick={onSave}
             >
               {button}
             </button>
