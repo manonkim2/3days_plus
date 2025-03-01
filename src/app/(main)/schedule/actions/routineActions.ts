@@ -1,25 +1,25 @@
 'use server'
 
-import db from '@/utils/db'
+import { cache } from 'react'
+import { unstable_cache as nextCache, revalidateTag } from 'next/cache'
 import { endOfDay, startOfDay } from 'date-fns'
+import db from '@/utils/db'
 import { Prisma } from '../../../../../prisma/client'
 import { getKoreanTime } from '@/utils/formmattedDate'
 import { getUserInfo } from '@/utils/supabase/actions'
-import { cache } from 'react'
 
 export interface IRoutine {
   id: number
   name: string
   color?: string
-  complete?: boolean
   logId?: number
 }
+
+const user = await getUserInfo()
 
 export const createRoutine = async (
   formData: FormData,
 ): Promise<IRoutine | undefined> => {
-  const user = await getUserInfo()
-
   try {
     const routine = formData.get('content') as string | null
 
@@ -27,7 +27,7 @@ export const createRoutine = async (
       return
     }
 
-    const newRoutine = await db.routine.create({
+    await db.routine.create({
       data: {
         name: routine,
         userId: user?.id as string,
@@ -39,38 +39,38 @@ export const createRoutine = async (
       },
     })
 
-    return newRoutine
+    revalidateTag('routines')
   } catch (error) {
     console.error('Error create routine', error)
   }
 }
 
-export const getRoutines = cache(async (): Promise<IRoutine[]> => {
-  const user = await getUserInfo()
+export const getRoutines = nextCache(
+  cache(async (): Promise<IRoutine[]> => {
+    const routines = await db.routine.findMany({
+      where: {
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    })
 
-  const routines = await db.routine.findMany({
-    where: {
-      userId: user?.id,
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-    orderBy: {
-      id: 'asc',
-    },
-  })
-
-  return routines
-})
+    return routines
+  }),
+  ['routines'],
+  { tags: ['routines'] },
+)
 
 export const getRoutineLog = cache(
   async (
     day?: Date,
     week?: Date[],
   ): Promise<{ id: number; routineId: number; date: Date }[]> => {
-    const user = await getUserInfo()
-
     const whereCondition: Prisma.RoutineLogWhereInput = {
       userId: user?.id,
     }
@@ -108,7 +108,6 @@ export const deleteRoutine = async (id: number) => {
 }
 
 export const completeRoutine = async (routineId: number, day: Date) => {
-  const user = await getUserInfo()
   const date = getKoreanTime(startOfDay(day))
 
   try {

@@ -11,7 +11,7 @@ import Box from '@/components/Box'
 import TaskCategory from './components/TaskCategory'
 
 const SchedulePage = async () => {
-  const routinesData = await getRoutines()
+  const routineList = await getRoutines()
   const tasks: ITask[] = await getTask(getKoreanTime(new Date()))
   const categories: ICategory[] = await getCategory()
 
@@ -29,7 +29,7 @@ const SchedulePage = async () => {
           <TaskList tasks={tasks} categories={categories} />
         </div>
         <aside>
-          <RoutineManager routinesData={routinesData} />
+          <RoutineManager routineList={routineList} />
         </aside>
       </div>
     </DateProvider>

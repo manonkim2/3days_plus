@@ -11,7 +11,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import Box from '@/components/Box'
-import { useRoutineWeekContext } from '../context'
+import { useDateContext } from '../context'
 import { useEffect, useState } from 'react'
 import { getRoutineLog } from '../actions/routineActions'
 import { format } from 'date-fns'
@@ -28,7 +28,7 @@ const WeekChart = () => {
     { week: string; complete: string }[]
   >([])
 
-  const { week, routines } = useRoutineWeekContext()
+  const { week, routines } = useDateContext()
 
   useEffect(() => {
     ;(async () => {

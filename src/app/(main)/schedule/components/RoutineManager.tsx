@@ -1,7 +1,7 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
-import { Check, Undo2 } from 'lucide-react'
+import { useActionState, useEffect, useState, useCallback } from 'react'
+import { format, isSameDay } from 'date-fns'
 
 import { useDateContext } from '../context'
 import {
@@ -13,18 +13,22 @@ import {
 } from '../actions/routineActions'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import Box from '@/components/Box'
-import { Button } from '@/components/ui'
 import { getDateWithWeek } from '@/utils/formmattedDate'
+import { cn } from '@/utils/cn'
 
-const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
-  const { date, setRoutines, routines } = useDateContext()
+const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
+  const { date, week } = useDateContext()
+
+  const [routines, setRoutines] = useState<IRoutine[]>(routineList)
+  const [completedDay, setCompletedDay] = useState<Record<string, Set<number>>>(
+    {},
+  )
 
   const [, formAction, isPending] = useActionState(
     async (_: void | null, formData: FormData) => {
-      const newKeyword = await createRoutine(formData)
-
-      if (newKeyword) {
-        setRoutines((prev) => [...prev, newKeyword])
+      const newRoutine = await createRoutine(formData)
+      if (newRoutine) {
+        setRoutines((prev) => [...prev, newRoutine])
       }
     },
     null,
@@ -32,67 +36,69 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
 
   const handleClickComplete = async (id: number) => {
     const completedLog = await completeRoutine(id, date)
-
     if (completedLog) {
       setRoutines((prev) =>
         prev.map((routine) =>
-          routine.id === id
-            ? { ...routine, complete: true, logId: completedLog.id }
-            : routine,
+          routine.id === id ? { ...routine, logId: completedLog.id } : routine,
         ),
       )
     }
   }
 
   const handleClickUndo = async (id: number | undefined) => {
-    if (id) {
-      await unCompleteRoutine(id)
-
-      setRoutines((prev) =>
-        prev.map((routine) =>
-          routine.logId === id
-            ? { ...routine, complete: false, logId: undefined }
-            : routine,
-        ),
-      )
-    }
+    if (!id) return
+    await unCompleteRoutine(id)
+    setRoutines((prev) =>
+      prev.map((routine) =>
+        routine.logId === id ? { ...routine, logId: undefined } : routine,
+      ),
+    )
   }
 
+  const fetchRoutineLogs = useCallback(async () => {
+    const logs = await getRoutineLog(undefined, week)
+    const logMap = logs.reduce<Record<string, Set<number>>>((acc, log) => {
+      const dateKey = format(new Date(log.date), 'yyyy-MM-dd')
+      acc[dateKey] = acc[dateKey] || new Set()
+      acc[dateKey].add(log.routineId)
+      return acc
+    }, {})
+    setCompletedDay(logMap)
+
+    setRoutines((prev) =>
+      prev.map((routine) => {
+        const log = logs.find(
+          (log) =>
+            isSameDay(new Date(log.date), date) && log.routineId === routine.id,
+        )
+        return {
+          ...routine,
+          logId: log?.id,
+        }
+      }),
+    )
+  }, [date, week, setRoutines])
+
   useEffect(() => {
-    setRoutines(routinesData)
-
-    const fetchRoutines = async () => {
-      const dayRoutineLog = await getRoutineLog(date)
-
-      setRoutines((prev) =>
-        prev.map((routine) => {
-          const log = dayRoutineLog.find((log) => log.routineId === routine.id)
-          return {
-            ...routine,
-            complete: Boolean(log),
-            logId: log?.id,
-          }
-        }),
-      )
-    }
-
-    fetchRoutines()
-  }, [date, routinesData, setRoutines])
+    fetchRoutineLogs()
+  }, [fetchRoutineLogs])
 
   return (
     <Box title={getDateWithWeek(date)}>
-      <div className="flex flex-col gap-sm py-lg">
+      <div className="flex flex-col gap-sm pb-sm">
         <FormActionWrapper
           formAction={formAction}
           placeholder="Add your routine"
           isPending={isPending}
         />
         {routines?.map((routine) => (
-          <RoutineItem
+          <RoutineCard
             key={routine.id}
             routine={routine}
             onClickComplete={handleClickComplete}
             onClickUndo={handleClickUndo}
+            completedDay={completedDay}
+            week={week}
           />
         ))}
       </div>
@@ -100,41 +106,58 @@ const RoutineManager = ({ routinesData }: { routinesData: IRoutine[] }) => {
   )
 }
 
-const RoutineItem = ({
+const RoutineCard = ({
   routine,
   onClickComplete,
   onClickUndo,
+  completedDay,
+  week,
 }: {
   routine: IRoutine
   onClickComplete: (id: number) => void
   onClickUndo: (id: number | undefined) => void
+  completedDay: Record<string, Set<number>>
+  week: Date[]
 }) => {
   return (
-    <div className="flex flex-col border p-md gap-sm">
-      <span>{routine.name}</span>
-      {!routine.logId ? (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onClickComplete(routine.id)}
-        >
-          Complete
-        </Button>
-      ) : (
-        <div className="flex items-center justify-between gap-xs bg-black">
-          <div className="flex items-center">
-            <Check className="h-3 w-3" color="white" />
-            <p className="text-xs text-white ">Completed</p>
-          </div>
+    <div className="flex flex-col justify-between border gap-sm rounded-lg min-h-[120px] p-lg">
+      <div className="flex justify-between items-center">
+        <span className="text-lg font-semibold">{routine.name}</span>
+        {!routine.logId ? (
+          <button
+            className="text-sm text-fontPrimary"
+            onClick={() => onClickComplete(routine.id)}
+          >
+            Complete
+          </button>
+        ) : (
           <div
-            className="flex items-center cursor-pointer"
+            className="flex items-center gap-xs cursor-pointer"
             onClick={() => onClickUndo(routine.logId)}
           >
-            <Undo2 className="h-3 w-3" color="white" />
-            <p className="text-xs text-white ">Undo</p>
+            <p className="text-xs">Undo</p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+      <div className="flex justify-between">
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => {
+          const dateKey = format(week[index], 'yyyy-MM-dd')
+          const isCompleted = completedDay[dateKey]?.has(routine.id)
+          return (
+            <span
+              key={index}
+              className={cn(
+                'text-xs',
+                isCompleted
+                  ? 'font-bold text-black'
+                  : 'text-gray-400 font-light',
+              )}
+            >
+              {day}
+            </span>
+          )
+        })}
+      </div>
     </div>
   )
 }

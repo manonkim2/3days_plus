@@ -1,22 +1,11 @@
 'use client'
 
 import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
-import { IRoutine } from './actions/routineActions'
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
 interface DateContextType {
   week: Date[]
   date: Date
-  routines: IRoutine[]
-  setRoutines: Dispatch<SetStateAction<IRoutine[]>>
   handleClickDate: (date: Date) => void
 }
 
@@ -24,7 +13,6 @@ const WeekContext = createContext<DateContextType | null>(null)
 
 export const DateProvider = ({ children }: { children: ReactNode }) => {
   const [date, setDate] = useState(new Date())
-  const [routines, setRoutines] = useState<IRoutine[]>([])
 
   const week = useMemo(
     () => eachDayOfInterval({ start: startOfWeek(date), end: endOfWeek(date) }),
@@ -34,9 +22,7 @@ export const DateProvider = ({ children }: { children: ReactNode }) => {
   const handleClickDate = (selectedDay: Date) => setDate(selectedDay)
 
   return (
-    <WeekContext.Provider
-      value={{ date, week, handleClickDate, setRoutines, routines }}
-    >
+    <WeekContext.Provider value={{ date, week, handleClickDate }}>
       {children}
     </WeekContext.Provider>
   )
