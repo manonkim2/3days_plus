@@ -24,6 +24,21 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
     {},
   )
 
+  const updateCompletionState = (id: number, isCompleted: boolean) => {
+    setCompletedDay((prev) => {
+      const dateKey = format(date, 'yyyy-MM-dd')
+      const updatedSet = new Set(prev[dateKey] || [])
+
+      if (isCompleted) {
+        updatedSet.add(id)
+      } else {
+        updatedSet.delete(id)
+      }
+
+      return { ...prev, [dateKey]: updatedSet }
+    })
+  }
+
   const [, formAction, isPending] = useActionState(
     async (_: void | null, formData: FormData) => {
       const newRoutine = await createRoutine(formData)
@@ -42,42 +57,55 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
           routine.id === id ? { ...routine, logId: completedLog.id } : routine,
         ),
       )
+      updateCompletionState(id, true)
     }
   }
 
   const handleClickUndo = async (id: number | undefined) => {
     if (!id) return
-    await unCompleteRoutine(id)
+
     setRoutines((prev) =>
       prev.map((routine) =>
         routine.logId === id ? { ...routine, logId: undefined } : routine,
       ),
     )
+    updateCompletionState(id, false)
+
+    await unCompleteRoutine(id)
+
+    fetchRoutineLogs()
   }
 
-  const fetchRoutineLogs = useCallback(async () => {
-    const logs = await getRoutineLog(undefined, week)
-    const logMap = logs.reduce<Record<string, Set<number>>>((acc, log) => {
-      const dateKey = format(new Date(log.date), 'yyyy-MM-dd')
-      acc[dateKey] = acc[dateKey] || new Set()
-      acc[dateKey].add(log.routineId)
-      return acc
-    }, {})
-    setCompletedDay(logMap)
+  const fetchRoutineLogs = useCallback(
+    async (updateFromUndo = false) => {
+      const logs = await getRoutineLog(undefined, week)
+      const logMap = logs.reduce<Record<string, Set<number>>>((acc, log) => {
+        const dateKey = format(new Date(log.date), 'yyyy-MM-dd')
+        acc[dateKey] = acc[dateKey] || new Set()
+        acc[dateKey].add(log.routineId)
+        return acc
+      }, {})
 
-    setRoutines((prev) =>
-      prev.map((routine) => {
-        const log = logs.find(
-          (log) =>
-            isSameDay(new Date(log.date), date) && log.routineId === routine.id,
-        )
-        return {
-          ...routine,
-          logId: log?.id,
-        }
-      }),
-    )
-  }, [date, week, setRoutines])
+      if (!updateFromUndo) {
+        setCompletedDay(logMap)
+      }
+
+      setRoutines((prev) =>
+        prev.map((routine) => {
+          const log = logs.find(
+            (log) =>
+              isSameDay(new Date(log.date), date) &&
+              log.routineId === routine.id,
+          )
+          return {
+            ...routine,
+            logId: log?.id,
+          }
+        }),
+      )
+    },
+    [date, week, setRoutines],
+  )
 
   useEffect(() => {
     fetchRoutineLogs()
@@ -120,7 +148,7 @@ const RoutineCard = ({
   week: Date[]
 }) => {
   return (
-    <div className="flex flex-col justify-between border gap-sm rounded-lg min-h-[120px] p-lg">
+    <div className="flex flex-col justify-between relative border gap-sm rounded-lg min-h-[120px] p-lg overflow-hidden">
       <div className="flex justify-between items-center">
         <span className="text-lg font-semibold">{routine.name}</span>
         {!routine.logId ? (
