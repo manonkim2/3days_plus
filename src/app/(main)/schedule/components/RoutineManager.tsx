@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useEffect, useState, useCallback } from 'react'
+import { motion, useAnimation } from 'framer-motion'
 import { format, isSameDay } from 'date-fns'
 
 import { useDateContext } from '../context'
@@ -76,6 +77,15 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
     fetchRoutineLogs()
   }
 
+  const getCompletionPercent = (routineId: number) => {
+    const completedCount = week.filter((day) => {
+      const dateKey = format(day, 'yyyy-MM-dd')
+      return completedDay[dateKey]?.has(routineId)
+    }).length
+
+    return (completedCount / 7) * 100
+  }
+
   const fetchRoutineLogs = useCallback(
     async (updateFromUndo = false) => {
       const logs = await getRoutineLog(undefined, week)
@@ -127,6 +137,7 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
             onClickUndo={handleClickUndo}
             completedDay={completedDay}
             week={week}
+            percent={getCompletionPercent(routine.id)}
           />
         ))}
       </div>
@@ -140,31 +151,50 @@ const RoutineCard = ({
   onClickUndo,
   completedDay,
   week,
+  percent,
 }: {
   routine: IRoutine
   onClickComplete: (id: number) => void
   onClickUndo: (id: number | undefined) => void
   completedDay: Record<string, Set<number>>
   week: Date[]
+  percent: number
 }) => {
+  const controls = useAnimation()
+
+  useEffect(() => {
+    const radius = Math.min(percent * 1.2)
+
+    controls.start({
+      clipPath: `circle(${radius}% at 35px 25%)`,
+      transition: { duration: 1, ease: 'easeInOut' },
+    })
+  }, [percent, controls])
+
   return (
     <div className="flex flex-col justify-between relative border gap-sm rounded-lg min-h-[120px] p-lg overflow-hidden">
+      <motion.div
+        initial={{ clipPath: 'circle(0% at 0% 0%)' }}
+        animate={controls}
+        className="absolute left-0 top-0 h-full w-full bg-black opacity-20 pointer-events-none"
+      ></motion.div>
+
       <div className="flex justify-between items-center">
         <span className="text-lg font-semibold">{routine.name}</span>
         {!routine.logId ? (
           <button
-            className="text-sm text-fontPrimary"
+            className="text-xs text-fontPrimary"
             onClick={() => onClickComplete(routine.id)}
           >
             Complete
           </button>
         ) : (
-          <div
-            className="flex items-center gap-xs cursor-pointer"
+          <button
+            className="text-xs text-fontPrimary"
             onClick={() => onClickUndo(routine.logId)}
           >
             <p className="text-xs">Undo</p>
-          </div>
+          </button>
         )}
       </div>
       <div className="flex justify-between">
