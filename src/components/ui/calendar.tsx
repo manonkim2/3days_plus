@@ -6,6 +6,7 @@ import { DayPicker } from 'react-day-picker'
 
 import { cn } from '@/utils/cn'
 import { buttonVariants } from '@/components/ui/button'
+import { endOfWeek, isAfter, startOfDay } from 'date-fns'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -15,6 +16,8 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const lastDayOfThisWeek = endOfWeek(new Date(), { weekStartsOn: 0 })
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -44,13 +47,13 @@ function Calendar({
         ),
         day: cn(
           buttonVariants({ variant: 'ghost' }),
-          'h-8 w-8 p-0 font-normal aria-selected:opacity-100',
+          'h-8 w-8 p-0 font-normal aria-selected:opacity-90',
         ),
         day_range_start: 'day-range-start',
         day_range_end: 'day-range-end',
         day_selected:
           'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
-        day_today: 'bg-accent text-accent-foreground',
+        day_today: 'bg-gray-200 text-accent-foreground',
         day_outside:
           'day-outside text-muted-foreground aria-selected:bg-accent/50 aria-selected:text-muted-foreground',
         day_disabled: 'text-muted-foreground opacity-50',
@@ -79,6 +82,9 @@ function Calendar({
           <ChevronRight className={cn('h-4 w-4', className)} {...props} />
         ),
       }}
+      disabled={(date) =>
+        isAfter(startOfDay(date), startOfDay(lastDayOfThisWeek))
+      }
       {...props}
     />
   )

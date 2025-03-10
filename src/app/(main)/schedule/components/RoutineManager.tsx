@@ -47,6 +47,7 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
   const [, formAction, isPending] = useActionState(
     async (_: void | null, formData: FormData) => {
       const newRoutine = await createRoutine(formData)
+
       if (newRoutine) {
         setRoutines((prev) => [...prev, newRoutine])
       }
@@ -85,8 +86,8 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
   const handleOnClickDelete = async (id: number) => {
     if (!id) return
 
-    const deletedRoutine = await deleteRoutine(id)
-    setRoutines(deletedRoutine)
+    await deleteRoutine(id)
+    setRoutines((prev) => prev.filter((routine) => routine.id !== id))
   }
 
   const getCompletionPercent = (routineId: number) => {
@@ -182,6 +183,7 @@ const RoutineCard = ({
   onClickDelete: (id: number) => void
   completedDay: Record<string, Set<number>>
   week: Date[]
+
   percent: number
 }) => {
   const controls = useAnimation()
@@ -195,47 +197,77 @@ const RoutineCard = ({
     })
   }, [percent, controls])
 
+  const renderWeek = () => {
+    const today = format(new Date(), 'yyyy-MM-dd')
+
+    return (
+      <div className="flex justify-between">
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => {
+          const dateKey = format(week[index], 'yyyy-MM-dd')
+          const isCompleted = completedDay[dateKey]?.has(routine.id)
+          const isToday = dateKey === today
+
+          return (
+            <span
+              key={index}
+              className={cn(
+                'text-xs relative flex items-center justify-center',
+                isCompleted
+                  ? 'font-bold text-black'
+                  : 'text-gray-300 font-light',
+              )}
+            >
+              {day}
+              {isToday && (
+                <span
+                  className="absolute"
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    border: '1px solid black',
+                  }}
+                />
+              )}
+            </span>
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
-    <div className="flex flex-col justify-between relative border gap-sm rounded-lg h-[120px] p-lg overflow-hidden">
+    <div
+      className={cn(
+        'flex flex-col justify-between relative border gap-sm rounded-lg h-[100px] min-w-[160px] p-lg overflow-hidden ',
+      )}
+    >
       <motion.div
         initial={{ clipPath: 'circle(0% at 0% 0%)' }}
         animate={controls}
-        className="absolute left-0 top-0 h-full w-full bg-black opacity-20 pointer-events-none"
+        className="absolute left-0 top-0 h-full w-full bg-black opacity-10 pointer-events-none"
       ></motion.div>
 
       <div className="flex justify-between items-center">
         <span className="text-lg font-semibold">{routine.name}</span>
         <DropDown
+          disabled={Boolean(!routine.logId)}
           onClickUndo={() => onClickUndo(routine.logId)}
           onClickDelete={() => onClickDelete(routine.id)}
         />
       </div>
 
-      {!routine.logId && (
-        <Button onClick={() => onClickComplete(routine.id)} size="sm">
+      {!routine.logId ? (
+        <Button
+          onClick={() => onClickComplete(routine.id)}
+          size="sm"
+          className="z-1000"
+        >
           Complete
         </Button>
+      ) : (
+        <>{renderWeek()}</>
       )}
-
-      <div className="flex justify-between">
-        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => {
-          const dateKey = format(week[index], 'yyyy-MM-dd')
-          const isCompleted = completedDay[dateKey]?.has(routine.id)
-          return (
-            <span
-              key={index}
-              className={cn(
-                'text-xs',
-                isCompleted
-                  ? 'font-bold text-black'
-                  : 'text-gray-400 font-light',
-              )}
-            >
-              {day}
-            </span>
-          )
-        })}
-      </div>
     </div>
   )
 }
