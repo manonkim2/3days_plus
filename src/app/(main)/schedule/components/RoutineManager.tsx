@@ -8,14 +8,18 @@ import { useDateContext } from '../context'
 import {
   completeRoutine,
   createRoutine,
+  deleteRoutine,
   getRoutineLog,
   IRoutine,
   unCompleteRoutine,
 } from '../actions/routineActions'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import Box from '@/components/Box'
+
 import { getDateWithWeek } from '@/utils/formmattedDate'
 import { cn } from '@/utils/cn'
+import DropDown from '@/app/(main)/schedule/components/DropDown'
+import { Button } from '@/components/ui'
 
 const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
   const { date, week } = useDateContext()
@@ -52,6 +56,7 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
 
   const handleClickComplete = async (id: number) => {
     const completedLog = await completeRoutine(id, date)
+
     if (completedLog) {
       setRoutines((prev) =>
         prev.map((routine) =>
@@ -75,6 +80,13 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
     await unCompleteRoutine(id)
 
     fetchRoutineLogs()
+  }
+
+  const handleOnClickDelete = async (id: number) => {
+    if (!id) return
+
+    const deletedRoutine = await deleteRoutine(id)
+    setRoutines(deletedRoutine)
   }
 
   const getCompletionPercent = (routineId: number) => {
@@ -122,7 +134,16 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
   }, [fetchRoutineLogs])
 
   return (
-    <Box title={getDateWithWeek(date)}>
+    <Box
+      title={
+        <div className="flex flex-col xl:flex-row justify-between items-baseline px-sm pt-sm">
+          <h1 className="text-fontPrimary text-2xl">Routines</h1>
+          <span className="text-fontPrimary text-md">
+            {getDateWithWeek(date)}
+          </span>
+        </div>
+      }
+    >
       <div className="flex flex-col gap-sm pb-sm">
         <FormActionWrapper
           formAction={formAction}
@@ -135,6 +156,7 @@ const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
             routine={routine}
             onClickComplete={handleClickComplete}
             onClickUndo={handleClickUndo}
+            onClickDelete={handleOnClickDelete}
             completedDay={completedDay}
             week={week}
             percent={getCompletionPercent(routine.id)}
@@ -149,6 +171,7 @@ const RoutineCard = ({
   routine,
   onClickComplete,
   onClickUndo,
+  onClickDelete,
   completedDay,
   week,
   percent,
@@ -156,6 +179,7 @@ const RoutineCard = ({
   routine: IRoutine
   onClickComplete: (id: number) => void
   onClickUndo: (id: number | undefined) => void
+  onClickDelete: (id: number) => void
   completedDay: Record<string, Set<number>>
   week: Date[]
   percent: number
@@ -172,7 +196,7 @@ const RoutineCard = ({
   }, [percent, controls])
 
   return (
-    <div className="flex flex-col justify-between relative border gap-sm rounded-lg min-h-[120px] p-lg overflow-hidden">
+    <div className="flex flex-col justify-between relative border gap-sm rounded-lg h-[120px] p-lg overflow-hidden">
       <motion.div
         initial={{ clipPath: 'circle(0% at 0% 0%)' }}
         animate={controls}
@@ -181,22 +205,18 @@ const RoutineCard = ({
 
       <div className="flex justify-between items-center">
         <span className="text-lg font-semibold">{routine.name}</span>
-        {!routine.logId ? (
-          <button
-            className="text-xs text-fontPrimary"
-            onClick={() => onClickComplete(routine.id)}
-          >
-            Complete
-          </button>
-        ) : (
-          <button
-            className="text-xs text-fontPrimary"
-            onClick={() => onClickUndo(routine.logId)}
-          >
-            <p className="text-xs">Undo</p>
-          </button>
-        )}
+        <DropDown
+          onClickUndo={() => onClickUndo(routine.logId)}
+          onClickDelete={() => onClickDelete(routine.id)}
+        />
       </div>
+
+      {!routine.logId && (
+        <Button onClick={() => onClickComplete(routine.id)} size="sm">
+          Complete
+        </Button>
+      )}
+
       <div className="flex justify-between">
         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => {
           const dateKey = format(week[index], 'yyyy-MM-dd')

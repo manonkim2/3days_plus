@@ -24,7 +24,7 @@ const SchedulePage = async () => {
             <TodayChart />
           </Box>
         </aside>
-        <div className="grid grid-cols-[1fr_4fr]">
+        <div className="grid grid-cols-[1fr_2fr]">
           <TaskCategory categories={categories} />
           <TaskList tasks={tasks} categories={categories} />
         </div>
