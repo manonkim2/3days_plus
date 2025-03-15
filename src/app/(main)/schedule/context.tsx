@@ -1,18 +1,26 @@
 'use client'
 
-import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useState, useEffect, useMemo } from 'react'
 
-interface DateContextType {
-  week: Date[]
+import { getKoreanTime } from '@/utils/formmattedDate'
+import { getTask, ITask } from './actions/taskActions'
+import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
+
+interface TaskContextType {
   date: Date
+  week: Date[]
   handleClickDate: (date: Date) => void
+
+  tasks: ITask[]
+  setTasks: (tasks: ITask[]) => void
+  refreshTasks: () => Promise<void>
 }
 
-const WeekContext = createContext<DateContextType | null>(null)
+const TaskContext = createContext<TaskContextType | null>(null)
 
-export const DateProvider = ({ children }: { children: ReactNode }) => {
-  const [date, setDate] = useState(new Date())
+export const DateProvider = ({ children }: { children: React.ReactNode }) => {
+  const [date, setDate] = useState(getKoreanTime(new Date()))
+  const [tasks, setTasks] = useState<ITask[]>([])
 
   const week = useMemo(
     () => eachDayOfInterval({ start: startOfWeek(date), end: endOfWeek(date) }),
@@ -21,17 +29,29 @@ export const DateProvider = ({ children }: { children: ReactNode }) => {
 
   const handleClickDate = (selectedDay: Date) => setDate(selectedDay)
 
+  const refreshTasks = async () => {
+    const updatedTasks = await getTask(date)
+    setTasks(updatedTasks)
+  }
+
+  useEffect(() => {
+    refreshTasks()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date])
+
   return (
-    <WeekContext.Provider value={{ date, week, handleClickDate }}>
+    <TaskContext.Provider
+      value={{ date, week, handleClickDate, tasks, setTasks, refreshTasks }}
+    >
       {children}
-    </WeekContext.Provider>
+    </TaskContext.Provider>
   )
 }
 
-export const useDateContext = () => {
-  const context = useContext(WeekContext)
+export const useTaskContext = () => {
+  const context = useContext(TaskContext)
   if (!context) {
-    throw new Error('useDateContext must be used within a WeekProvider')
+    throw new Error('useTaskContext must be used within a TaskProvider')
   }
   return context
 }

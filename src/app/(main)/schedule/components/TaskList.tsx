@@ -20,7 +20,7 @@ import { Input } from '@/components/ui'
 import { Combobox } from '@/app/(main)/schedule/components/TaskCategoryCombobox'
 import { createCategory, ICategory } from '../actions/categoryActions'
 import { Pencil, Save, Trash2 } from 'lucide-react'
-import { useDateContext } from '../context'
+import { useTaskContext } from '../context'
 
 const TaskInput = ({
   tasks,
@@ -29,7 +29,7 @@ const TaskInput = ({
   tasks: ITask[]
   categories: ICategory[]
 }) => {
-  const { date } = useDateContext()
+  const { date, refreshTasks } = useTaskContext()
 
   const [category, setCategory] = useState<{
     value: string
@@ -67,6 +67,7 @@ const TaskInput = ({
 
   const handleToggleTask = async (id: number, completed: boolean) => {
     await updateCheckTask(id, completed)
+    await refreshTasks()
     startTransition(() => {
       formAction(new FormData())
     })

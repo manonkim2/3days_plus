@@ -2,8 +2,8 @@
 
 import { useMemo } from 'react'
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts'
+import { useTaskContext } from '../context'
 import { ChartContainer } from '@/components/ui/chart'
-import { useDateContext } from '../context'
 
 const chartConfig = {
   completed: {
@@ -12,31 +12,29 @@ const chartConfig = {
   },
 }
 
-const TodayChart = () => {
-  const { routines, date } = useDateContext()
+const DayTaskChart = () => {
+  const { tasks } = useTaskContext()
 
   const completedRoutineRatio = useMemo(() => {
-    if (routines.length === 0) return 0
+    if (tasks.length === 0) return 0
 
-    const completedCount = routines.filter((item) => item.complete).length
-    return completedCount / routines.length
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routines, date])
+    return tasks.filter((task) => task.completed).length / tasks.length
+  }, [tasks])
 
   const chartData = useMemo(() => {
-    const completedCount = routines.filter((item) => item.complete).length
+    const completedCount = tasks.filter((item) => item.completed).length
     return [
       {
         completed: completedCount,
-        total: routines.length,
+        total: tasks.length,
         fill: 'hsl(var(--chart-2))',
       },
     ]
-  }, [routines])
+  }, [tasks])
 
   const percentage = useMemo(() => {
-    return routines.length === 0 ? 0 : Math.round(completedRoutineRatio * 100)
-  }, [completedRoutineRatio, routines.length])
+    return tasks.length === 0 ? 0 : Math.round(completedRoutineRatio * 100)
+  }, [completedRoutineRatio, tasks.length])
 
   const footerMessage = useMemo(() => {
     if (percentage === 100) {
@@ -74,7 +72,7 @@ const TodayChart = () => {
               content={({ viewBox }) => {
                 if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                   const percentage =
-                    routines.length === 0
+                    tasks.length === 0
                       ? 0
                       : Math.round(
                           (chartData[0].completed / chartData[0].total) * 100,
@@ -115,4 +113,4 @@ const TodayChart = () => {
   )
 }
 
-export default TodayChart
+export default DayTaskChart

@@ -2,7 +2,7 @@ import { DateProvider } from './context'
 import TaskList from './components/TaskList'
 import Calendar from './components/Calendar'
 import RoutineManager from './components/RoutineManager'
-import TodayChart from './components/TodayChart'
+import DayTaskChart from './components/DayTaskChart'
 import RoutinesTable from './components/RoutinesTable'
 import Box from '@/components/Box'
 import { getCategory, ICategory } from './actions/categoryActions'
@@ -26,7 +26,7 @@ const SchedulePage = async () => {
         <div className="flex flex-col gap-md h-full">
           <Box>
             <div className="grid grid-cols-[1fr_2fr] h-[calc(50vh-var(--navbar-height))]">
-              <TodayChart />
+              <DayTaskChart />
               <TaskList tasks={tasks} categories={categories} />
             </div>
           </Box>

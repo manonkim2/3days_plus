@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState, useCallback } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { format, isSameDay } from 'date-fns'
 
-import { useDateContext } from '../context'
+import { useTaskContext } from '../context'
 import {
   completeRoutine,
   createRoutine,
@@ -22,7 +22,7 @@ import DropDown from '@/app/(main)/schedule/components/DropDown'
 import { Button } from '@/components/ui'
 
 const RoutineManager = ({ routineList }: { routineList: IRoutine[] }) => {
-  const { date, week } = useDateContext()
+  const { date, week } = useTaskContext()
 
   const [routines, setRoutines] = useState<IRoutine[]>(routineList)
   const [completedDay, setCompletedDay] = useState<Record<string, Set<number>>>(
