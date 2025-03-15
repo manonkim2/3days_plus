@@ -110,7 +110,7 @@ const TaskInput = ({
   }, [date, formAction])
 
   return (
-    <div className="flex flex-col gap-md w-full pl-md">
+    <div className="flex flex-col gap-md w-full pl-md max-h-[40vh] overflow-auto">
       {/* category/Task create */}
       <div className="grid grid-cols-[1fr_3fr] gap-sm h-9">
         <Combobox
@@ -134,58 +134,66 @@ const TaskInput = ({
         />
       </div>
 
-      {/* taskList */}
-      {taskList?.map(({ id, completed, content, categoryId }) => {
-        const category = categoryList.find((c) => c.id === categoryId)
+      {taskList.length === 0 && (
+        <p className="flex justify-center items-center py-12 text-base text-fontSecondary border border-dashed rounded-md h-full">
+          Let&apos;s plan your day!
+        </p>
+      )}
 
-        return (
-          <div key={id} className="flex items-center w-full">
-            {editTask?.id !== id ? (
-              <div className="flex justify-between w-full">
-                <div onClick={() => handleToggleTask(id, completed)}>
-                  <Checkbox
-                    checked={completed}
-                    text={content}
-                    badge={category?.title}
+      {/* taskList */}
+      <div className="flex flex-col gap-xs">
+        {taskList?.map(({ id, completed, content, categoryId }) => {
+          const category = categoryList.find((c) => c.id === categoryId)
+
+          return (
+            <div key={id}>
+              {editTask?.id !== id ? (
+                <div className="flex justify-between w-full px-xs">
+                  <div onClick={() => handleToggleTask(id, completed)}>
+                    <Checkbox
+                      checked={completed}
+                      text={content}
+                      badge={category?.title}
+                    />
+                  </div>
+                  <div className="flex items-center gap-sm">
+                    <div
+                      onClick={() => startEditingTask(id, content, categoryId)}
+                      className="cursor-pointer"
+                    >
+                      <Pencil className="h-4 w-4 opacity-50" />
+                    </div>
+                    <div
+                      onClick={() => handleDeleteTask(id)}
+                      className="cursor-pointer"
+                    >
+                      <Trash2 className="h-4 w-4 opacity-50" />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-[1fr_3fr] gap-sm">
+                  <Combobox
+                    items={categoryList.map((item) => {
+                      return { value: item.title, id: item.id }
+                    })}
+                    value={editCategory}
+                    setStateAction={setEditCategory}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Password"
+                    value={editTask.content}
+                    onChange={(event) => handleChangeTask(event)}
+                    onSave={handleSaveEdit}
+                    button={<Save className="h-4 w-4 opacity-50" />}
                   />
                 </div>
-                <div className="flex items-center gap-sm">
-                  <div
-                    onClick={() => startEditingTask(id, content, categoryId)}
-                    className="cursor-pointer"
-                  >
-                    <Pencil className="h-4 w-4 opacity-50" />
-                  </div>
-                  <div
-                    onClick={() => handleDeleteTask(id)}
-                    className="cursor-pointer"
-                  >
-                    <Trash2 className="h-4 w-4 opacity-50" />
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-[1fr_3fr] gap-sm">
-                <Combobox
-                  items={categoryList.map((item) => {
-                    return { value: item.title, id: item.id }
-                  })}
-                  value={editCategory}
-                  setStateAction={setEditCategory}
-                />
-                <Input
-                  type="text"
-                  placeholder="Password"
-                  value={editTask.content}
-                  onChange={(event) => handleChangeTask(event)}
-                  onSave={handleSaveEdit}
-                  button={<Save className="h-4 w-4 opacity-50" />}
-                />
-              </div>
-            )}
-          </div>
-        )
-      })}
+              )}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

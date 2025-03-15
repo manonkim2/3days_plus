@@ -1,16 +1,20 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-import { getUserInfo } from '@/utils/supabase/actions'
-
-import NavMenu from './NavMenu'
 import { CircleUser } from 'lucide-react'
+import { getUserInfo } from '@/utils/supabase/actions'
+import NavMenu from './NavMenu'
+import { cn } from '@/utils/cn'
 
 const Navbar = async () => {
   const user = await getUserInfo()
 
   return (
-    <nav className="flex items-center justify-between h-16 top-0 z-40 mb-8">
+    <nav
+      className={cn(
+        `flex items-center justify-between h-[var(--navbar-height)] top-0 z-40`,
+      )}
+    >
       <Link href="/">Title</Link>
 
       <NavMenu />

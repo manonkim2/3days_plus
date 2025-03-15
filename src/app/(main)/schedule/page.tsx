@@ -3,12 +3,12 @@ import TaskList from './components/TaskList'
 import Calendar from './components/Calendar'
 import RoutineManager from './components/RoutineManager'
 import TodayChart from './components/TodayChart'
+import RoutinesTable from './components/RoutinesTable'
+import Box from '@/components/Box'
 import { getCategory, ICategory } from './actions/categoryActions'
 import { getTask, ITask } from './actions/taskActions'
 import { getRoutines } from './actions/routineActions'
 import { getKoreanTime } from '@/utils/formmattedDate'
-import Box from '@/components/Box'
-import TaskCategory from './components/TaskCategory'
 
 const SchedulePage = async () => {
   const routineList = await getRoutines()
@@ -17,21 +17,26 @@ const SchedulePage = async () => {
 
   return (
     <DateProvider>
-      <div className="grid grid-cols-[1fr_3fr_1fr] gap-xl">
-        <aside>
-          <Box className="flex flex-col gap-sm">
-            <Calendar />
-            <TodayChart />
+      <main className="grid grid-cols-[1fr_3fr_1fr] h-[calc(100vh-var(--navbar-height))] gap-md py-4">
+        <Box className="flex flex-col gap-sm">
+          <Calendar />
+          <div>2025 목표 / 이 달의 목표 / 이 주의 목표</div>
+        </Box>
+
+        <div className="flex flex-col gap-md h-full">
+          <Box>
+            <div className="grid grid-cols-[1fr_2fr] h-[calc(50vh-var(--navbar-height))]">
+              <TodayChart />
+              <TaskList tasks={tasks} categories={categories} />
+            </div>
           </Box>
-        </aside>
-        <div className="grid grid-cols-[1fr_2fr]">
-          <TaskCategory categories={categories} />
-          <TaskList tasks={tasks} categories={categories} />
+          <Box className="flex-grow gap-sm">
+            {/* <TaskCategory categories={categories} /> */}
+            <RoutinesTable routinesData={routineList} />
+          </Box>
         </div>
-        <aside>
-          <RoutineManager routineList={routineList} />
-        </aside>
-      </div>
+        <RoutineManager routineList={routineList} />
+      </main>
     </DateProvider>
   )
 }
