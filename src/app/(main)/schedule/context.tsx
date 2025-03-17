@@ -1,8 +1,6 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, useMemo } from 'react'
-
-import { getKoreanTime } from '@/utils/formmattedDate'
 import { getTask, ITask } from './actions/taskActions'
 import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
 
@@ -14,13 +12,17 @@ interface TaskContextType {
   tasks: ITask[]
   setTasks: (tasks: ITask[]) => void
   refreshTasks: () => Promise<void>
+
+  weekTasks: ITask[]
+  refreshWeekTasks: () => Promise<void>
 }
 
 const TaskContext = createContext<TaskContextType | null>(null)
 
 export const DateProvider = ({ children }: { children: React.ReactNode }) => {
-  const [date, setDate] = useState(getKoreanTime(new Date()))
+  const [date, setDate] = useState(new Date())
   const [tasks, setTasks] = useState<ITask[]>([])
+  const [weekTasks, setWeekTasks] = useState<ITask[]>([])
 
   const week = useMemo(
     () => eachDayOfInterval({ start: startOfWeek(date), end: endOfWeek(date) }),
@@ -34,14 +36,29 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
     setTasks(updatedTasks)
   }
 
+  const refreshWeekTasks = async () => {
+    const tasksForWeek = await Promise.all(week.map((day) => getTask(day)))
+    setWeekTasks(tasksForWeek.flat())
+  }
+
   useEffect(() => {
     refreshTasks()
+    refreshWeekTasks()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
 
   return (
     <TaskContext.Provider
-      value={{ date, week, handleClickDate, tasks, setTasks, refreshTasks }}
+      value={{
+        date,
+        week,
+        handleClickDate,
+        tasks,
+        setTasks,
+        refreshTasks,
+        weekTasks,
+        refreshWeekTasks,
+      }}
     >
       {children}
     </TaskContext.Provider>

@@ -11,6 +11,7 @@ export interface ITask {
   content: string
   completed: boolean
   categoryId: number | null
+  date: Date
 }
 
 const user = await getUserInfo()
@@ -76,6 +77,7 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
       content: true,
       completed: true,
       categoryId: true,
+      date: true,
     },
     orderBy: {
       id: 'asc',

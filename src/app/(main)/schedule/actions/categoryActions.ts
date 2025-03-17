@@ -70,34 +70,3 @@ export const deleteCategory = async (id: number) => {
     throw new Error('Task deletion failed.')
   }
 }
-
-export type ITaskInCategory = {
-  id: number
-  content: string
-  completed: boolean
-  date: Date
-}
-
-export const getTaskInCategory = nextCache(
-  cache(async (id: number): Promise<ITaskInCategory[]> => {
-    try {
-      return await db.task.findMany({
-        where: { categoryId: id },
-        select: {
-          id: true,
-          content: true,
-          completed: true,
-          date: true,
-        },
-        orderBy: {
-          date: 'asc',
-        },
-      })
-    } catch (error) {
-      console.error('Error get task:', error)
-      return []
-    }
-  }),
-  ['task_in_category'],
-  { tags: ['task_in_category'] },
-)

@@ -2,13 +2,14 @@ import { DateProvider } from './context'
 import TaskList from './components/TaskList'
 import Calendar from './components/Calendar'
 import RoutineManager from './components/RoutineManager'
+import WeeklyCategoryTasks from './components/WeeklyCategoryTasks'
 import DayTaskChart from './components/DayTaskChart'
-import RoutinesTable from './components/RoutinesTable'
 import Box from '@/components/Box'
 import { getCategory, ICategory } from './actions/categoryActions'
 import { getTask, ITask } from './actions/taskActions'
 import { getRoutines } from './actions/routineActions'
 import { getKoreanTime } from '@/utils/formmattedDate'
+import { CategoryTaskChart } from './components/CategoryTaskChart'
 
 const SchedulePage = async () => {
   const routineList = await getRoutines()
@@ -30,9 +31,12 @@ const SchedulePage = async () => {
               <TaskList tasks={tasks} categories={categories} />
             </div>
           </Box>
-          <Box className="flex-grow gap-sm">
-            {/* <TaskCategory categories={categories} /> */}
-            <RoutinesTable routinesData={routineList} />
+          <Box className="flex-grow">
+            <div className="flex justify-between gap-md">
+              <CategoryTaskChart />
+              <WeeklyCategoryTasks categories={categories} />
+            </div>
+            {/* <RoutinesTable routinesData={routineList} /> */}
           </Box>
         </div>
         <RoutineManager routineList={routineList} />
