@@ -1,6 +1,13 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useMemo } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react'
 import { getTask, ITask } from './actions/taskActions'
 import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
 
@@ -15,6 +22,9 @@ interface TaskContextType {
 
   weekTasks: ITask[]
   refreshWeekTasks: () => Promise<void>
+
+  selectedCategoryId: number | null
+  setSelectedCategoryId: (id: number | null) => void
 }
 
 const TaskContext = createContext<TaskContextType | null>(null)
@@ -23,6 +33,9 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
   const [date, setDate] = useState(new Date())
   const [tasks, setTasks] = useState<ITask[]>([])
   const [weekTasks, setWeekTasks] = useState<ITask[]>([])
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null,
+  )
 
   const week = useMemo(
     () => eachDayOfInterval({ start: startOfWeek(date), end: endOfWeek(date) }),
@@ -31,21 +44,25 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleClickDate = (selectedDay: Date) => setDate(selectedDay)
 
-  const refreshTasks = async () => {
+  const refreshTasks = useCallback(async () => {
     const updatedTasks = await getTask(date)
     setTasks(updatedTasks)
-  }
+  }, [date])
 
-  const refreshWeekTasks = async () => {
+  const refreshWeekTasks = useCallback(async () => {
     const tasksForWeek = await Promise.all(week.map((day) => getTask(day)))
     setWeekTasks(tasksForWeek.flat())
-  }
+  }, [week])
 
   useEffect(() => {
     refreshTasks()
-    refreshWeekTasks()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date])
+  }, [refreshTasks])
+
+  useEffect(() => {
+    if (weekTasks.length === 0) {
+      refreshWeekTasks()
+    }
+  }, [weekTasks, refreshWeekTasks])
 
   return (
     <TaskContext.Provider
@@ -58,6 +75,8 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
         refreshTasks,
         weekTasks,
         refreshWeekTasks,
+        selectedCategoryId,
+        setSelectedCategoryId,
       }}
     >
       {children}
@@ -68,7 +87,7 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
 export const useTaskContext = () => {
   const context = useContext(TaskContext)
   if (!context) {
-    throw new Error('useTaskContext must be used within a TaskProvider')
+    throw new Error('useTaskContext must be used within a DateProvider')
   }
   return context
 }
