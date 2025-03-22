@@ -1,7 +1,13 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts'
+import {
+  Label,
+  PolarGrid,
+  PolarRadiusAxis,
+  RadialBar,
+  RadialBarChart,
+} from 'recharts'
 import { useTaskContext } from '../context'
 import { ChartContainer } from '@/components/ui/chart'
 
@@ -61,6 +67,13 @@ const DayTaskChart = () => {
           innerRadius={80}
           outerRadius={110}
         >
+          <PolarGrid
+            gridType="circle"
+            radialLines={false}
+            stroke="none"
+            className="first:fill-muted last:fill-background"
+            polarRadius={[86, 74]}
+          />
           <RadialBar
             dataKey="completed"
             background

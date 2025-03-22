@@ -56,13 +56,8 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     refreshTasks()
-  }, [refreshTasks])
-
-  useEffect(() => {
-    if (weekTasks.length === 0) {
-      refreshWeekTasks()
-    }
-  }, [weekTasks, refreshWeekTasks])
+    refreshWeekTasks()
+  }, [date, refreshTasks, refreshWeekTasks])
 
   return (
     <TaskContext.Provider
