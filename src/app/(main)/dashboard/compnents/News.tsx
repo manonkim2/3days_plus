@@ -1,54 +1,40 @@
-import Link from 'next/link'
 import Image from 'next/image'
-
-import Box from '@/components/Box'
-
-interface NewsResponse {
-  status: string
-  totalResults: number
-  articles: {
-    author: string
-    title: string
-    description: string
-    url: string
-    urlToImage: string
-    publishedAt: string
-    content: string
-  }[]
-}
-
-const getNews = async () => {
-  return await fetch(
-    `https://newsapi.org/v2/everything?q=경제&sortBy=publishedAt&pageSize=6&page=1&apiKey=${process.env.NEWS_API_KEY}`,
-  ).then((res) => res.json())
-}
+import Parser from 'rss-parser'
 
 const News = async () => {
-  const news: NewsResponse = await getNews()
+  const parser = new Parser()
+  const feed = await parser.parseURL(
+    'https://www.yonhapnewstv.co.kr/category/news/headline/feed/',
+  )
 
   return (
-    <div className="grid grid-cols-2 gap-3 h-[1140px]">
-      {news.articles.map(({ title, urlToImage, publishedAt, url }, index) => (
-        <Link href={url} key={urlToImage + index} target="_blank">
-          <Box>
-            <div className="flex flex-col h-full gap-3">
-              <div className="border w-full h-[280px] relative rounded-xl overflow-hidden">
-                <Image
-                  src={urlToImage}
-                  alt="sample-img"
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  style={{ objectFit: 'cover' }}
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-fontSecondary">{publishedAt}</span>
-                {/* <Badge text={section} /> */}
-              </div>
-              <span>{title}</span>
+    <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {feed.items.map((item) => (
+        <a
+          key={item.guid}
+          href={item.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group block rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 border hover:border-blue-500"
+        >
+          {item.enclosure?.url && (
+            <div className="relative aspect-video w-full">
+              <Image
+                src={item.enclosure.url}
+                alt={item.title || ''}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+              />
             </div>
-          </Box>
-        </Link>
+          )}
+          <div className="p-4">
+            <h2 className="text-lg font-semibold mb-2 group-hover:text-blue-600">
+              {item.title}
+            </h2>
+            <p className="text-sm text-gray-500">{item.pubDate}</p>
+          </div>
+        </a>
       ))}
     </div>
   )
