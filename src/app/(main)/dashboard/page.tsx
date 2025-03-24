@@ -1,13 +1,33 @@
-import Link from 'next/link'
 import { format } from 'date-fns'
+import Parser from 'rss-parser'
 
-import Box from '@/components/Box'
-import News from '@/app/(main)/dashboard/compnents/News'
 import { getUserInfo } from '@/utils/supabase/actions'
-import { Button } from '@/components/ui'
+import News from './compnents/News'
+import { NewsCardItem, RssFeed } from '@/types/rss'
 
 const DashBoardPage = async () => {
   const user = await getUserInfo()
+
+  const parser = new Parser({
+    customFields: {
+      item: ['media:content', 'no'],
+    },
+  })
+
+  const news = (await parser.parseURL(
+    'https://www.mk.co.kr/rss/30000001/',
+  )) as RssFeed
+  console.log('🚀 ~ DashBoardPage ~ news:', news)
+
+  const newsCardItems: NewsCardItem[] = news.items.map((item) => ({
+    no: item.no,
+    title: item.title,
+    content: item.content,
+    contentSnippet: item.contentSnippet,
+    pubDate: item.pubDate,
+    link: item.link,
+    enclosureUrl: item['media:content']?.$?.url,
+  }))
 
   return (
     <div>
@@ -25,24 +45,8 @@ const DashBoardPage = async () => {
           </span>
         </div>
       </div>
-
-      <div className="grid gap-8">
-        <div className="grid grid-cols-[2fr,1.5fr,3fr] h-[400px] gap-3">
-          <Box>
-            <div className="flex justify-between items-center">
-              <span className="text-xl">TASK</span>
-              <Link href={'/schedule'}>
-                <Button size="sm" variant="secondary">
-                  바로가기
-                </Button>
-              </Link>
-            </div>
-          </Box>
-
-          <Box />
-        </div>
-        <News />
-      </div>
+      <News newsItems={newsCardItems} />
+      <div className="grid gap-8"></div>
     </div>
   )
 }
