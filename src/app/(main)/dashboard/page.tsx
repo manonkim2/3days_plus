@@ -17,21 +17,23 @@ const DashBoardPage = async () => {
   const news = (await parser.parseURL(
     'https://www.mk.co.kr/rss/30000001/',
   )) as RssFeed
-  console.log('🚀 ~ DashBoardPage ~ news:', news)
 
-  const newsCardItems: NewsCardItem[] = news.items.map((item) => ({
-    no: item.no,
-    title: item.title,
-    content: item.content,
-    contentSnippet: item.contentSnippet,
-    pubDate: item.pubDate,
-    link: item.link,
-    enclosureUrl: item['media:content']?.$?.url,
-  }))
+  const newsCardItems: NewsCardItem[] = news.items
+    .map((item) => ({
+      no: item.no,
+      title: item.title,
+      content: item.content,
+      contentSnippet: item.contentSnippet,
+      pubDate: item.pubDate,
+      link: item.link,
+      enclosureUrl: item['media:content']?.$?.url,
+    }))
+    .filter((item) => item.enclosureUrl)
+    .slice(0, 10)
 
   return (
     <div>
-      <div className="mb-xxl font-poppins">
+      <div className="container mb-xxl font-poppins h-screen">
         <div className="flex justify-end">
           <span className="text-3xl font-extralight pr-2">Hello,</span>
           <span className="text-3xl font-semibold">
@@ -45,8 +47,7 @@ const DashBoardPage = async () => {
           </span>
         </div>
       </div>
-      <News newsItems={newsCardItems} />
-      <div className="grid gap-8"></div>
+      <News newsItems={newsCardItems.slice(0, 10)} />
     </div>
   )
 }

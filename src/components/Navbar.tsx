@@ -12,7 +12,7 @@ const Navbar = async () => {
   return (
     <nav
       className={cn(
-        `flex items-center justify-between h-[var(--navbar-height)] top-0 z-40`,
+        `flex items-center justify-between container h-[var(--navbar-height)] top-0 z-40`,
       )}
     >
       <Link href="/">Title</Link>

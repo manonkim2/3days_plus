@@ -1,5 +1,4 @@
 import { format } from 'date-fns'
-import { ko } from 'date-fns/locale'
 
 /**
  * @returns MM/DD 형식 변환 (예: "02/04")
@@ -23,7 +22,7 @@ export function getFormattedDate(dateString: string | undefined): string {
 
   try {
     const parsedDate = new Date(dateString)
-    return format(parsedDate, 'yyyy-MM-dd hh:mm', { locale: ko })
+    return format(parsedDate, 'yyyy-MM-dd a hh:mm')
   } catch (error) {
     console.error('Error formatting date:', error)
     return '날짜 형식 오류'

@@ -32,7 +32,7 @@ const NewsList = () => {
   if (isLoading) return <NewsCardSkeleton />
 
   return (
-    <div>
+    <div className="container">
       {news && (
         <div className="flex justify-end items-center pb-sm gap-sm">
           <span className="text-sm text-gray-400">
