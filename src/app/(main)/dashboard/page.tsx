@@ -32,7 +32,7 @@ const DashBoardPage = async () => {
     .slice(0, 10)
 
   return (
-    <div>
+    <div className="pb-xxl">
       <div className="container mb-xxl font-poppins h-screen">
         <div className="flex justify-end">
           <span className="text-3xl font-extralight pr-2">Hello,</span>

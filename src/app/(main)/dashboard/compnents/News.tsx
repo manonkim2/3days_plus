@@ -18,8 +18,14 @@ const News = ({ newsItems }: { newsItems: NewsCardItem[] }) => {
     ['#000000', '#1E1E1E', '#ffffff'],
   )
 
+  const borderRadius = useTransform(scrollYProgress, [0.9, 1], ['0px', '36px'])
+  const width = useTransform(scrollYProgress, [0.9, 1], ['100vw', '90vw'])
+
   return (
-    <motion.article className="w-screen" style={{ backgroundColor: bgColor }}>
+    <motion.article
+      className="mx-auto"
+      style={{ backgroundColor: bgColor, borderRadius, width }}
+    >
       <div className="flex justify-between container">
         <div className="sticky top-0 w-[400px] h-screen flex flex-col items-center justify-center text-6xl font-poppins">
           <motion.div
