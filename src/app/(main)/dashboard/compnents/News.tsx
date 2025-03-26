@@ -9,21 +9,48 @@ import { Button } from '@/components/ui'
 import { useRef } from 'react'
 
 const News = ({ newsItems }: { newsItems: NewsCardItem[] }) => {
+  const { scrollYProgress } = useScroll()
+
+  const bgColor = useTransform(scrollYProgress, [0, 1], ['#ffffff', '#1E1E1E'])
+  const animatedColor = useTransform(
+    scrollYProgress,
+    [0, 0.7, 1],
+    ['#000000', '#1E1E1E', '#ffffff'],
+  )
+
   return (
-    <article className="w-screen">
+    <motion.article className="w-screen" style={{ backgroundColor: bgColor }}>
       <div className="flex justify-between container">
         <div className="sticky top-0 w-[400px] h-screen flex flex-col items-center justify-center text-6xl font-poppins">
-          <div>
-            <p className="font-light text-fontPrimary tracking-wide">
-              TOP<span className="text-6xl font-bold">10</span>
-            </p>
-            <p className="font-light leading-none tracking-[0.08em]">NEWS</p>
-          </div>
-          <Link href="/news">
-            <Button variant="outline" size="lg">
-              More news
-            </Button>
-          </Link>
+          <motion.div
+            className="border p-xxl"
+            style={{ borderColor: animatedColor }}
+          >
+            <motion.p
+              className="font-light text-fontPrimary tracking-wide"
+              style={{ color: animatedColor }}
+            >
+              TOP
+              <motion.span
+                className="text-6xl font-bold"
+                style={{ color: animatedColor }}
+              >
+                10
+              </motion.span>
+            </motion.p>
+            <motion.p
+              className="font-light leading-none tracking-[0.08em]"
+              style={{ color: animatedColor }}
+            >
+              NEWS
+            </motion.p>
+
+            <Link href="/news">
+              <Button variant="outline" size="lg" className="w-full">
+                More news
+              </Button>
+            </Link>
+          </motion.div>
         </div>
 
         <div className="grid grid-flow-row w-[780px]">
@@ -32,7 +59,7 @@ const News = ({ newsItems }: { newsItems: NewsCardItem[] }) => {
           })}
         </div>
       </div>
-    </article>
+    </motion.article>
   )
 }
 
