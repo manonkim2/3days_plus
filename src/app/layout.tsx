@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Montserrat, Poppins } from 'next/font/google'
+
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 import ReactQueryProvider from '@/components/ReactQueryProvider'
 
 const montserrat = Montserrat({
@@ -30,12 +32,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`container mx-auto ${montserrat.variable} ${poppins.variable}`}
-      >
+      <body className={`${montserrat.variable} ${poppins.variable}`}>
         <ReactQueryProvider>
           <Navbar />
           <main>{children}</main>
+          <Footer />
         </ReactQueryProvider>
       </body>
     </html>
