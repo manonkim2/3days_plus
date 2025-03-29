@@ -1,10 +1,9 @@
 import Parser from 'rss-parser'
 
+import Title from './compnents/Title'
 import News from './compnents/News'
 import { getUserInfo } from '@/utils/supabase/actions'
 import { NewsCardItem, RssFeed } from '@/types/rss'
-import Title from './compnents/Title'
-import CustomImage from './compnents/CustomImage'
 
 const DashBoardPage = async () => {
   const user = await getUserInfo()
@@ -36,7 +35,6 @@ const DashBoardPage = async () => {
     <div className="pb-xxl">
       <div className="font-poppins h-screen bg-[#1E1E1E]">
         <Title userName={user?.name} />
-        <CustomImage />
       </div>
       <News newsItems={newsCardItems.slice(0, 10)} />
     </div>

@@ -3,6 +3,8 @@
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 
+import TitleImageSheet from './TitleImageSheet'
+
 const TypingText = ({
   text,
   onComplete,
@@ -28,7 +30,9 @@ const TypingText = ({
   }, [onComplete, text])
 
   return (
-    <div className="text-4xl font-poppins text-fontTertiary">{displayed}</div>
+    <span className="text-4xl font-poppins text-fontTertiary font-extralight">
+      {displayed}
+    </span>
   )
 }
 
@@ -36,20 +40,19 @@ const Title = ({ userName }: { userName?: string }) => {
   const [showDate, setShowDate] = useState(false)
 
   return (
-    <div className="container flex flex-col justify-end mb-xxl h-1/3">
-      <div className="flex justify-end">
+    <div className="container flex justify-between items-end mb-xxl h-1/3">
+      <TitleImageSheet />
+      <div className=" flex flex-col items-end">
         <TypingText
           text={`Hello, ${userName || 'Everybody'}`}
           onComplete={() => setShowDate(true)}
         />
-      </div>
-      {showDate && (
-        <div className="flex justify-end">
+        {showDate && (
           <TypingText
-            text={`Today is ${format(new Date(), 'EEEE, MMMM do')}`}
+            text={`Today is ${format(new Date(), 'EEEE, MMMM do')}.`}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
