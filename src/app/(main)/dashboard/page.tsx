@@ -1,9 +1,10 @@
-import { format } from 'date-fns'
 import Parser from 'rss-parser'
 
-import { getUserInfo } from '@/utils/supabase/actions'
 import News from './compnents/News'
+import { getUserInfo } from '@/utils/supabase/actions'
 import { NewsCardItem, RssFeed } from '@/types/rss'
+import Title from './compnents/Title'
+import CustomImage from './compnents/CustomImage'
 
 const DashBoardPage = async () => {
   const user = await getUserInfo()
@@ -33,19 +34,9 @@ const DashBoardPage = async () => {
 
   return (
     <div className="pb-xxl">
-      <div className="container mb-xxl font-poppins h-screen">
-        <div className="flex justify-end">
-          <span className="text-3xl font-extralight pr-2">Hello,</span>
-          <span className="text-3xl font-semibold">
-            {user?.name || 'Everybody'}
-          </span>
-        </div>
-        <div className="flex justify-end">
-          <span className="text-3xl font-extralight pr-2">Today is</span>
-          <span className="text-3xl font-semibold" suppressHydrationWarning>
-            {format(new Date(), 'EEEE, MMMM do')}
-          </span>
-        </div>
+      <div className="font-poppins h-screen bg-[#1E1E1E]">
+        <Title userName={user?.name} />
+        <CustomImage />
       </div>
       <News newsItems={newsCardItems.slice(0, 10)} />
     </div>
