@@ -1,14 +1,7 @@
 'use client'
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-} from 'react'
-import { getTask, ITask } from './actions/taskActions'
+import { createContext, useContext, useState, useMemo } from 'react'
+import { ITask } from './actions/taskActions'
 import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
 
 interface TaskContextType {
@@ -18,10 +11,8 @@ interface TaskContextType {
 
   tasks: ITask[]
   setTasks: (tasks: ITask[]) => void
-  refreshTasks: () => Promise<void>
 
   weekTasks: ITask[]
-  refreshWeekTasks: () => Promise<void>
 
   selectedCategoryId: number | null
   setSelectedCategoryId: (id: number | null) => void
@@ -44,20 +35,14 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleClickDate = (selectedDay: Date) => setDate(selectedDay)
 
-  const refreshTasks = useCallback(async () => {
-    const updatedTasks = await getTask(date)
-    setTasks(updatedTasks)
-  }, [date])
+  // const refreshWeekTasks = useCallback(async () => {
+  //   const tasksForWeek = await Promise.all(week.map((day) => getTask(day)))
+  //   setWeekTasks(tasksForWeek.flat())
+  // }, [week])
 
-  const refreshWeekTasks = useCallback(async () => {
-    const tasksForWeek = await Promise.all(week.map((day) => getTask(day)))
-    setWeekTasks(tasksForWeek.flat())
-  }, [week])
-
-  useEffect(() => {
-    refreshTasks()
-    refreshWeekTasks()
-  }, [date, refreshTasks, refreshWeekTasks])
+  // useEffect(() => {
+  //   refreshWeekTasks()
+  // }, [date, , refreshWeekTasks])
 
   return (
     <TaskContext.Provider
@@ -67,9 +52,9 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
         handleClickDate,
         tasks,
         setTasks,
-        refreshTasks,
+
         weekTasks,
-        refreshWeekTasks,
+
         selectedCategoryId,
         setSelectedCategoryId,
       }}
