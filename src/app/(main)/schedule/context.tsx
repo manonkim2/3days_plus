@@ -1,18 +1,12 @@
 'use client'
 
 import { createContext, useContext, useState, useMemo } from 'react'
-import { ITask } from './actions/taskActions'
 import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
 
 interface TaskContextType {
   date: Date
   week: Date[]
   handleClickDate: (date: Date) => void
-
-  tasks: ITask[]
-  setTasks: (tasks: ITask[]) => void
-
-  weekTasks: ITask[]
 
   selectedCategoryId: number | null
   setSelectedCategoryId: (id: number | null) => void
@@ -22,8 +16,7 @@ const TaskContext = createContext<TaskContextType | null>(null)
 
 export const DateProvider = ({ children }: { children: React.ReactNode }) => {
   const [date, setDate] = useState(new Date())
-  const [tasks, setTasks] = useState<ITask[]>([])
-  const [weekTasks, setWeekTasks] = useState<ITask[]>([])
+
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null,
   )
@@ -50,10 +43,6 @@ export const DateProvider = ({ children }: { children: React.ReactNode }) => {
         date,
         week,
         handleClickDate,
-        tasks,
-        setTasks,
-
-        weekTasks,
 
         selectedCategoryId,
         setSelectedCategoryId,

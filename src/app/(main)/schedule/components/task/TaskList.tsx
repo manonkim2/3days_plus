@@ -1,35 +1,27 @@
 'use client'
 
-import React, {
-  startTransition,
-  useActionState,
-  useEffect,
-  useState,
-} from 'react'
+import React, { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Pencil, Save, Trash2 } from 'lucide-react'
 import {
+  createCategory,
   createTask,
   deleteTask,
-  getTask,
-  ITask,
   updateCheckTask,
   updateContentTask,
-} from '../actions/taskActions'
+} from './actions'
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Input } from '@/components/ui'
 import { Combobox } from '@/app/(main)/schedule/components/TaskCategoryCombobox'
-import { createCategory, ICategory } from '../actions/categoryActions'
-import { Pencil, Save, Trash2 } from 'lucide-react'
-import { useTaskContext } from '../context'
+import { useTaskContext } from '../../context'
+import { useTasks } from './useTasks'
+import LoadingOverlay from '@/components/LoadingOverlay'
 
-const TaskInput = ({
-  tasks,
-  categories,
-}: {
-  tasks: ITask[]
-  categories: ICategory[]
-}) => {
-  const { date, refreshTasks } = useTaskContext()
+const TaskInput = () => {
+  const queryClient = useQueryClient()
+  const { date } = useTaskContext()
+  const { tasks, categories, isLoading } = useTasks(date)
 
   const [category, setCategory] = useState<{
     value: string
@@ -44,33 +36,70 @@ const TaskInput = ({
     id: number
   } | null>(null)
 
-  const [categoryList, categoryFormAction, isPendingCategory] = useActionState(
-    createCategory,
-    categories,
-  )
-
-  const [taskList, formAction, isPending] = useActionState<ITask[], FormData>(
-    async (_, formData) => {
-      createTask(formData, date, category?.id)
-      setCategory(null)
-      return await getTask(date)
+  const createCategoryMutation = useMutation({
+    mutationFn: (formData: FormData) => createCategory(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['category'],
+      })
     },
-    tasks,
-  )
+  })
 
-  const handleDeleteTask = async (id: number) => {
-    await deleteTask(id)
-    startTransition(() => {
-      formAction(new FormData())
-    })
+  const createTaskMutation = useMutation({
+    mutationFn: (formData: FormData) =>
+      createTask(formData, date, category?.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', date.toDateString()],
+      })
+      setCategory(null)
+    },
+  })
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', date.toDateString()],
+      })
+    },
+  })
+
+  const toggleTaskMutation = useMutation({
+    mutationFn: ({ id, completed }: { id: number; completed: boolean }) =>
+      updateCheckTask(id, completed),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', date.toDateString()],
+      })
+    },
+  })
+
+  const updateTaskMutation = useMutation({
+    mutationFn: ({
+      id,
+      content,
+      categoryId,
+    }: {
+      id: number
+      content: string
+      categoryId?: number
+    }) => updateContentTask(id, content, categoryId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', date.toDateString()],
+      })
+      setEditTask(null)
+      setEditCategory(null)
+    },
+  })
+
+  const handleDeleteTask = (id: number) => {
+    deleteTaskMutation.mutate(id)
   }
 
-  const handleToggleTask = async (id: number, completed: boolean) => {
-    await updateCheckTask(id, completed)
-    await refreshTasks()
-    startTransition(() => {
-      formAction(new FormData())
-    })
+  const handleToggleTask = (id: number, completed: boolean) => {
+    toggleTaskMutation.mutate({ id, completed })
   }
 
   const startEditingTask = (
@@ -81,8 +110,10 @@ const TaskInput = ({
     setEditTask({ id, content })
 
     if (categoryId) {
-      const category = categoryList.find((c) => c.id === categoryId)
-      setEditCategory({ id: category?.id ?? 0, value: category?.title ?? '' })
+      const category = categories.find((c) => c.id === categoryId)
+      if (category) {
+        setEditCategory({ id: category.id, value: category.title })
+      }
     }
   }
 
@@ -92,59 +123,54 @@ const TaskInput = ({
     }
   }
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = () => {
     if (editTask) {
-      await updateContentTask(editTask.id, editTask.content, editCategory?.id)
-
-      startTransition(() => {
-        formAction(new FormData())
-        setEditTask(null)
-        setEditCategory(null)
+      updateTaskMutation.mutate({
+        id: editTask.id,
+        content: editTask.content,
+        categoryId: editCategory?.id,
       })
     }
   }
 
-  useEffect(() => {
-    startTransition(() => {
-      formAction(new FormData())
-    })
-  }, [date, formAction])
+  if (isLoading) return <LoadingOverlay />
 
   return (
     <div className="flex flex-col gap-md w-full pl-md max-h-[40vh] overflow-auto">
-      {/* category/Task create */}
       <div className="grid grid-cols-[1fr_3fr] gap-sm h-9">
         <Combobox
-          items={categories?.map((item) => {
-            return { value: item.title, id: item.id }
-          })}
+          items={categories?.map((item) => ({
+            value: item.title,
+            id: item.id,
+          }))}
           value={category}
           setStateAction={setCategory}
           commandInput={
             <FormActionWrapper
               placeholder="Add category name"
-              formAction={categoryFormAction}
-              isPending={isPendingCategory}
+              formAction={createCategoryMutation.mutate}
+              isPending={createCategoryMutation.isPending}
             />
           }
         />
         <FormActionWrapper
-          formAction={formAction}
+          formAction={createTaskMutation.mutate}
           placeholder="Add your task"
-          isPending={isPending}
+          isPending={createTaskMutation.isPending}
         />
       </div>
 
-      {taskList.length === 0 && (
+      {tasks.length === 0 && (
         <p className="flex justify-center items-center py-12 text-base text-fontSecondary border border-dashed rounded-md h-full">
           Let&apos;s plan your day!
         </p>
       )}
 
-      {/* taskList */}
       <div className="flex flex-col gap-xs">
-        {taskList?.map(({ id, completed, content, categoryId }) => {
-          const category = categoryList.find((c) => c.id === categoryId)
+        {tasks.map(({ id, completed, content, categoryId }) => {
+          const categoryTitle = categories.find(
+            (c) => c.id === categoryId,
+          )?.title
 
           return (
             <div key={id}>
@@ -154,7 +180,7 @@ const TaskInput = ({
                     <Checkbox
                       checked={completed}
                       text={content}
-                      badge={category?.title}
+                      badge={categoryTitle}
                     />
                   </div>
                   <div className="flex items-center gap-sm">
@@ -175,17 +201,18 @@ const TaskInput = ({
               ) : (
                 <div className="grid grid-cols-[1fr_3fr] gap-sm">
                   <Combobox
-                    items={categoryList.map((item) => {
-                      return { value: item.title, id: item.id }
-                    })}
+                    items={categories.map((item) => ({
+                      value: item.title,
+                      id: item.id,
+                    }))}
                     value={editCategory}
                     setStateAction={setEditCategory}
                   />
                   <Input
                     type="text"
-                    placeholder="Password"
+                    placeholder="Edit task..."
                     value={editTask.content}
-                    onChange={(event) => handleChangeTask(event)}
+                    onChange={handleChangeTask}
                     onSave={handleSaveEdit}
                     button={<Save className="h-4 w-4 opacity-50" />}
                   />
