@@ -3,9 +3,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { getCategory, getTask, ICategory, ITask } from './actions'
 
-export const useTasks = (date: Date) => {
+export const useTasks = (date?: Date) => {
   const { data: tasks = [], isLoading: isTasksLoading } = useQuery<ITask[]>({
-    queryKey: ['tasks', date.toDateString()],
+    queryKey: ['tasks', date?.toISOString()],
     queryFn: () => getTask(date),
   })
 

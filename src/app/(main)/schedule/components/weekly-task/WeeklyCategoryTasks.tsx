@@ -1,8 +1,7 @@
 'use client'
 
 import { Trash2 } from 'lucide-react'
-import { ICategory } from '../actions/categoryActions'
-import { useTaskContext } from '../context'
+import { useTaskContext } from '../../context'
 
 import {
   Accordion,
@@ -13,9 +12,11 @@ import {
 import { Badge } from '@/components/ui'
 import AlertButton from '@/components/AlertButton'
 import { getShortDate } from '@/utils/formmattedDate'
+import { useTasks } from '../task/useTasks'
 
-const WeeklyCategoryTasks = ({ categories }: { categories: ICategory[] }) => {
-  const { weekTasks, setSelectedCategoryId } = useTaskContext()
+const WeeklyCategoryTasks = () => {
+  const { setSelectedCategoryId, weekTaskList } = useTaskContext()
+  const { categories } = useTasks()
 
   return (
     <div className="flex flex-col min-w-[180px] w-[300px] max-h-[280px] overflow-y-auto border-l pl-md">
@@ -31,7 +32,7 @@ const WeeklyCategoryTasks = ({ categories }: { categories: ICategory[] }) => {
         }
       >
         {categories?.map(({ id, title }) => {
-          const filteredTasks = weekTasks.filter(
+          const filteredTasks = weekTaskList.filter(
             (task) => task.categoryId === id,
           )
           const completedTasks = filteredTasks.filter((task) => task.completed)

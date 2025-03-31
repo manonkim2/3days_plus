@@ -1,29 +1,15 @@
+'use client'
+
 import { DateProvider } from './context'
-import TaskList from './components/TaskList'
-import Calendar from './components/Calendar'
-import RoutineManager from './components/RoutineManager'
-import WeeklyCategoryTasks from './components/WeeklyCategoryTasks'
-import DayTaskChart from './components/DayTaskChart'
-import WeeklyTasksChart from './components/WeeklyTasksChart'
 import Box from '@/components/Box'
-import { getCategory } from './actions/categoryActions'
-import { getTask } from './actions/taskActions'
-import { getRoutines } from './actions/routineActions'
-import { getKoreanTime } from '@/utils/formmattedDate'
+import Calendar from './components/Calendar'
+import DayTaskChart from './components/task/DayTaskChart'
+import TaskList from './components/task/TaskList'
+import WeeklyTasksChart from './components/weekly-task/WeeklyTasksChart'
+import WeeklyCategoryTasks from './components/weekly-task/WeeklyCategoryTasks'
+import RoutineManager from './components/routine/RoutineManager'
 
-const fetchInitialData = async () => {
-  const today = getKoreanTime(new Date())
-  const [routineList, tasks, categories] = await Promise.all([
-    getRoutines(),
-    getTask(today),
-    getCategory(),
-  ])
-  return { routineList, tasks, categories }
-}
-
-const SchedulePage = async () => {
-  const { routineList, tasks, categories } = await fetchInitialData()
-
+const SchedulePage = () => {
   return (
     <DateProvider>
       <main className="grid grid-cols-[1fr_3fr_1fr] h-[calc(100vh-var(--navbar-height))] gap-md pb-12">
@@ -36,18 +22,17 @@ const SchedulePage = async () => {
           <Box className="flex-1">
             <div className="grid grid-cols-[1fr_2fr]">
               <DayTaskChart />
-              <TaskList tasks={tasks} categories={categories} />
+              <TaskList />
             </div>
           </Box>
           <Box className="flex-1">
             <div className="flex gap-xl h-full">
               <WeeklyTasksChart />
-              <WeeklyCategoryTasks categories={categories} />
+              <WeeklyCategoryTasks />
             </div>
-            {/* <RoutinesTable routinesData={routineList} /> */}
           </Box>
         </div>
-        <RoutineManager routineList={routineList} />
+        <RoutineManager />
       </main>
     </DateProvider>
   )
