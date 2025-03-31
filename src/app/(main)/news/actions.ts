@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import db from '@/utils/db'
-import { getUserInfo } from '@/utils/supabase/actions'
+import { withUserInfo } from '@/utils/withUserInfo'
 
 export interface INaverNews {
   display: number
@@ -64,8 +64,6 @@ export interface INewsKeyword {
 }
 
 export const createNewsKeyword = async (formData: FormData) => {
-  const user = await getUserInfo()
-
   const keyword = formData.get('content') as string | null
   const result = await formSchema.spa(keyword)
 
@@ -78,40 +76,41 @@ export const createNewsKeyword = async (formData: FormData) => {
   }
 
   try {
-    const newKeyword = await db.newsKeyword.create({
-      data: {
-        keyword,
-        userId: user?.id as string,
-      },
-      select: {
-        id: true,
-        keyword: true,
-      },
+    const newKeyword = await withUserInfo(async (userId) => {
+      return await db.newsKeyword.create({
+        data: {
+          keyword,
+          userId,
+        },
+        select: {
+          id: true,
+          keyword: true,
+        },
+      })
     })
 
     return { newKeyword, errors: [] }
   } catch (error) {
     console.error(error)
+    return { errors: ['An unexpected error occurred.'] }
   }
 }
 
 export const getNewsKeyword = async (): Promise<INewsKeyword[]> => {
-  const user = await getUserInfo()
-
-  const keywords = await db.newsKeyword.findMany({
-    where: {
-      userId: user?.id,
-    },
-    select: {
-      id: true,
-      keyword: true,
-    },
-    orderBy: {
-      id: 'asc',
-    },
+  return await withUserInfo(async (userId) => {
+    return await db.newsKeyword.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        keyword: true,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    })
   })
-
-  return keywords
 }
 
 export const deleteNewsCategory = async (id: number) => {

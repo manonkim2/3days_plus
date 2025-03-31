@@ -33,12 +33,12 @@ const Login = () => {
         </Link>
       </div>
 
-      <div className="flex justify-center mt-xl">
+      {/* <div className="flex justify-center mt-xl">
         <span className="text-xs">Don&apos;t have an account?</span>
         <Link href="/signup" className="text-xs text-primary pl-xs underline">
           Sign up
         </Link>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -4,7 +4,10 @@ import { Montserrat, Poppins } from 'next/font/google'
 
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+
 import ReactQueryProvider from '@/components/ReactQueryProvider'
+import { Toaster } from '@/components/ui/toaster'
+import { ToastProvider } from '@/components/ui/toast'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -34,9 +37,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${montserrat.variable} ${poppins.variable}`}>
         <ReactQueryProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <ToastProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Toaster />
+            <Footer />
+          </ToastProvider>
         </ReactQueryProvider>
       </body>
     </html>

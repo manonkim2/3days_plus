@@ -1,13 +1,22 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
-
 import { CircleUser } from 'lucide-react'
-import { getUserInfo } from '@/utils/supabase/actions'
 import NavMenu from './NavMenu'
 import { cn } from '@/utils/cn'
+import { useUser } from '@/utils/useUser'
 
-const Navbar = async () => {
-  const user = await getUserInfo()
+export interface UserInfo {
+  id: string
+  name: string
+  email: string
+  image_url: string | null
+  social: string
+}
+
+const Navbar = () => {
+  const { user } = useUser()
 
   return (
     <nav

@@ -8,7 +8,7 @@ import {
   completeRoutine,
   unCompleteRoutine,
   deleteRoutine,
-} from '../../actions/routineActions'
+} from './actions'
 
 export const useRoutineManager = (date: Date, week: Date[]) => {
   const queryClient = useQueryClient()

@@ -8,7 +8,6 @@ interface Routes {
 const publicOnlyUrl: Routes = {
   '/': true,
   '/login': true,
-  '/signup': true,
   '/dashboard': true,
   '/oauth/google': true,
   '/oauth/kakao': true,

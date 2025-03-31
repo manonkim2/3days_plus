@@ -6,8 +6,8 @@ import { format } from 'date-fns'
 
 import { Button } from '@/components/ui'
 import { cn } from '@/utils/cn'
-import DropDown from '../DropDown'
-import { IRoutine } from '../../actions/routineActions'
+import DropDown from '@/components/DropDown'
+import { IRoutine } from './actions'
 
 interface IRoutineCardProps {
   routine: IRoutine & { logId?: number }

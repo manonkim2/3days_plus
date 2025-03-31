@@ -8,8 +8,9 @@ import {
   RadialBar,
   RadialBarChart,
 } from 'recharts'
-import { useTaskContext } from '../context'
 import { ChartContainer } from '@/components/ui/chart'
+import { useTasks } from './useTasks'
+import { useTaskContext } from '../../context'
 
 const chartConfig = {
   completed: {
@@ -19,7 +20,8 @@ const chartConfig = {
 }
 
 const DayTaskChart = () => {
-  const { tasks } = useTaskContext()
+  const { date } = useTaskContext()
+  const { tasks } = useTasks(date)
 
   const completedRoutineRatio = useMemo(() => {
     if (tasks.length === 0) return 0

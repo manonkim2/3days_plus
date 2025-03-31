@@ -2,29 +2,33 @@
 
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Trash2 } from 'lucide-react'
-import React, { startTransition, useActionState } from 'react'
-import {
-  createNewsKeyword,
-  deleteNewsCategory,
-  getNewsKeyword,
-  INewsKeyword,
-} from '../actions'
+import React, { useActionState } from 'react'
+import { createNewsKeyword, deleteNewsCategory, INewsKeyword } from '../actions'
 import { Button } from '@/components/ui'
 import { DEFAULT_KEYWORD, useSelectedKeyword } from '../context'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getNewsKeyword } from '../actions'
 
-const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
+const NewsKeyword = () => {
+  const queryClient = useQueryClient()
   const { selectedKeyword, setSelectedKeyword } = useSelectedKeyword()
 
-  const [keywords, formAction, isPending] = useActionState(
-    async (
-      _: { keywords: INewsKeyword[]; errors: string[] },
-      formData: FormData,
-    ) => {
+  const { data: keywords = [], isLoading } = useQuery<INewsKeyword[]>({
+    queryKey: ['news-keywords'],
+    queryFn: getNewsKeyword,
+    staleTime: 1000 * 60 * 5,
+  })
+
+  const [, formAction, isPending] = useActionState<
+    { newKeyword?: INewsKeyword; errors: string[] },
+    FormData
+  >(
+    async (_: unknown, formData: FormData) => {
       const response = await createNewsKeyword(formData)
-      const updatedKeywords = await getNewsKeyword()
-      return { keywords: updatedKeywords, errors: response?.errors || [] }
+      await queryClient.invalidateQueries({ queryKey: ['news-keywords'] })
+      return response
     },
-    { keywords: keywordsData, errors: [] },
+    { errors: [] },
   )
 
   const handleClickKeyword = (keyword: string) => {
@@ -33,13 +37,9 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
 
   const handleDeleteTask = async (id: number, event: React.MouseEvent) => {
     event.stopPropagation()
-
     await deleteNewsCategory(id)
-
-    startTransition(() => {
-      formAction(new FormData())
-      setSelectedKeyword(DEFAULT_KEYWORD)
-    })
+    await queryClient.invalidateQueries({ queryKey: ['news-keywords'] })
+    setSelectedKeyword(DEFAULT_KEYWORD)
   }
 
   return (
@@ -48,7 +48,7 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
         formAction={formAction}
         placeholder="관심 있는 뉴스 키워드를 등록하고 소식을 받아보세요."
         isPending={isPending}
-        errors={keywords.errors}
+        errors={[]}
       />
 
       <div className="flex flex-wrap gap-sm">
@@ -60,12 +60,12 @@ const NewsKeyword = ({ keywordsData }: { keywordsData: INewsKeyword[] }) => {
         >
           {DEFAULT_KEYWORD}
         </Button>
-        {keywords.keywords.length === 0 && (
+        {keywords.length === 0 && !isLoading && (
           <div className="border border-dashed rounded-md text-sm text-gray-400 px-sm flex items-center justify-center">
             ex. 삼성전자
           </div>
         )}
-        {keywords.keywords.map(({ id, keyword }) => {
+        {keywords.map(({ id, keyword }) => {
           return (
             <Button
               key={id}

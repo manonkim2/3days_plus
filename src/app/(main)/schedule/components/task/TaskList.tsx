@@ -13,7 +13,7 @@ import {
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Input } from '@/components/ui'
-import { Combobox } from '@/app/(main)/schedule/components/TaskCategoryCombobox'
+import { Combobox } from '@/app/(main)/schedule/components/task/Combobox'
 import { useTaskContext } from '../../context'
 import { useTasks } from './useTasks'
 import LoadingOverlay from '@/components/LoadingOverlay'
@@ -50,7 +50,7 @@ const TaskInput = () => {
       createTask(formData, date, category?.id),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['tasks', date.toDateString()],
+        queryKey: ['tasks', date.toISOString()],
       })
       setCategory(null)
     },
@@ -60,7 +60,7 @@ const TaskInput = () => {
     mutationFn: deleteTask,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['tasks', date.toDateString()],
+        queryKey: ['tasks', date.toISOString()],
       })
     },
   })
@@ -70,7 +70,7 @@ const TaskInput = () => {
       updateCheckTask(id, completed),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['tasks', date.toDateString()],
+        queryKey: ['tasks', date.toISOString()],
       })
     },
   })
@@ -87,7 +87,7 @@ const TaskInput = () => {
     }) => updateContentTask(id, content, categoryId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['tasks', date.toDateString()],
+        queryKey: ['tasks', date.toISOString()],
       })
       setEditTask(null)
       setEditCategory(null)

@@ -2,12 +2,9 @@ import Parser from 'rss-parser'
 
 import Title from './compnents/Title'
 import News from './compnents/News'
-import { getUserInfo } from '@/utils/supabase/actions'
 import { NewsCardItem, RssFeed } from '@/types/rss'
 
 const DashBoardPage = async () => {
-  const user = await getUserInfo()
-
   const parser = new Parser({
     customFields: {
       item: ['media:content', 'no'],
@@ -34,7 +31,7 @@ const DashBoardPage = async () => {
   return (
     <div className="pb-xxl">
       <div className="font-poppins h-screen bg-[#1E1E1E]">
-        <Title userName={user?.name} />
+        <Title />
       </div>
       <News newsItems={newsCardItems.slice(0, 10)} />
     </div>
