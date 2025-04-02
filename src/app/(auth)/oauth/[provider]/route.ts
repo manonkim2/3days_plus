@@ -10,11 +10,14 @@ export async function GET(
   const { provider } = await params
   const supabase = await serverCreateClient()
 
+  const redirectTo =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000/oauth/complete'
+      : 'https://your-app.vercel.app/oauth/complete'
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
-    options: {
-      redirectTo: 'http://localhost:3000/oauth/complete',
-    },
+    options: { redirectTo },
   })
 
   if (error) {
