@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "yarn pnpify prisma generate"
+    "postinstall": "yarn pnpify prisma generate"
   },
   "dependencies": {
     "@prisma/client": "6.3.1",
