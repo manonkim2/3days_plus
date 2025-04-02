@@ -1,6 +1,6 @@
 'use client'
 
-import { DateProvider } from './context'
+import { DateProvider } from '@/context/TaskContext'
 import Box from '@/components/Box'
 import Calendar from './components/Calendar'
 import DayTaskChart from './components/task/DayTaskChart'

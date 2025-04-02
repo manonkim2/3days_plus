@@ -1,7 +1,6 @@
 'use client'
 
 import { Trash2 } from 'lucide-react'
-import { useTaskContext } from '../../context'
 
 import {
   Accordion,
@@ -13,6 +12,7 @@ import { Badge } from '@/components/ui'
 import AlertButton from '@/components/AlertButton'
 import { getShortDate } from '@/utils/formmattedDate'
 import { useTasks } from '../task/useTasks'
+import { useTaskContext } from '@/context/TaskContext'
 
 const WeeklyCategoryTasks = () => {
   const { setSelectedCategoryId, weekTaskList } = useTaskContext()

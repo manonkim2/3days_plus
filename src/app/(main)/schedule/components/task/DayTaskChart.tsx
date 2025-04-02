@@ -10,7 +10,7 @@ import {
 } from 'recharts'
 import { ChartContainer } from '@/components/ui/chart'
 import { useTasks } from './useTasks'
-import { useTaskContext } from '../../context'
+import { useTaskContext } from '@/context/TaskContext'
 
 const chartConfig = {
   completed: {

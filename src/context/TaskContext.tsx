@@ -9,7 +9,7 @@ import {
   useEffect,
 } from 'react'
 import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
-import { getTask, ITask } from './components/task/actions'
+import { getTask, ITask } from '../app/(main)/schedule/components/task/actions'
 
 interface TaskContextType {
   date: Date

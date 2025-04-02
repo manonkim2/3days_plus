@@ -4,15 +4,15 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
-import { useSelectedKeyword } from '../context'
 import { getNews, INaverNews } from '../actions'
 import NewsCardSkeleton from './NewsSkeleton'
 import { Pagination } from '@/components/Pagination'
 import { getFormattedDate } from '@/utils/formmattedDate'
 import { RefreshCcw } from 'lucide-react'
+import { useNewsContext } from '@/context/NewsContext'
 
 const NewsList = () => {
-  const { selectedKeyword } = useSelectedKeyword()
+  const { selectedKeyword } = useNewsContext()
   const [page, setPage] = useState(1)
 
   const {

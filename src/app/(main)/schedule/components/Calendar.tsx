@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { Calendar as CalendarUI } from '@/components/ui'
-import { useTaskContext } from '../context'
+import { useTaskContext } from '@/context/TaskContext'
 
 const Calendar = () => {
   const { date, week, handleClickDate } = useTaskContext()

@@ -5,13 +5,13 @@ import { Trash2 } from 'lucide-react'
 import React, { useActionState } from 'react'
 import { createNewsKeyword, deleteNewsCategory, INewsKeyword } from '../actions'
 import { Button } from '@/components/ui'
-import { DEFAULT_KEYWORD, useSelectedKeyword } from '../context'
+import { DEFAULT_KEYWORD, useNewsContext } from '@/context/NewsContext'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getNewsKeyword } from '../actions'
 
 const NewsKeyword = () => {
   const queryClient = useQueryClient()
-  const { selectedKeyword, setSelectedKeyword } = useSelectedKeyword()
+  const { selectedKeyword, setSelectedKeyword } = useNewsContext()
 
   const { data: keywords = [], isLoading } = useQuery<INewsKeyword[]>({
     queryKey: ['news-keywords'],

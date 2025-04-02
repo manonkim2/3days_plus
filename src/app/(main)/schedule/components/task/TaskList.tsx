@@ -14,7 +14,7 @@ import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import { Input } from '@/components/ui'
 import { Combobox } from '@/app/(main)/schedule/components/task/Combobox'
-import { useTaskContext } from '../../context'
+import { useTaskContext } from '@/context/TaskContext'
 import { useTasks } from './useTasks'
 import LoadingOverlay from '@/components/LoadingOverlay'
 

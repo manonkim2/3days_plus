@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 
 import TitleImageSheet from './TitleImageSheet'
-import { useUser } from '@/utils/useUser'
+import { useUser } from '@/context/UserContext'
 
 const TypingText = ({
   text,

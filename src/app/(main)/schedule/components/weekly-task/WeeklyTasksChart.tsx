@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { format } from 'date-fns'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
-import { useTaskContext } from '../../context'
+import { useTaskContext } from '@/context/TaskContext'
 import {
   ChartConfig,
   ChartContainer,
