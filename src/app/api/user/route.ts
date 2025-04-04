@@ -17,11 +17,11 @@ export async function POST(request: NextRequest) {
       update: {},
       create: {
         id: identity.identity_id,
-        name: raw.user_metadata?.name,
-        email: raw.email,
-        updated_at: raw.updated_at,
-        image_url: raw.user_metadata?.avatar_url,
-        social: identity.provider,
+        name: raw.user_metadata?.name ?? '',
+        email: raw.email ?? '',
+        updated_at: raw.updated_at ?? new Date().toISOString(),
+        image_url: raw.user_metadata?.avatar_url ?? '',
+        social: identity.provider ?? 'unknown',
       },
     })
 
