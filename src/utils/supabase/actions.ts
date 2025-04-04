@@ -46,8 +46,6 @@ const getUserInfo = async () => {
 const signOut = async () => {
   const supabase = await serverCreateClient()
   await supabase.auth.signOut()
-
-  return redirect('/dashboard')
 }
 
 export { getUserInfo, signOut }
