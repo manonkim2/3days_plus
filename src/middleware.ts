@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
-const PUBLIC_ROUTES = new Set([
-  '/',
-  '/login',
-  '/dashboard',
-  '/oauth/google',
-  '/oauth/kakao',
-  '/oauth/complete',
-])
+const PROTECTED_ROUTES = new Set(['/schedule', '/profile'])
 
 export const middleware = async (request: NextRequest) => {
   const response = NextResponse.next()
@@ -34,9 +27,9 @@ export const middleware = async (request: NextRequest) => {
     } = await supabase.auth.getUser()
 
     const pathname = request.nextUrl.pathname
-    const isPublic = PUBLIC_ROUTES.has(pathname)
+    const isProtected = PROTECTED_ROUTES.has(pathname)
 
-    if (!user && !isPublic) {
+    if (!user && isProtected) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
   } catch (error) {
@@ -48,5 +41,5 @@ export const middleware = async (request: NextRequest) => {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/schedule', '/profile'],
 }
