@@ -10,7 +10,7 @@ const Login = () => {
   const handleOAuthLogin = async (provider: 'google' | 'kakao') => {
     const redirectTo =
       process.env.NODE_ENV === 'development'
-        ? 'https://localhost:3000/oauth/complete'
+        ? 'http://localhost:3000/oauth/complete'
         : 'https://3daysplus.vercel.app/oauth/complete'
 
     const { error } = await supabase.auth.signInWithOAuth({
@@ -20,7 +20,7 @@ const Login = () => {
 
     if (error) {
       alert('로그인에 실패했습니다. 다시 시도해 주세요.')
-      console.error('[OAuth Error]:', error.message)
+      console.error('[OAuth Error|login page]:', error.message)
     }
   }
 
