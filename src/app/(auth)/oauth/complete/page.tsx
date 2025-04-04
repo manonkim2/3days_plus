@@ -1,13 +1,15 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/utils/supabase/client'
+import { useUser } from '@/context/UserContext'
 
-const OAuthCompletePage = () => {
+const OAuthHandler = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
+  const { setUser } = useUser()
 
   useEffect(() => {
     const handleOAuth = async () => {
@@ -24,6 +26,18 @@ const OAuthCompletePage = () => {
         return
       }
 
+      const identity = user.identities!
+      const socialLogin = identity?.length > 1 ? identity[1] : identity[0]
+
+      setUser({
+        id: socialLogin.identity_id,
+        name: user.user_metadata.name,
+        email: user.email || '',
+        updated_at: user.updated_at || '',
+        image_url: user.user_metadata.avatar_url,
+        social: socialLogin.provider,
+      })
+
       try {
         const res = await fetch('/api/user', {
           method: 'POST',
@@ -37,7 +51,7 @@ const OAuthCompletePage = () => {
           return
         }
 
-        router.push('/dashboard')
+        router.push('/')
       } catch (err) {
         console.error('[OAuth Error|fetch failed]:', err)
         router.push('/login')
@@ -45,9 +59,17 @@ const OAuthCompletePage = () => {
     }
 
     handleOAuth()
-  }, [code, router])
+  }, [code, router, setUser])
 
   return <div>로그인 처리 중...</div>
+}
+
+const OAuthCompletePage = () => {
+  return (
+    <Suspense fallback={<div>로그인 처리 중...</div>}>
+      <OAuthHandler />
+    </Suspense>
+  )
 }
 
 export default OAuthCompletePage

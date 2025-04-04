@@ -6,8 +6,9 @@ export interface UserInfo {
   id: string
   name: string
   email: string
-  image_url: string | null
+  image_url: string
   social: string
+  updated_at: string
 }
 
 const UserContext = createContext<{
