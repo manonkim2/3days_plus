@@ -18,7 +18,7 @@ const ProfilePage = () => {
       }
 
       setUser(null)
-      router.push('/dashboard')
+      router.push('/')
     } catch (error) {
       alert('로그아웃 중 오류가 발생했어요!')
       console.error(error)

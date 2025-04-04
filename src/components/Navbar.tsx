@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { CircleUser } from 'lucide-react'
-import NavMenu from './NavMenu'
+import Button from './Button'
 import { cn } from '@/utils/cn'
-import { useUser } from '@/utils/useUser'
+import { useUser } from '@/context/UserContext'
 
 export interface UserInfo {
   id: string
@@ -17,6 +18,25 @@ export interface UserInfo {
 
 const Navbar = () => {
   const { user } = useUser()
+  const pathName = usePathname()
+
+  const navButton = (menu: string) => {
+    const _menu = menu.toLowerCase()
+    const isDashboard = _menu === 'dashboard'
+
+    const isCurrent = isDashboard
+      ? pathName === '/' || pathName === '/dashboard'
+      : `/${_menu}` === pathName
+
+    const href = isDashboard ? '/' : `/${_menu}`
+    const variant = isCurrent ? 'primary' : 'tertiary'
+
+    return (
+      <Link href={href}>
+        <Button text={menu} variant={variant} />
+      </Link>
+    )
+  }
 
   return (
     <nav
@@ -26,7 +46,11 @@ const Navbar = () => {
     >
       <Link href="/">Title</Link>
 
-      <NavMenu />
+      <div className="gap-2 sm:gap-10 flex">
+        {navButton('Dashboard')}
+        {navButton('Schedule')}
+        {navButton('News')}
+      </div>
 
       <Link className="rounded-full overflow-hidden" href="/profile">
         {user ? (
