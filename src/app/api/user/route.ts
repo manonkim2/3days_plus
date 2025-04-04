@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from '@/utils/db'
 
 export async function POST(request: NextRequest) {
-  console.log(request)
   try {
     const raw = await request.json()
 
@@ -19,7 +18,6 @@ export async function POST(request: NextRequest) {
         id: identity.identity_id,
         name: raw.user_metadata?.name ?? '',
         email: raw.email ?? '',
-        updated_at: raw.updated_at ?? new Date().toISOString(),
         image_url: raw.user_metadata?.avatar_url ?? '',
         social: identity.provider ?? 'unknown',
       },
