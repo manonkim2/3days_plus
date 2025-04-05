@@ -50,7 +50,7 @@ const OAuthHandler = () => {
           return
         }
 
-        router.push('/')
+        window.location.href = '/'
       } catch (err) {
         console.error('[OAuth Error|fetch failed]:', err)
         router.push('/login')

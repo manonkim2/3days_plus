@@ -1,12 +1,10 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { useUser } from '@/context/UserContext'
 import { supabase } from '@/lib/supabase/client'
 
 const ProfilePage = () => {
-  const router = useRouter()
   const { setUser } = useUser()
 
   const handleLogout = async () => {
@@ -18,7 +16,7 @@ const ProfilePage = () => {
       }
 
       setUser(null)
-      router.push('/')
+      window.location.href = '/'
     } catch (error) {
       alert('로그아웃 중 오류가 발생했어요!')
       console.error(error)
