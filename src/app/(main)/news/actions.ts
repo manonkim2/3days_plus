@@ -5,7 +5,10 @@ import db from '@/lib/db'
 import { withUserInfo } from '@/lib/withUserInfo'
 
 const formSchema = z
-  .string({ required_error: '키워드를 입력해주세요.' })
+  .string({
+    required_error: '키워드를 입력해주세요.',
+    invalid_type_error: '문자열을 입력해주세요.',
+  })
   .min(2, '키워드는 최소 2자 이상 입력해야 합니다.')
   .max(10, '키워드는 최대 10자까지 입력 가능합니다.')
   .regex(/^[가-힣a-zA-Z0-9]+$/, '특수문자는 사용할 수 없습니다.')

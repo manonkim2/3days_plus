@@ -1,30 +1,30 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { RefreshCcw } from 'lucide-react'
 
 import NewsCardSkeleton from './NewsSkeleton'
 import { Pagination } from '@/components/Pagination'
 import { getFormattedDate } from '@/utils/formmattedDate'
-import { RefreshCcw } from 'lucide-react'
 import { useNewsContext } from '@/context/NewsContext'
-import { getNews, INaverNews } from '@/lib/naver'
+import { getNews } from '@/lib/naver'
+import { INaverNews } from '@/app/api/naver/news/route'
 
 const NewsList = () => {
-  const { selectedKeyword } = useNewsContext()
-  const [page, setPage] = useState(1)
+  const { selectedKeyword, page, setPage } = useNewsContext()
 
   const {
     data: news,
     isLoading,
     refetch,
-  } = useQuery({
+  } = useQuery<INaverNews>({
     queryKey: ['news', selectedKeyword, page],
     queryFn: () => getNews(selectedKeyword, page),
     enabled: !!selectedKeyword,
     staleTime: 60 * 60 * 1000, // 1시간
   })
+  console.log('🚀 ~ NewsList ~ news:', news)
 
   const removeHtmlTags = (str: string) =>
     str.replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, '')
@@ -33,7 +33,13 @@ const NewsList = () => {
 
   return (
     <div className="container">
-      {news && (
+      {!news?.total ? (
+        <div className="text-center text-gray-500 text-sm py-8">
+          No news found for this keyword.
+          <br />
+          Try exploring other topics!
+        </div>
+      ) : (
         <div className="flex justify-end items-center pb-sm gap-sm">
           <span className="text-sm text-gray-400">
             last update : {getFormattedDate(news?.lastBuildDate)}
@@ -44,6 +50,7 @@ const NewsList = () => {
           />
         </div>
       )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {news?.items.map((item) => (
           <NewsCard
@@ -57,7 +64,7 @@ const NewsList = () => {
       {news && (
         <div className="flex w-full my-16">
           <Pagination
-            totalPages={20}
+            totalPages={news.total}
             currentPage={page}
             setCurrentPage={setPage}
           />

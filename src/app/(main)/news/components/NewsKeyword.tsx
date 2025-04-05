@@ -11,7 +11,7 @@ import { getNewsKeyword } from '../actions'
 
 const NewsKeyword = () => {
   const queryClient = useQueryClient()
-  const { selectedKeyword, setSelectedKeyword } = useNewsContext()
+  const { selectedKeyword, setSelectedKeyword, setPage } = useNewsContext()
 
   const { data: keywords = [], isLoading } = useQuery<INewsKeyword[]>({
     queryKey: ['news-keywords'],
@@ -19,7 +19,7 @@ const NewsKeyword = () => {
     staleTime: 1000 * 60 * 5,
   })
 
-  const [, formAction, isPending] = useActionState<
+  const [formState, formAction, isPending] = useActionState<
     { newKeyword?: INewsKeyword; errors: string[] },
     FormData
   >(
@@ -32,6 +32,7 @@ const NewsKeyword = () => {
   )
 
   const handleClickKeyword = (keyword: string) => {
+    setPage(1)
     setSelectedKeyword(keyword)
   }
 
@@ -48,10 +49,10 @@ const NewsKeyword = () => {
         formAction={formAction}
         placeholder="관심 있는 뉴스 키워드를 등록하고 소식을 받아보세요."
         isPending={isPending}
-        errors={[]}
+        errors={formState.errors}
       />
 
-      <div className="flex flex-wrap gap-sm">
+      <div className="flex flex-wrap gap-sm w-[80vw]">
         <Button
           className="cursor-pointer text-sm"
           onClick={() => handleClickKeyword(DEFAULT_KEYWORD)}
@@ -65,6 +66,7 @@ const NewsKeyword = () => {
             ex. 삼성전자
           </div>
         )}
+
         {keywords.map(({ id, keyword }) => {
           return (
             <Button
