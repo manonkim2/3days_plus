@@ -2,9 +2,7 @@
 
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
-
 import TitleImageSheet from './TitleImageSheet'
-import { useUser } from '@/context/UserContext'
 
 const TypingText = ({
   text,
@@ -37,16 +35,15 @@ const TypingText = ({
   )
 }
 
-const Title = () => {
+const Title = ({ user }: { user: string }) => {
   const [showDate, setShowDate] = useState(false)
-  const { user } = useUser()
 
   return (
     <div className="container flex justify-between items-end mb-xxl h-1/3">
       <TitleImageSheet />
       <div className=" flex flex-col items-end">
         <TypingText
-          text={`Hello, ${user?.name || 'Everybody'}`}
+          text={`Hello, ${user || 'Everybody'}`}
           onComplete={() => setShowDate(true)}
         />
         {showDate && (

@@ -4,7 +4,7 @@ import GoogleIcon from '@/components/icons/GoogleIcon'
 import KakaoIcon from '@/components/icons/KakaoIcon'
 import { Input } from '@/components/ui'
 import { KeyRound, Mail } from 'lucide-react'
-import { supabase } from '@/utils/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 
 const Login = () => {
   const handleOAuthLogin = async (provider: 'google' | 'kakao') => {

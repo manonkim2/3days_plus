@@ -8,7 +8,6 @@ export interface UserInfo {
   email: string
   image_url: string
   social: string
-  updated_at: string
 }
 
 const UserContext = createContext<{

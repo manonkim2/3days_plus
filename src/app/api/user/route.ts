@@ -1,25 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
-import db from '@/utils/db'
+import db from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
-    const raw = await request.json()
+    const { id, email, name, image_url, social } = await request.json()
 
-    const identity = raw.identities?.[1] ?? raw.identities?.[0]
-
-    if (!identity?.identity_id) {
-      return NextResponse.json({ error: 'No identity found' }, { status: 400 })
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Missing identity ID' },
+        { status: 400 },
+      )
     }
 
     const user = await db.user.upsert({
-      where: { id: identity.identity_id },
+      where: { id },
       update: {},
       create: {
-        id: identity.identity_id,
-        name: raw.user_metadata?.name ?? '',
-        email: raw.email ?? '',
-        image_url: raw.user_metadata?.avatar_url ?? '',
-        social: identity.provider ?? 'unknown',
+        id,
+        email,
+        name,
+        image_url,
+        social,
       },
     })
 

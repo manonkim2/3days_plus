@@ -1,12 +1,11 @@
-'use client'
+export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
 import { CircleUser } from 'lucide-react'
-import Button from './Button'
 import { cn } from '@/utils/cn'
-import { useUser } from '@/context/UserContext'
+import NavButtons from './NavButtons'
+import { getUserInfo } from '@/lib/supabase/actions'
 
 export interface UserInfo {
   id: string
@@ -16,27 +15,8 @@ export interface UserInfo {
   social: string
 }
 
-const Navbar = () => {
-  const { user } = useUser()
-  const pathName = usePathname()
-
-  const navButton = (menu: string) => {
-    const _menu = menu.toLowerCase()
-    const isDashboard = _menu === 'dashboard'
-
-    const isCurrent = isDashboard
-      ? pathName === '/' || pathName === '/dashboard'
-      : `/${_menu}` === pathName
-
-    const href = isDashboard ? '/' : `/${_menu}`
-    const variant = isCurrent ? 'primary' : 'tertiary'
-
-    return (
-      <Link href={href}>
-        <Button text={menu} variant={variant} />
-      </Link>
-    )
-  }
+const Navbar = async () => {
+  const user = await getUserInfo()
 
   return (
     <nav
@@ -46,14 +26,10 @@ const Navbar = () => {
     >
       <Link href="/">Title</Link>
 
-      <div className="gap-2 sm:gap-10 flex">
-        {navButton('Dashboard')}
-        {navButton('Schedule')}
-        {navButton('News')}
-      </div>
+      <NavButtons />
 
       <Link className="rounded-full overflow-hidden" href="/profile">
-        {user ? (
+        {user?.image_url ? (
           <Image
             src={user.image_url || ''}
             alt="user_image"
