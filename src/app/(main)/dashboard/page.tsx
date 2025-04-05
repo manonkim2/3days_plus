@@ -1,37 +1,18 @@
-import Parser from 'rss-parser'
+export const dynamic = 'force-dynamic'
 
 import Title from './compnents/Title'
 import News from './compnents/News'
-import { NewsCardItem, RssFeed } from '@/types/rss'
+import { getUserInfo } from '@/lib/supabase/actions'
+import { fetchDashboardNews } from '@/lib/news'
 
 const DashBoardPage = async () => {
-  const parser = new Parser({
-    customFields: {
-      item: ['media:content', 'no'],
-    },
-  })
-
-  const news = (await parser.parseURL(
-    'https://www.mk.co.kr/rss/30000001/',
-  )) as RssFeed
-
-  const newsCardItems: NewsCardItem[] = news.items
-    .map((item) => ({
-      no: item.no,
-      title: item.title,
-      content: item.content,
-      contentSnippet: item.contentSnippet,
-      pubDate: item.pubDate,
-      link: item.link,
-      enclosureUrl: item['media:content']?.$?.url,
-    }))
-    .filter((item) => item.enclosureUrl)
-    .slice(0, 10)
+  const user = await getUserInfo()
+  const newsCardItems = await fetchDashboardNews()
 
   return (
     <div className="pb-xxl">
       <div className="font-poppins h-screen bg-[#1E1E1E]">
-        <Title />
+        <Title user={user?.name || ''} />
       </div>
       <News newsItems={newsCardItems.slice(0, 10)} />
     </div>

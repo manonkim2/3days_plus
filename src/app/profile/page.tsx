@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { useUser } from '@/context/UserContext'
-import { supabase } from '@/utils/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 
 const ProfilePage = () => {
   const router = useRouter()

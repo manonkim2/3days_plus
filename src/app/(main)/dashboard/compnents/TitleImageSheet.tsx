@@ -11,7 +11,7 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet'
 import { IPhotos } from '@/types/unsplash'
-import { fetcher } from '@/utils/fetcher'
+import { fetcher } from '@/lib/fetcher'
 import { useQuery } from '@tanstack/react-query'
 import { Search } from 'lucide-react'
 import Image from 'next/image'

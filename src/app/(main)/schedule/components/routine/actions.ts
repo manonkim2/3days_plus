@@ -2,10 +2,10 @@
 
 import { cache } from 'react'
 import { endOfDay, startOfDay } from 'date-fns'
-import db from '@/utils/db'
+import db from '@/lib/db'
 import { Prisma } from '../../../../../../prisma/client'
 import { getKoreanTime } from '@/utils/formmattedDate'
-import { withUserInfo } from '@/utils/withUserInfo'
+import { withUserInfo } from '@/lib/withUserInfo'
 
 export interface IRoutine {
   id: number

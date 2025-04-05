@@ -1,9 +1,9 @@
 'use server'
 
-import db from '@/utils/db'
+import db from '@/lib/db'
 import { endOfDay, startOfDay } from 'date-fns'
 import { getKoreanTime } from '@/utils/formmattedDate'
-import { withUserInfo } from '@/utils/withUserInfo'
+import { withUserInfo } from '@/lib/withUserInfo'
 
 export interface ITask {
   id: number

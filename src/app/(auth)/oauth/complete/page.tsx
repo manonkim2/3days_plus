@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { supabase } from '@/utils/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 import { useUser } from '@/context/UserContext'
 
 const OAuthHandler = () => {
@@ -26,23 +26,22 @@ const OAuthHandler = () => {
         return
       }
 
-      const identity = user.identities!
-      const socialLogin = identity?.length > 1 ? identity[1] : identity[0]
-
-      setUser({
-        id: socialLogin.identity_id,
-        name: user.user_metadata.name,
+      const identity = user.identities?.[0]
+      const payload = {
+        id: identity?.identity_id || '',
         email: user.email || '',
-        updated_at: user.updated_at || '',
-        image_url: user.user_metadata.avatar_url,
-        social: socialLogin.provider,
-      })
+        name: user.user_metadata?.name || '',
+        image_url: user.user_metadata?.avatar_url || '',
+        social: identity?.provider || '',
+      }
+
+      setUser(payload)
 
       try {
         const res = await fetch('/api/user', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(user),
+          body: JSON.stringify(payload),
         })
 
         if (!res.ok) {
