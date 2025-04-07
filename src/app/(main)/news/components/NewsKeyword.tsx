@@ -52,7 +52,7 @@ const NewsKeyword = () => {
         errors={formState.errors}
       />
 
-      <div className="flex flex-wrap gap-sm w-[80vw]">
+      <div className="flex flex-wrap justify-center gap-sm w-[80vw]">
         <Button
           className="cursor-pointer text-sm"
           onClick={() => handleClickKeyword(DEFAULT_KEYWORD)}

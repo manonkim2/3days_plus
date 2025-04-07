@@ -29,6 +29,13 @@ export const createNewsKeyword = async (formData: FormData) => {
     return { errors: [] }
   }
 
+  const existing = await db.newsKeyword.findFirst({
+    where: { keyword },
+  })
+
+  if (existing) {
+    return { errors: ['이미 등록된 키워드입니다.'] }
+  }
   if (!result.success) {
     return { errors: result.error.flatten().formErrors }
   }
