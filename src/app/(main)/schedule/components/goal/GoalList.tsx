@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Trash2, Plus } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { useTaskContext } from '@/context/TaskContext'
-import { useGoalItems } from './useGoalItem'
-import { GoalType } from '@/prisma/client'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Trash2, Plus } from 'lucide-react'
+
+import { useGoalItems } from './useGoalItem'
+import { Input } from '@/components/ui/input'
+import { Progress } from '@/components/ui/progress'
+import { useTaskContext } from '@/context/TaskContext'
+import { GoalType } from '@/prisma/client'
 
 const GoalList = ({ tab }: { tab: GoalType }) => {
   const { date } = useTaskContext()
@@ -34,8 +36,27 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
     )
   }, [goalItems])
 
+  const completedCount = goalItems.filter((g) => g.completed).length
+  const totalCount = goalItems.length
+  const percent =
+    totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100)
+
   return (
     <div className="flex flex-col gap-md mt-md">
+      {totalCount > 0 && (
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-center text-sm text-muted-foreground">
+            <span>Progress</span>
+            <span>{percent}%</span>
+          </div>
+          <Progress value={percent} />
+        </div>
+      )}
+      {percent === 100 && (
+        <p className="text-sm text-green-500 font-semibold">
+          🎉 All goals completed!
+        </p>
+      )}
       <ul className="flex flex-col gap-xs">
         <AnimatePresence>
           {sortedGoals.map((goal) => (
