@@ -3,6 +3,7 @@
 import { DateProvider } from '@/context/TaskContext'
 import Box from '@/components/Box'
 import Calendar from './components/Calendar'
+import GoalManager from './components/goal/GoalManager'
 import DayTaskChart from './components/task/DayTaskChart'
 import TaskList from './components/task/TaskList'
 import WeeklyTasksChart from './components/weekly-task/WeeklyTasksChart'
@@ -15,7 +16,7 @@ const SchedulePage = () => {
       <main className="grid grid-cols-[1fr_3fr_1fr] h-[calc(100vh-var(--navbar-height))] gap-md pb-12 container">
         <Box className="flex flex-col gap-sm">
           <Calendar />
-          <div>2025 목표 / 이 달의 목표 / 이 주의 목표</div>
+          <GoalManager />
         </Box>
 
         <div className="flex flex-col gap-md">
