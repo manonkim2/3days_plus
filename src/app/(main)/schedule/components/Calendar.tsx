@@ -24,11 +24,13 @@ const Calendar = () => {
   )
 
   return (
-    <CalendarUI
-      onDayClick={handleClickDate}
-      modifiers={memoizedModifiers}
-      modifiersStyles={memoizedModifiersStyles}
-    />
+    <div className="flex w-auto justify-center">
+      <CalendarUI
+        onDayClick={handleClickDate}
+        modifiers={memoizedModifiers}
+        modifiersStyles={memoizedModifiersStyles}
+      />
+    </div>
   )
 }
 

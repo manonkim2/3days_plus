@@ -17,7 +17,7 @@ const Checkbox = ({ text, checked, disabled, badge }: ICheckboxProps) => {
       {badge && <Badge variant="outline">{badge}</Badge>}
       <label
         htmlFor="terms"
-        className={`text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${checked ? 'line-through text-gray-500' : ''}`}
+        className={`text-base text-fontPrimary leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${checked ? 'line-through text-gray-500' : ''}`}
       >
         {text}
       </label>

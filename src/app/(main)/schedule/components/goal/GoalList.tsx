@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { useTaskContext } from '@/context/TaskContext'
 import { GoalType } from '@/prisma/client'
+import Checkbox from '@/components/Checkbox'
 
 const GoalList = ({ tab }: { tab: GoalType }) => {
   const { date } = useTaskContext()
@@ -43,27 +44,36 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
 
   return (
     <div className="flex flex-col gap-md mt-md">
-      {totalCount > 0 && (
-        <div className="flex flex-col gap-1">
-          <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <span>Progress</span>
-            <span>{percent}%</span>
-          </div>
-          <Progress value={percent} />
+      <div className="flex flex-col gap-xs">
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-muted-foreground">Progress</span>
+          <span className="text-xs text-muted-foreground">{percent}%</span>
         </div>
-      )}
+        <Progress value={percent} />
+      </div>
+
       {percent === 100 && (
         <p className="text-sm text-green-500 font-semibold">
           🎉 All goals completed!
         </p>
       )}
-      <ul className="flex flex-col gap-xs">
+
+      <Input
+        className="h-8 text-sm"
+        placeholder="Enter a new goal"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+        button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
+        onSave={handleAdd}
+      />
+
+      <ul className="flex flex-col gap-xs flex-grow overflow-hidden">
         <AnimatePresence>
           {sortedGoals.map((goal) => (
             <motion.li
               key={goal.id}
               layout
-              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{
@@ -71,20 +81,13 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
                 opacity: { duration: 0.25 },
                 y: { duration: 0.3, ease: 'easeOut' },
               }}
-              className={`flex justify-between items-center px-3 py-2 border rounded-md text-sm shadow-sm transition ${
-                goal.completed
-                  ? 'bg-muted opacity-60 line-through'
-                  : 'bg-card hover:bg-accent'
+              className={`flex justify-between items-center px-3 py-xs shadow-sm transition ${
+                goal.completed ? 'opacity-60' : 'bg-card hover:bg-accent'
               }`}
             >
-              <label className="flex gap-sm items-center">
-                <input
-                  type="checkbox"
-                  checked={goal.completed}
-                  onChange={() => handleToggle(goal.id, goal.completed)}
-                />
-                <span>{goal.content}</span>
-              </label>
+              <div onClick={() => handleToggle(goal.id, goal.completed)}>
+                <Checkbox checked={goal.completed} text={goal.content} />
+              </div>
               <Trash2
                 className="w-4 h-4 opacity-50 cursor-pointer"
                 onClick={() => handleDelete(goal.id)}
@@ -93,18 +96,6 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
           ))}
         </AnimatePresence>
       </ul>
-
-      <div className="mt-sm flex items-center gap-xs">
-        <Input
-          className="h-8 text-sm"
-          placeholder="Enter a new goal"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-          button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
-          onSave={handleAdd}
-        />
-      </div>
     </div>
   )
 }

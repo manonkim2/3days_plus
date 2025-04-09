@@ -13,11 +13,11 @@ import RoutineManager from './components/routine/RoutineManager'
 const SchedulePage = () => {
   return (
     <DateProvider>
-      <main className="grid grid-cols-[1fr_3fr_1fr] h-[calc(100vh-var(--navbar-height))] gap-md pb-12 container">
-        <Box className="flex flex-col gap-sm">
+      <main className="grid grid-cols-[1fr_2.5fr_1fr] h-[calc(100vh-var(--navbar-height))] gap-md pb-12 container">
+        <div className="flex flex-col justify-between">
           <Calendar />
           <GoalManager />
-        </Box>
+        </div>
 
         <div className="flex flex-col gap-md">
           <Box className="flex-1">
