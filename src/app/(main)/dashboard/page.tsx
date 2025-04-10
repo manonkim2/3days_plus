@@ -10,7 +10,7 @@ const DashBoardPage = async () => {
   const newsCardItems = await fetchDashboardNews()
 
   return (
-    <div className="pb-xxl">
+    <div>
       <div className="font-poppins h-screen bg-[#1E1E1E]">
         <Title user={user?.name || ''} />
       </div>
