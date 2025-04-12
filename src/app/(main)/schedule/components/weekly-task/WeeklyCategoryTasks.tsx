@@ -16,10 +16,10 @@ import { useTaskContext } from '@/context/TaskContext'
 
 const WeeklyCategoryTasks = () => {
   const { setSelectedCategoryId, weekTaskList } = useTaskContext()
-  const { categories } = useTasks()
+  const { categories, handleOnClickDelete } = useTasks()
 
   return (
-    <div className="flex flex-col min-w-[180px] w-[300px] max-h-[280px] overflow-y-auto border-l pl-md">
+    <div className="flex flex-col min-w-[180px] w-[300px] overflow-y-auto border-l pl-md max-h-[35vh] min-h-[200px]">
       <span className="text-sm font-semibold py-sm">
         Weekly Tasks by Category
       </span>
@@ -104,7 +104,7 @@ const WeeklyCategoryTasks = () => {
                   <AlertButton
                     alertTitle="Delete Category"
                     description="Deleting a category will also delete all of its to-do lists. Are you sure you want to proceed?"
-                    action={() => console.log(`Deleting category ${id}`)}
+                    action={() => handleOnClickDelete(id)}
                     button={
                       <div className="flex gap-xs items-center justify-center cursor-pointer pt-md">
                         <Trash2 className="opacity-50 w-3 h-3" />

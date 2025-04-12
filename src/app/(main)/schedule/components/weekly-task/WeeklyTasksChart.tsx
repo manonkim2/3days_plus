@@ -14,12 +14,12 @@ import {
 } from '@/components/ui/chart'
 
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
+  completionRate: {
+    label: 'All Tasks',
     color: 'hsl(var(--chart-1))',
   },
-  mobile: {
-    label: 'Mobile',
+  categoryCompletionRate: {
+    label: 'Selected Category',
     color: 'hsl(var(--chart-2))',
   },
 } satisfies ChartConfig
@@ -83,16 +83,20 @@ const WeeklyTasksChart = () => {
           <ChartLegend content={<ChartLegendContent />} />
           <Bar
             dataKey="completionRate"
-            stackId="a"
-            fill="var(--color-desktop)"
-            radius={[0, 0, 4, 4]}
-          />
-          <Bar
-            dataKey="categoryCompletionRate"
-            stackId="a"
-            fill="var(--color-mobile)"
+            fill="var(--color-completionRate)"
             radius={[4, 4, 0, 0]}
+            barSize={16}
+            opacity={0.85}
           />
+          {selectedCategoryId && (
+            <Bar
+              dataKey="categoryCompletionRate"
+              fill="var(--color-categoryCompletionRate)"
+              radius={[4, 4, 0, 0]}
+              barSize={16}
+              opacity={0.85}
+            />
+          )}
         </BarChart>
       </ChartContainer>
     </div>

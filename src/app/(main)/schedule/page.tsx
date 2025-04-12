@@ -27,7 +27,13 @@ const SchedulePage = () => {
             </div>
           </Box>
           <Box className="flex-1">
-            <div className="flex gap-xl h-full">
+            <h2 className="text-xl font-semibold text-fontPrimary">
+              This Week&apos;s Task Success Rate
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Showing completion rates for all tasks and selected category
+            </p>
+            <div className="flex gap-xl h-full items-center">
               <WeeklyTasksChart />
               <WeeklyCategoryTasks />
             </div>
