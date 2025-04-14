@@ -1,33 +1,32 @@
-'use client'
+import Image from 'next/image'
+import LogoutButton from './LogoutButton'
+import { getUserInfo } from '@/lib/supabase/actions'
 
-import { Button } from '@/components/ui/button'
-import { useUser } from '@/context/UserContext'
-import { supabase } from '@/lib/supabase/client'
+const ProfilePage = async () => {
+  const user = await getUserInfo()
 
-const ProfilePage = () => {
-  const { setUser } = useUser()
-
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut()
-      if (error) {
-        console.error('[Logout Error]:', error.message)
-        throw error
-      }
-
-      setUser(null)
-      window.location.href = '/'
-    } catch (error) {
-      alert('로그아웃 중 오류가 발생했어요!')
-      console.error(error)
-    }
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-muted-foreground">Loading user info...</p>
+      </div>
+    )
   }
 
   return (
-    <div className="flex justify-center h-full">
-      <Button variant="secondary" size="sm" onClick={handleLogout}>
-        Logout
-      </Button>
+    <div className="flex flex-col items-center justify-center h-screen gap-md">
+      <Image
+        src={user?.image_url || '/default-profile.png'}
+        alt="Profile Image"
+        width={80}
+        height={80}
+        className="rounded-full border"
+      />
+      <div className="text-center">
+        <p className="text-lg font-semibold">{user?.name || 'Anonymous'}</p>
+        <p className="text-sm text-muted-foreground">{user.email}</p>
+      </div>
+      <LogoutButton />
     </div>
   )
 }
