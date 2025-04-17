@@ -12,7 +12,8 @@ const DashboardSummary = () => {
   const [activeCard, setActiveCard] = useState<
     'task' | 'routine' | 'motivation' | 'weather'
   >('task')
-  const [city, setCity] = useState('Seoul')
+  // const [city, setCity] = useState('Seoul')
+  const city = 'Seoul'
 
   const {
     data: weather,
@@ -27,8 +28,7 @@ const DashboardSummary = () => {
   })
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 w-full h-full max-h-[70vh] container">
-      {/* 좌측 상세 영역 */}
+    <div className="grid lg:grid-cols-[1fr_1fr] gap-lg w-full h-full max-h-[50vh] container">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <SummaryCard
           title="Today's Tasks"
@@ -68,7 +68,6 @@ const DashboardSummary = () => {
           {isError && <p className="text-red-400 text-lg">Error</p>}
           {weather && (
             <div className="flex items-start justify-between mt-4">
-              {/* 왼쪽: 텍스트 영역 */}
               <div className="flex flex-col justify-center gap-1">
                 <div className="flex items-end leading-tight">
                   <p className="text-5xl font-bold text-white">
@@ -82,16 +81,13 @@ const DashboardSummary = () => {
                 </p>
               </div>
 
-              {/* 오른쪽: 아이콘 영역 */}
-              <div className="flex justify-center items-center">
-                <Image
-                  src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-                  alt="weather icon"
-                  width={60}
-                  height={60}
-                  className="ml-2 drop-shadow-lg"
-                />
-              </div>
+              <Image
+                src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+                alt="weather icon"
+                width={60}
+                height={60}
+                className="drop-shadow-lg"
+              />
             </div>
           )}
         </SummaryCard>
@@ -102,7 +98,7 @@ const DashboardSummary = () => {
         {/* {activeCard === 'task' && <TaskDetail />}
         {activeCard === 'routine' && <RoutineDetail />}
         {activeCard === 'motivation' && <MotivationDetail />}*/}
-        {activeCard === 'weather' && <WeatherDetail setCity={setCity} />}
+        {activeCard === 'weather' && <WeatherDetail weather={weather!} />}
       </div>
     </div>
   )

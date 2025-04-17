@@ -12,7 +12,7 @@ const DashBoardPage = async () => {
 
   return (
     <div>
-      <div className="flex flex-col justify-around font-poppins h-screen pb-xxl bg-[#1E1E1E]">
+      <div className="flex flex-col justify-between font-poppins h-screen pb-xxl bg-[#1E1E1E]">
         <Title user={user?.name || ''} />
         <DashboardSummary />
       </div>
