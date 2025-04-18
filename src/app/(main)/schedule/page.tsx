@@ -1,5 +1,3 @@
-'use client'
-
 import { DateProvider } from '@/context/TaskContext'
 import Box from '@/components/Box'
 import Calendar from './components/Calendar'
@@ -10,7 +8,7 @@ import WeeklyTasksChart from './components/weekly-task/WeeklyTasksChart'
 import WeeklyCategoryTasks from './components/weekly-task/WeeklyCategoryTasks'
 import RoutineManager from './components/routine/RoutineManager'
 
-const SchedulePage = () => {
+const SchedulePage = async () => {
   return (
     <DateProvider>
       <main className="grid grid-cols-[1fr_2.5fr_1fr] gap-md container h-screen pt-[var(--navbar-height)] pb-xl">

@@ -3,13 +3,11 @@
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
-import { useUser } from '@/context/UserContext'
 
 const OAuthHandler = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
-  const { setUser } = useUser()
 
   useEffect(() => {
     const handleOAuth = async () => {
@@ -35,8 +33,6 @@ const OAuthHandler = () => {
         social: identity?.provider || '',
       }
 
-      setUser(payload)
-
       try {
         const res = await fetch('/api/user', {
           method: 'POST',
@@ -58,7 +54,7 @@ const OAuthHandler = () => {
     }
 
     handleOAuth()
-  }, [code, router, setUser])
+  }, [code, router])
 
   return <div>로그인 처리 중...</div>
 }

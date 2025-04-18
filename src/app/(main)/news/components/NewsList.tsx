@@ -24,7 +24,6 @@ const NewsList = () => {
     enabled: !!selectedKeyword,
     staleTime: 60 * 60 * 1000, // 1시간
   })
-  console.log('🚀 ~ NewsList ~ news:', news)
 
   const removeHtmlTags = (str: string) =>
     str.replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, '')

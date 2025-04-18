@@ -1,7 +1,9 @@
-export const getNews = async (keyword: string, page: number) => {
-  const res = await fetch(`/api/naver/news?query=${keyword}&page=${page}`, {
-    cache: 'no-store',
+import { INaverNews } from '@/app/api/naver/news/route'
+import { fetcher } from './fetcher'
+
+export const getNews = (query: string, page: number) =>
+  fetcher<INaverNews>('/api/naver/news', {
+    query: { query, page },
+    fallbackErrorMessage: '뉴스 로딩 실패',
+    showToastOnError: true,
   })
-  if (!res.ok) throw new Error('뉴스 불러오기 실패')
-  return await res.json()
-}

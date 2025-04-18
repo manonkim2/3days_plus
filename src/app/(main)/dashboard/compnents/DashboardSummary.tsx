@@ -67,8 +67,8 @@ const DashboardSummary = () => {
           {isFetching && <p className="text-white text-lg">Loading...</p>}
           {isError && <p className="text-red-400 text-lg">Error</p>}
           {weather && (
-            <div className="flex items-start justify-between mt-4">
-              <div className="flex flex-col justify-center gap-1">
+            <div className="flex items-start justify-between">
+              <div className="flex flex-col justify-center">
                 <div className="flex items-end leading-tight">
                   <p className="text-5xl font-bold text-white">
                     {Math.round(weather.temperature)}
@@ -76,7 +76,7 @@ const DashboardSummary = () => {
                   <p className="text-lg text-muted-foreground ml-1">°C</p>
                 </div>
 
-                <p className="text-sm capitalize text-gray-300">
+                <p className="text-sm capitalize text-fontTertiary pl-xs">
                   {weather.description}
                 </p>
               </div>
