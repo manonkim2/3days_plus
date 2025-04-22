@@ -1,4 +1,3 @@
-import { fetcher } from '@/lib/fetcher'
 import { IWeather } from '@/types/weather'
 
 export interface IWeatherData {
@@ -14,11 +13,19 @@ export interface IWeatherData {
 }
 
 export const getWeather = async (city: string): Promise<IWeatherData> => {
-  const data = await fetcher<IWeather>('/api/weather', {
-    query: { city },
-    fallbackErrorMessage: '날씨 정보를 불러오지 못했어요.',
-    showToastOnError: true,
-  })
+  const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+    city,
+  )}&appid=${apiKey}&units=metric`
+
+  const res = await fetch(url, { cache: 'no-store' })
+
+  if (!res.ok) {
+    throw new Error('날씨 정보를 불러오지 못했어요.')
+  }
+
+  const data: IWeather = await res.json()
 
   return {
     temperature: data.main.temp,
