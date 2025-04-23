@@ -75,6 +75,8 @@ export default {
         xxl: '32px',
       },
       fontSize: {
+        '5xl': ['3.5rem', '4rem'],
+        '4xl': ['2.5rem', '3.5rem'],
         '3xl': ['2rem', '3.25rem'],
         '2xl': ['1.5rem', '2.25rem'],
         xl: ['1.125rem', '1.5rem'],

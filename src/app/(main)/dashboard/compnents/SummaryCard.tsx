@@ -1,19 +1,14 @@
-import { Progress } from '@/components/ui/progress'
 import { cn } from '@/utils/cn'
 import { PropsWithChildren, ReactElement } from 'react'
 
 interface SummaryCardProps {
   title: string | ReactElement
-  value?: string | number
-  percent?: number
   isActive?: boolean
   onClick?: () => void
 }
 
 const SummaryCard = ({
   title,
-  value,
-  percent,
   isActive,
   onClick,
   children,
@@ -29,9 +24,7 @@ const SummaryCard = ({
       )}
     >
       <p className="text-sm text-muted-foreground">{title}</p>
-      <p className="text-2xl font-semibold text-white">{value}</p>
       {children}
-      {percent && <Progress value={percent} className="mt-3 h-2 bg-white/10" />}
     </div>
   )
 }

@@ -21,7 +21,7 @@ const WeatherDetail = ({ weather }: WeatherDetailProps) => {
   return (
     <div className="grid grid-rows-[3fr_1.2fr_2fr] h-full">
       {/* 상단 요약 */}
-      <div className="flex justify-between pb-xxl">
+      <div className="flex justify-between pb-xl">
         <div className="flex flex-col justify-between">
           <h2 className="text-xl text-fontTertiary">📍 {weather.city}</h2>
 
@@ -45,14 +45,14 @@ const WeatherDetail = ({ weather }: WeatherDetailProps) => {
       </div>
 
       {/* 상세 정보 */}
-      <div className="grid grid-cols-2 text-fontTertiary text-base py-sm ">
+      <div className="grid grid-cols-2 text-fontTertiary text-base py-xl">
         <div>💧 Humidity: {weather.humidity}%</div>
         <div>🌬 Wind: {weather.wind} m/s</div>
         <div>🌅 Sunrise: {formatTime(weather.sunrise)}</div>
         <div>🌇 Sunset: {formatTime(weather.sunset)}</div>
       </div>
 
-      <div className="text-sm text-white pt-xxl">
+      <div className="text-sm text-white">
         <p className="text-muted-foreground mb-1">🧥 오늘의 추천 옷차림</p>
         {isLoading ? (
           <p>추천 생성 중...</p>
