@@ -1,13 +1,8 @@
 'use client'
 
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  deleteCategory,
-  getCategory,
-  getTask,
-  ICategory,
-  ITask,
-} from './actions'
+import { deleteCategory, getCategory, getTask, ICategory } from './actions'
+import { ITask } from '@/types/schedule'
 
 export const useTasks = (date?: Date) => {
   const { data: tasks = [], isLoading: isTasksLoading } = useQuery<ITask[]>({

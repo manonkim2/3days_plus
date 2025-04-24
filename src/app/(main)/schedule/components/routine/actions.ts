@@ -5,17 +5,7 @@ import { endOfDay, startOfDay } from 'date-fns'
 import { Prisma } from '@/prisma/client'
 import { getKoreanTime } from '@/utils/formmattedDate'
 import { withUserInfo } from '@/lib/withUserInfo'
-
-export interface IRoutine {
-  id: number
-  name: string
-}
-
-export interface IroutineLog {
-  id: number
-  routineId: number
-  date: Date
-}
+import { IRoutine, IroutineLog } from '@/types/schedule'
 
 export const createRoutine = async (
   formData: FormData,

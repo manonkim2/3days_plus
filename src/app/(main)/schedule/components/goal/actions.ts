@@ -47,9 +47,7 @@ export const createGoalItem = async (
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const week = getISOWeek(date)
-  console.log(week)
-  console.log(type)
-  console.log(month)
+
   return withUserInfo(async (userId) => {
     return db.goal.create({
       data: {

@@ -4,14 +4,7 @@ import db from '@/lib/db'
 import { endOfDay, startOfDay } from 'date-fns'
 import { getKoreanTime } from '@/utils/formmattedDate'
 import { withUserInfo } from '@/lib/withUserInfo'
-
-export interface ITask {
-  id: number
-  content: string
-  completed: boolean
-  categoryId: number | null
-  date: Date
-}
+import { ITask } from '@/types/schedule'
 
 export const createTask = async (
   formData: FormData,

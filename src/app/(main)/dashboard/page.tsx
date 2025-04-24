@@ -9,9 +9,9 @@ import { getWeather } from '@/lib/weather'
 import {
   getRoutineLog,
   getRoutines,
-  IRoutine,
-  IroutineLog,
 } from '../schedule/components/routine/actions'
+import { getTask } from '../schedule/components/task/actions'
+import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
 
 const DashBoardPage = async () => {
   const user = await getUserInfo()
@@ -21,10 +21,12 @@ const DashBoardPage = async () => {
 
   let routines: IRoutine[] = []
   let routinelog: IroutineLog[] = []
+  let tasks: ITask[] = []
 
   if (user?.id) {
     routines = await getRoutines()
     routinelog = await getRoutineLog(new Date())
+    tasks = await getTask()
   }
 
   return (
@@ -35,6 +37,7 @@ const DashBoardPage = async () => {
           weather={weather}
           routines={routines}
           routineLog={routinelog}
+          tasks={tasks}
         />
       </div>
       <News newsItems={newsCardItems} />

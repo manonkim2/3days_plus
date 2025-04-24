@@ -1,11 +1,8 @@
 'use client'
 
 import { cn } from '@/utils/cn'
-import {
-  IRoutine,
-  IroutineLog,
-} from '@/app/(main)/schedule/components/routine/actions'
 import RoutineChart from './RoutineChart'
+import { IRoutine, IroutineLog } from '@/types/schedule'
 
 interface IRoutineDetail {
   routines: IRoutine[]
@@ -15,9 +12,7 @@ interface IRoutineDetail {
 const RoutineDetail = ({ completedRoutines, routines }: IRoutineDetail) => {
   return (
     <div className="flex flex-col gap-md">
-      <h2 className="text-xl text-fontTertiary">
-        📋 Today’s Routine Completion
-      </h2>
+      <h2 className="text-xl text-fontTertiary">Today’s Routine Completion</h2>
       <div className="grid grid-cols-[1fr_2fr] gap-md">
         <div className="flex flex-col gap-sm">
           {routines.map(({ name, id }) => (

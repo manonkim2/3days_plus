@@ -1,28 +1,30 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
+import { MapPin } from 'lucide-react'
+
 import SummaryCard from './SummaryCard'
 import WeatherDetail from './detail/WeatherDetail'
-import { IWeatherData } from '@/lib/weather'
-import Image from 'next/image'
-import { MapPin } from 'lucide-react'
-import { Progress } from '@/components/ui/progress'
-import {
-  IRoutine,
-  IroutineLog,
-} from '../../schedule/components/routine/actions'
 import RoutineDetail from './detail/RoutineDetail'
+import TaskDetail from './detail/TaskDetail'
+import { IWeatherData } from '@/lib/weather'
+import { Progress } from '@/components/ui/progress'
+import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
+import TasksDetail from './detail/TaskDetail'
 
 interface DashboardSummaryProps {
   weather: IWeatherData
   routines: IRoutine[]
   routineLog: IroutineLog[]
+  tasks: ITask[]
 }
 
 const DashboardSummary = ({
   weather,
   routines,
   routineLog: completedRoutines,
+  tasks,
 }: DashboardSummaryProps) => {
   const [activeCard, setActiveCard] = useState<
     'task' | 'routine' | 'motivation' | 'weather'
@@ -31,6 +33,13 @@ const DashboardSummary = ({
   const routineCompletedPercent = Math.round(
     (completedRoutines.length / routines?.length) * 100,
   )
+
+  const tasksCompletedPercent =
+    tasks.length > 0
+      ? Math.round(
+          (tasks.filter((task) => task.completed).length / tasks.length) * 100,
+        )
+      : 0
 
   return (
     <div className="grid lg:grid-cols-[1fr_1fr] gap-lg w-full h-full max-h-[50vh] container">
@@ -48,8 +57,8 @@ const DashboardSummary = ({
           onClick={() => setActiveCard('weather')}
           isActive={activeCard === 'weather'}
         >
-          <div className="flex justify-between">
-            <div className="flex flex-col justify-end">
+          <div className="flex justify-between items-center h-full">
+            <div className="flex flex-col h-full justify-end">
               <div className="flex items-baseline">
                 <p className="text-5xl font-bold text-white">
                   {Math.round(weather.temperature)}
@@ -60,13 +69,14 @@ const DashboardSummary = ({
                 {weather.description}
               </p>
             </div>
-            <Image
-              src={`https://openweathermap.org/img/wn/${weather.icon}@4x.png`}
-              alt="weather icon"
-              width={120}
-              height={120}
-              className="drop-shadow-lg"
-            />
+            <div className="h-full">
+              <Image
+                src={`https://openweathermap.org/img/wn/${weather.icon}@4x.png`}
+                alt="weather icon"
+                width={98}
+                height={98}
+              />
+            </div>
           </div>
         </SummaryCard>
 
@@ -81,24 +91,35 @@ const DashboardSummary = ({
         {/* task */}
         <SummaryCard
           title="Today's Tasks"
-          // value="3 / 5 done"
-          // percent={60}
           onClick={() => setActiveCard('task')}
           isActive={activeCard === 'task'}
-        />
+        >
+          <div>
+            <div className="flex items-baseline">
+              <p className="text-5xl font-bold text-white">
+                {tasksCompletedPercent}
+              </p>
+              <p className="text-xl text-muted-foreground ml-1">%</p>
+            </div>
+            <Progress
+              value={tasksCompletedPercent}
+              className="mt-3 h-2 bg-white/10"
+            />
+          </div>
+        </SummaryCard>
 
         {/* routine */}
         <SummaryCard
-          title="Today's Routine Completion"
+          title="Today's Routine"
           onClick={() => setActiveCard('routine')}
           isActive={activeCard === 'routine'}
         >
           <div>
             <div className="flex items-baseline">
               <p className="text-5xl font-bold text-white">
-                {routineCompletedPercent}
+                {completedRoutines.length} / {routines.length}
               </p>
-              <p className="text-xl text-muted-foreground ml-1">%</p>
+              <p className="text-xl text-muted-foreground ml-1">done</p>
             </div>
             <Progress
               value={routineCompletedPercent}
@@ -110,7 +131,7 @@ const DashboardSummary = ({
 
       {/* 우측 상세 영역 */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-md min-h-[240px]">
-        {/* {activeCard === 'task' && <TaskDetail />} */}
+        {activeCard === 'task' && <TasksDetail tasks={tasks} />}
         {activeCard === 'routine' && (
           <RoutineDetail
             routines={routines}

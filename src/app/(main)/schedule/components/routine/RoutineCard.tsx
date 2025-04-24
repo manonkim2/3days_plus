@@ -7,7 +7,7 @@ import { format } from 'date-fns'
 import { Button } from '@/components/ui'
 import { cn } from '@/utils/cn'
 import DropDown from '@/components/DropDown'
-import { IRoutine } from './actions'
+import { IRoutine } from '@/types/schedule'
 
 interface IRoutineCardProps {
   routine: IRoutine & { logId?: number }
