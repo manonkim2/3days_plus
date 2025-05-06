@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import Image from 'next/image'
 import LogoutButton from './LogoutButton'
 import { getUserInfo } from '@/lib/supabase/actions'
