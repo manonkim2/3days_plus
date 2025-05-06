@@ -1,23 +1,27 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { MapPin } from 'lucide-react'
 
 import SummaryCard from './SummaryCard'
 import WeatherDetail from './detail/WeatherDetail'
 import RoutineDetail from './detail/RoutineDetail'
-import TaskDetail from './detail/TaskDetail'
+import MotivationDetail from './detail/MotivationDetail'
+import TasksDetail from './detail/TaskDetail'
+import { getPinnedQuote, IQuotes } from '../actions'
 import { IWeatherData } from '@/lib/weather'
 import { Progress } from '@/components/ui/progress'
 import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
-import TasksDetail from './detail/TaskDetail'
 
 interface DashboardSummaryProps {
   weather: IWeatherData
   routines: IRoutine[]
   routineLog: IroutineLog[]
   tasks: ITask[]
+  quotes: IQuotes[]
+  pinnedQuote: number | null
 }
 
 const DashboardSummary = ({
@@ -25,6 +29,8 @@ const DashboardSummary = ({
   routines,
   routineLog: completedRoutines,
   tasks,
+  quotes,
+  pinnedQuote,
 }: DashboardSummaryProps) => {
   const [activeCard, setActiveCard] = useState<
     'task' | 'routine' | 'motivation' | 'weather'
@@ -41,8 +47,23 @@ const DashboardSummary = ({
         )
       : 0
 
+  const { data: pinnedQuoteData } = useQuery({
+    queryKey: ['pinned-quote'],
+    queryFn: getPinnedQuote,
+    initialData: { quoteId: pinnedQuote },
+  })
+
+  const randomQuote = useMemo(() => {
+    if (!quotes.length) return null
+    const pinnedId = pinnedQuoteData?.quoteId
+
+    return pinnedId
+      ? quotes.find((q) => q.id === pinnedId)
+      : quotes[Math.floor(Math.random() * quotes.length)]
+  }, [pinnedQuoteData, quotes])
+
   return (
-    <div className="grid lg:grid-cols-[1fr_1fr] gap-lg w-full h-full max-h-[50vh] container">
+    <div className="grid lg:grid-cols-[1fr_1fr] gap-lg w-full h-full md:max-h-[50vh] container pt-[var(--navbar-height)] md:pt-0">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* weather */}
         <SummaryCard
@@ -83,10 +104,16 @@ const DashboardSummary = ({
         {/* motivation */}
         <SummaryCard
           title="Keep it up!"
-          // value="You're on the right track."
           onClick={() => setActiveCard('motivation')}
           isActive={activeCard === 'motivation'}
-        ></SummaryCard>
+        >
+          <div className="flex-col items-baseline">
+            <p className="text-xl text-white">{randomQuote?.content}</p>
+            <p className="text-sm text-muted-foreground">
+              {randomQuote?.author}
+            </p>
+          </div>
+        </SummaryCard>
 
         {/* task */}
         <SummaryCard
@@ -129,8 +156,9 @@ const DashboardSummary = ({
         </SummaryCard>
       </div>
 
-      {/* 우측 상세 영역 */}
+      {/* 상세 카드 */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-md min-h-[240px]">
+        {activeCard === 'weather' && <WeatherDetail weather={weather} />}
         {activeCard === 'task' && <TasksDetail tasks={tasks} />}
         {activeCard === 'routine' && (
           <RoutineDetail
@@ -138,8 +166,7 @@ const DashboardSummary = ({
             completedRoutines={completedRoutines}
           />
         )}
-        {/* {activeCard === 'motivation' && <MotivationDetail />}*/}
-        {/* {activeCard === 'weather' && <WeatherDetail weather={weather} />} */}
+        {activeCard === 'motivation' && <MotivationDetail quotes={quotes} />}
       </div>
     </div>
   )

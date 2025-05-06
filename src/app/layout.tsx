@@ -8,7 +8,6 @@ import Footer from '@/components/Footer'
 import ReactQueryProvider from '@/components/ReactQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { ToastProvider } from '@/components/ui/toast'
-import { UserProvider } from '@/context/UserContext'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -39,12 +38,10 @@ export default function RootLayout({
       <body className={`${montserrat.variable} ${poppins.variable}`}>
         <ReactQueryProvider>
           <ToastProvider>
-            <UserProvider>
-              <Navbar />
-              <main>{children}</main>
-              <Toaster />
-              <Footer />
-            </UserProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Toaster />
+            <Footer />
           </ToastProvider>
         </ReactQueryProvider>
       </body>

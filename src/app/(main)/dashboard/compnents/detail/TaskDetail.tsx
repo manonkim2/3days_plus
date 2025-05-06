@@ -1,10 +1,7 @@
-'use client'
-
 import { cn } from '@/utils/cn'
 import { ITask } from '@/types/schedule'
 import { Button } from '@/components/ui'
 import Link from 'next/link'
-import Checkbox from '@/components/Checkbox'
 
 const TasksDetail = ({ tasks }: { tasks: ITask[] }) => {
   return (

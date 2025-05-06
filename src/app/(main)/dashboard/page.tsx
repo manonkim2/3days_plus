@@ -12,6 +12,7 @@ import {
 } from '../schedule/components/routine/actions'
 import { getTask } from '../schedule/components/task/actions'
 import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
+import { getPinnedQuote, getQuotes, IQuotes } from './actions'
 
 const DashBoardPage = async () => {
   const user = await getUserInfo()
@@ -22,11 +23,15 @@ const DashBoardPage = async () => {
   let routines: IRoutine[] = []
   let routinelog: IroutineLog[] = []
   let tasks: ITask[] = []
+  let quotes: IQuotes[] = []
+  let pinnedQuote: { quoteId: number } | null = { quoteId: 0 }
 
   if (user?.id) {
     routines = await getRoutines()
     routinelog = await getRoutineLog(new Date())
     tasks = await getTask()
+    quotes = await getQuotes()
+    pinnedQuote = await getPinnedQuote()
   }
 
   return (
@@ -38,6 +43,8 @@ const DashBoardPage = async () => {
           routines={routines}
           routineLog={routinelog}
           tasks={tasks}
+          quotes={quotes}
+          pinnedQuote={pinnedQuote?.quoteId || null}
         />
       </div>
       <News newsItems={newsCardItems} />

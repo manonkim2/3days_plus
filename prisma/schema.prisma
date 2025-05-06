@@ -23,6 +23,7 @@ model User {
   Routine     Routine[]
   RoutineLog  RoutineLog[]
   Goal        Goal[]
+  Quote       Quote[]
 }
 
 model Task {
@@ -118,4 +119,25 @@ enum GoalType {
   YEAR
   MONTH
   WEEK
+}
+
+model Quote {
+  id        Int      @id @default(autoincrement())
+  content   String
+  author    String?
+  userId    String?
+  isPublic  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  user        User?         @relation(fields: [userId], references: [id])
+  PinnedQuote PinnedQuote[]
+}
+
+model PinnedQuote {
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique // 한 유저당 하나의 핀만 허용
+  quoteId   Int
+  createdAt DateTime @default(now())
+
+  quoto Quote @relation(fields: [quoteId], references: [id])
 }

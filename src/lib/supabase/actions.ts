@@ -1,6 +1,5 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { serverCreateClient } from './server'
 import db from '../db'
 
@@ -33,7 +32,7 @@ const getUserInfo = async () => {
     })
 
     if (!userInfo?.id) {
-      return redirect('/login')
+      return null
     }
 
     return userInfo
