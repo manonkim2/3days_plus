@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import db from '@/lib/db'
-import { withUserInfo } from '@/lib/withUserInfo'
+import { getUserIdOrThrow } from '@/lib/auth'
 
 const formSchema = z
   .string({
@@ -36,33 +36,36 @@ export const createNewsKeyword = async (formData: FormData) => {
   if (existing) {
     return { errors: ['이미 등록된 키워드입니다.'] }
   }
+
   if (!result.success) {
     return { errors: result.error.flatten().formErrors }
   }
 
   try {
-    const newKeyword = await withUserInfo(async (userId) => {
-      return await db.newsKeyword.create({
-        data: {
-          keyword,
-          userId,
-        },
-        select: {
-          id: true,
-          keyword: true,
-        },
-      })
+    const userId = await getUserIdOrThrow()
+
+    const newKeyword = await db.newsKeyword.create({
+      data: {
+        keyword,
+        userId,
+      },
+      select: {
+        id: true,
+        keyword: true,
+      },
     })
 
     return { newKeyword, errors: [] }
   } catch (error) {
-    console.error(error)
+    console.error('[createNewsKeyword Error]:', error)
     return { errors: ['An unexpected error occurred.'] }
   }
 }
 
-export const getNewsKeyword = async (): Promise<INewsKeyword[]> => {
-  return await withUserInfo(async (userId) => {
+export const getNewsKeyword = async (): Promise<INewsKeyword[] | null> => {
+  try {
+    const userId = await getUserIdOrThrow()
+
     return await db.newsKeyword.findMany({
       where: {
         userId,
@@ -75,7 +78,10 @@ export const getNewsKeyword = async (): Promise<INewsKeyword[]> => {
         id: 'asc',
       },
     })
-  })
+  } catch (error) {
+    console.error('[getNewsKeyword Error]:', error)
+    return null
+  }
 }
 
 export const deleteNewsCategory = async (id: number) => {
@@ -84,7 +90,7 @@ export const deleteNewsCategory = async (id: number) => {
       where: { id },
     })
   } catch (error) {
-    console.error('Error deleting category:', error)
+    console.error('[deleteNewsCategory Error]:', error)
     throw new Error('Category deletion failed.')
   }
 }

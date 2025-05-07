@@ -3,7 +3,7 @@
 import db from '@/lib/db'
 import { endOfDay, startOfDay } from 'date-fns'
 import { getKoreanTime } from '@/utils/formmattedDate'
-import { withUserInfo } from '@/lib/withUserInfo'
+import { getUserIdOrThrow } from '@/lib/auth'
 import { ITask } from '@/types/schedule'
 
 export const createTask = async (
@@ -11,14 +11,13 @@ export const createTask = async (
   date: Date,
   categoryId?: number,
 ) => {
-  const content = formData.get('content') as string
-  const kstTime = getKoreanTime(date)
+  try {
+    const userId = await getUserIdOrThrow()
+    const content = formData.get('content') as string
+    const kstTime = getKoreanTime(date)
 
-  if (!content || content.trim() === '') {
-    return
-  }
+    if (!content || content.trim() === '') return
 
-  return withUserInfo(async (userId) => {
     return db.task.create({
       data: {
         content,
@@ -38,11 +37,14 @@ export const createTask = async (
           : {}),
       },
     })
-  })
+  } catch (error) {
+    console.error('[createTask Error]:', error)
+  }
 }
 
 export const getTask = async (date?: Date): Promise<ITask[]> => {
-  return withUserInfo(async (userId) => {
+  try {
+    const userId = await getUserIdOrThrow()
     const selectedDate = date || new Date()
     const startDate = getKoreanTime(startOfDay(selectedDate))
     const endDate = getKoreanTime(endOfDay(selectedDate))
@@ -66,24 +68,34 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
         id: 'asc',
       },
     })
-  })
+  } catch (error) {
+    console.error('[getTask Error]:', error)
+    return []
+  }
 }
 
 export const deleteTask = async (taskId: number) => {
-  return withUserInfo(async () => {
+  try {
+    await getUserIdOrThrow()
     await db.task.delete({
       where: { id: taskId },
     })
-  })
+  } catch (error) {
+    console.error('[deleteTask Error]:', error)
+  }
 }
 
 export const updateCheckTask = async (id: number, completed: boolean) => {
-  return withUserInfo(async (userId) => {
+  try {
+    const userId = await getUserIdOrThrow()
     return db.task.update({
       where: { id, userId },
       data: { completed: !completed },
     })
-  })
+  } catch (error) {
+    console.error('[updateCheckTask Error]:', error)
+    return null
+  }
 }
 
 export const updateContentTask = async (
@@ -91,7 +103,8 @@ export const updateContentTask = async (
   content: string,
   categoryId: number | undefined,
 ) => {
-  return withUserInfo(async (userId) => {
+  try {
+    const userId = await getUserIdOrThrow()
     await db.task.update({
       where: { id, userId },
       data: {
@@ -99,7 +112,9 @@ export const updateContentTask = async (
         categoryId,
       },
     })
-  })
+  } catch (error) {
+    console.error('[updateContentTask Error]:', error)
+  }
 }
 
 export interface ICategory {
@@ -109,28 +124,26 @@ export interface ICategory {
 }
 
 export const createCategory = async (formData: FormData): Promise<void> => {
-  const content = formData.get('content') as string
+  try {
+    const userId = await getUserIdOrThrow()
+    const content = formData.get('content') as string
 
-  if (!content || content.trim() === '') {
-    return
+    if (!content || content.trim() === '') return
+
+    await db.category.create({
+      data: {
+        title: content,
+        userId,
+      },
+    })
+  } catch (error) {
+    console.error('[createCategory Error]:', error)
   }
-
-  return withUserInfo(async (userId) => {
-    try {
-      await db.category.create({
-        data: {
-          title: content,
-          userId,
-        },
-      })
-    } catch (error) {
-      console.error('Error creating category:', error)
-    }
-  })
 }
 
 export const getCategory = async (): Promise<ICategory[]> => {
-  return withUserInfo(async (userId) => {
+  try {
+    const userId = await getUserIdOrThrow()
     return db.category.findMany({
       where: {
         userId,
@@ -141,18 +154,20 @@ export const getCategory = async (): Promise<ICategory[]> => {
         color: true,
       },
     })
-  })
+  } catch (error) {
+    console.error('[getCategory Error]:', error)
+    return []
+  }
 }
 
 export const deleteCategory = async (id: number) => {
-  return withUserInfo(async () => {
-    try {
-      await db.category.delete({
-        where: { id },
-      })
-    } catch (error) {
-      console.error('Error deleting task:', error)
-      throw new Error('Task deletion failed.')
-    }
-  })
+  try {
+    await getUserIdOrThrow()
+    await db.category.delete({
+      where: { id },
+    })
+  } catch (error) {
+    console.error('[deleteCategory Error]:', error)
+    throw new Error('Task deletion failed.')
+  }
 }

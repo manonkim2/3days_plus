@@ -31,14 +31,14 @@ const chartConfig = {
 
 const RoutineChart = ({ totalRoutines }: { totalRoutines: number }) => {
   const today = new Date()
-  const week = useMemo(
-    () =>
-      eachDayOfInterval({
-        start: startOfWeek(today),
-        end: endOfWeek(today),
-      }),
-    [today],
-  )
+
+  const week = useMemo(() => {
+    const today = new Date()
+    return eachDayOfInterval({
+      start: startOfWeek(today),
+      end: endOfWeek(today),
+    })
+  }, [])
 
   const { data: realData = [], isLoading } = useQuery({
     queryKey: ['week-routine'],

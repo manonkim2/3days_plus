@@ -1,7 +1,7 @@
 'use server'
 
 import db from '@/lib/db'
-import { withUserInfo } from '@/lib/withUserInfo'
+import { getUserIdOrThrow } from '@/lib/auth'
 import { GoalType } from '@/prisma/client'
 import { getISOWeek } from 'date-fns'
 
@@ -15,11 +15,13 @@ export const getGoalItems = async (
   type: GoalType,
   date: Date,
 ): Promise<GoalItem[]> => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const week = getISOWeek(date)
+  try {
+    const userId = await getUserIdOrThrow()
 
-  return withUserInfo(async (userId) => {
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const week = getISOWeek(date)
+
     const items = await db.goal.findMany({
       where: {
         userId,
@@ -36,7 +38,10 @@ export const getGoalItems = async (
       content: item.content,
       completed: item.completed,
     }))
-  })
+  } catch (error) {
+    console.error('[getGoalItems Error]:', error)
+    return []
+  }
 }
 
 export const createGoalItem = async (
@@ -44,11 +49,13 @@ export const createGoalItem = async (
   content: string,
   date: Date,
 ) => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const week = getISOWeek(date)
+  try {
+    const userId = await getUserIdOrThrow()
 
-  return withUserInfo(async (userId) => {
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const week = getISOWeek(date)
+
     return db.goal.create({
       data: {
         userId,
@@ -59,23 +66,33 @@ export const createGoalItem = async (
         week: type === 'WEEK' ? week : null,
       },
     })
-  })
+  } catch (error) {
+    console.error('[createGoalItem Error]:', error)
+    return null
+  }
 }
 
 export const toggleGoalItem = async (id: number, completed: boolean) => {
-  return withUserInfo(async () => {
+  try {
+    await getUserIdOrThrow()
     return db.goal.update({
       where: { id },
       data: { completed },
     })
-  })
+  } catch (error) {
+    console.error('[toggleGoalItem Error]:', error)
+    return null
+  }
 }
 
-// 목표 삭제
 export const deleteGoalItem = async (id: number) => {
-  return withUserInfo(async () => {
+  try {
+    await getUserIdOrThrow()
     return db.goal.delete({
       where: { id },
     })
-  })
+  } catch (error) {
+    console.error('[deleteGoalItem Error]:', error)
+    return null
+  }
 }

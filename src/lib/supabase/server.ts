@@ -18,7 +18,7 @@ export async function serverCreateClient() {
               cookieStore.set(name, value, options),
             )
           } catch (error) {
-            console.error(error)
+            console.error('[Supabase Cookie Set Error]:', error)
           }
         },
       },

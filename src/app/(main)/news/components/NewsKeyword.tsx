@@ -13,7 +13,7 @@ const NewsKeyword = () => {
   const queryClient = useQueryClient()
   const { selectedKeyword, setSelectedKeyword, setPage } = useNewsContext()
 
-  const { data: keywords = [], isLoading } = useQuery<INewsKeyword[]>({
+  const { data: keywords = [], isLoading } = useQuery<INewsKeyword[] | null>({
     queryKey: ['news-keywords'],
     queryFn: getNewsKeyword,
     staleTime: 1000 * 60 * 5,
@@ -61,13 +61,13 @@ const NewsKeyword = () => {
         >
           {DEFAULT_KEYWORD}
         </Button>
-        {keywords.length === 0 && !isLoading && (
+        {keywords?.length === 0 && !isLoading && (
           <div className="border border-dashed rounded-md text-sm text-gray-400 px-sm flex items-center justify-center">
             ex. 삼성전자
           </div>
         )}
 
-        {keywords.map(({ id, keyword }) => {
+        {keywords?.map(({ id, keyword }) => {
           return (
             <Button
               key={id}

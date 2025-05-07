@@ -1,7 +1,7 @@
 'use server'
 
 import db from '@/lib/db'
-import { withUserInfo } from '@/lib/withUserInfo'
+import { getUserIdOrThrow } from '@/lib/auth'
 
 export interface IQuotes {
   id: number
@@ -31,7 +31,9 @@ export const getQuotes = async (): Promise<IQuotes[]> => {
 }
 
 export const getPinnedQuote = async (): Promise<{ quoteId: number } | null> => {
-  return await withUserInfo(async (userId) => {
+  try {
+    const userId = await getUserIdOrThrow()
+
     return await db.pinnedQuote.findUnique({
       where: {
         userId,
@@ -40,13 +42,18 @@ export const getPinnedQuote = async (): Promise<{ quoteId: number } | null> => {
         quoteId: true,
       },
     })
-  })
+  } catch (error) {
+    console.error('[getPinnedQuote Error]:', error)
+    return null
+  }
 }
 
 export const upsertPinnedQuote = async (
   quoteId: number,
-): Promise<{ quoteId: number }> => {
-  return withUserInfo(async (userId) => {
+): Promise<{ quoteId: number } | null> => {
+  try {
+    const userId = await getUserIdOrThrow()
+
     const existing = await db.pinnedQuote.findUnique({
       where: { userId },
     })
@@ -57,11 +64,14 @@ export const upsertPinnedQuote = async (
         data: { quoteId },
         select: { quoteId: true },
       })
-    } else {
-      return db.pinnedQuote.create({
-        data: { userId, quoteId },
-        select: { quoteId: true },
-      })
     }
-  })
+
+    return db.pinnedQuote.create({
+      data: { userId, quoteId },
+      select: { quoteId: true },
+    })
+  } catch (error) {
+    console.error('[upsertPinnedQuote Error]:', error)
+    return null
+  }
 }

@@ -40,8 +40,8 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
     )
   }, [goalItems])
 
-  const completedCount = goalItems.filter((g) => g.completed).length
-  const totalCount = goalItems.length
+  const completedCount = goalItems?.filter((g) => g.completed).length
+  const totalCount = goalItems?.length
   const percent =
     totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100)
 
