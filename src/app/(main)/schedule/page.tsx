@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import { DateProvider } from '@/context/TaskContext'
 import Box from '@/components/Box'
 import Calendar from './components/Calendar'
@@ -7,6 +8,12 @@ import TaskList from './components/task/TaskList'
 import WeeklyTasksChart from './components/weekly-task/WeeklyTasksChart'
 import WeeklyCategoryTasks from './components/weekly-task/WeeklyCategoryTasks'
 import RoutineManager from './components/routine/RoutineManager'
+
+export const metadata: Metadata = {
+  title: '3Days+ | Daily Schedule & Routine',
+  description:
+    'Plan your daily schedule, manage routines, and track your tasks all in one place. Build consistent habits with 3Days+.',
+}
 
 const SchedulePage = async () => {
   return (

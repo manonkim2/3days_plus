@@ -1,8 +1,13 @@
-'use client'
-
+import { Metadata } from 'next'
 import { NewsProvider } from '@/context/NewsContext'
 import NewsKeyword from './components/NewsKeyword'
 import NewsList from './components/NewsList'
+
+export const metadata: Metadata = {
+  title: '3Days+ | Personalized News Feed',
+  description:
+    'Follow the latest news based on your selected keywords. Stay informed while managing your daily routines with 3Days+.',
+}
 
 const NewsPage = () => {
   return (
