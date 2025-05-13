@@ -12,9 +12,12 @@ export const metadata: Metadata = {
 const NewsPage = () => {
   return (
     <NewsProvider>
-      <h1 className="text-6xl font-poppins text-center pt-[140px]">
-        Keyword News
+      <h1 className="sr-only">
+        3Days+ | 키워드 뉴스 구독 (Personalized News Feed)
       </h1>
+      <h2 className="text-6xl font-poppins text-center pt-[140px]">
+        Keyword News
+      </h2>
       <NewsKeyword />
       <NewsList />
     </NewsProvider>
