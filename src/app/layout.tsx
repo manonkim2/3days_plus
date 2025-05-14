@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Montserrat, Poppins } from 'next/font/google'
 
@@ -23,7 +23,13 @@ const poppins = Poppins({
   variable: '--poppins-text',
 })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export const metadata: Metadata = {
+  metadataBase: new URL('https://3daysplus.vercel.app/'),
   title: '3Days+ | Habit Dashboard',
   description:
     'Track your daily routines and tasks. Small steps each day lead to lasting habits. Stay consistent with 3Days+.',
