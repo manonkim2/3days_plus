@@ -1,7 +1,8 @@
 import { NewsCardItem, RssFeed } from '@/types/rss'
+import { NextResponse } from 'next/server'
 import Parser from 'rss-parser'
 
-export const fetchDashboardNews = async () => {
+export const GET = async () => {
   const parser = new Parser({
     customFields: {
       item: ['media:content', 'no'],
@@ -25,5 +26,10 @@ export const fetchDashboardNews = async () => {
     .filter((item) => item.enclosureUrl)
     .slice(0, 10)
 
-  return newsCardItems
+  return NextResponse.json(newsCardItems, {
+    status: 200,
+    headers: {
+      'Cache-Control': 's-maxage=1800, stale-while-revalidate=1200', // 30분 캐싱, 20분 revalidate
+    },
+  })
 }

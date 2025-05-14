@@ -4,35 +4,46 @@ import Title from './compnents/Title'
 import News from './compnents/News'
 import DashboardSummary from './compnents/DashboardSummary'
 import { getUserInfo } from '@/lib/supabase/actions'
-import { fetchDashboardNews } from '@/lib/news'
 import { getWeather } from '@/lib/weather'
 import {
   getRoutineLog,
   getRoutines,
 } from '../schedule/components/routine/actions'
 import { getTask } from '../schedule/components/task/actions'
-import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
-import { getPinnedQuote, getQuotes, IQuotes } from './actions'
+import { getPinnedQuote, getQuotes } from './actions'
 
 const DashBoardPage = async () => {
-  const user = await getUserInfo()
-  const weather = await getWeather('Seoul')
+  const [user, weather] = await Promise.all([
+    getUserInfo(),
+    getWeather('Seoul'),
+  ])
 
-  const newsCardItems = await fetchDashboardNews()
-
-  let routines: IRoutine[] = []
-  let routinelog: IroutineLog[] = []
-  let tasks: ITask[] = []
-  let quotes: IQuotes[] = []
-  let pinnedQuote: { quoteId: number } | null = { quoteId: 0 }
-
-  if (user?.id) {
-    routines = await getRoutines()
-    routinelog = await getRoutineLog(new Date())
-    tasks = await getTask()
-    quotes = await getQuotes()
-    pinnedQuote = await getPinnedQuote()
+  if (!user?.id) {
+    return (
+      <div>
+        <div className="flex flex-col justify-between h-screen bg-[#1E1E1E] pb-xxl">
+          <Title user={''} />
+          <DashboardSummary
+            weather={weather}
+            routines={[]}
+            routineLog={[]}
+            tasks={[]}
+            quotes={[]}
+            pinnedQuote={null}
+          />
+        </div>
+        <News />
+      </div>
+    )
   }
+
+  const [routines, routinelog, tasks, quotes, pinnedQuote] = await Promise.all([
+    getRoutines(),
+    getRoutineLog(new Date()),
+    getTask(),
+    getQuotes(),
+    getPinnedQuote(),
+  ])
 
   return (
     <div>
@@ -47,7 +58,7 @@ const DashBoardPage = async () => {
           pinnedQuote={pinnedQuote?.quoteId || null}
         />
       </div>
-      <News newsItems={newsCardItems} />
+      <News />
     </div>
   )
 }

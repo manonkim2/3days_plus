@@ -7,8 +7,10 @@ import { NewsCardItem } from '@/types/rss'
 import { getFormattedDate } from '@/utils/formmattedDate'
 import { Button } from '@/components/ui'
 import { useRef } from 'react'
+import { useDashboardNews } from '@/lib/useDashboardNews'
 
-const News = ({ newsItems }: { newsItems: NewsCardItem[] }) => {
+const News = () => {
+  const { data: newsItems, isLoading, isError } = useDashboardNews()
   const { scrollYProgress } = useScroll()
 
   const bgColor = useTransform(scrollYProgress, [0, 1], ['#ffffff', '#1E1E1E'])
@@ -20,6 +22,13 @@ const News = ({ newsItems }: { newsItems: NewsCardItem[] }) => {
 
   const borderRadius = useTransform(scrollYProgress, [0.9, 1], ['0px', '36px'])
   const width = useTransform(scrollYProgress, [0.9, 1], ['100vw', '90vw'])
+
+  if (isLoading) return <div className="text-center py-10">Loading news...</div>
+
+  if (isError)
+    return (
+      <div className="text-center py-10 text-red-500">Failed to load news.</div>
+    )
 
   return (
     <motion.article
@@ -60,7 +69,7 @@ const News = ({ newsItems }: { newsItems: NewsCardItem[] }) => {
         </div>
 
         <div className="grid grid-flow-row w-[780px]">
-          {newsItems.map((item, index) => {
+          {newsItems?.map((item, index) => {
             return <NewsCard key={item.no} item={item} index={index} />
           })}
         </div>

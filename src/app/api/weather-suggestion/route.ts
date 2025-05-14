@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
@@ -21,11 +23,22 @@ export async function POST(req: NextRequest) {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7, //답변의 자연스러움
     })
 
-    const suggestion = response.choices[0]?.message?.content?.trim()
+    const suggestion =
+      response.choices[0]?.message?.content?.trim() ||
+      '추천을 불러오지 못했습니다.'
 
-    return NextResponse.json({ suggestion })
+    return NextResponse.json(
+      { suggestion },
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 's-maxage=43200, stale-while-revalidate=3600', // 12시간 캐싱 + 1시간 revalidate
+        },
+      },
+    )
   } catch (error) {
     console.error('OpenAI 요청 중 오류 발생:', error)
     return NextResponse.json(
