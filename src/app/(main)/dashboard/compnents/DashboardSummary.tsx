@@ -129,6 +129,7 @@ const DashboardSummary = ({
               <p className="text-xl text-muted-foreground ml-1">%</p>
             </div>
             <Progress
+              aria-label="오늘의 할일 완료율"
               value={tasksCompletedPercent}
               className="mt-3 h-2 bg-white/10"
             />
@@ -149,6 +150,7 @@ const DashboardSummary = ({
               <p className="text-xl text-muted-foreground ml-1">done</p>
             </div>
             <Progress
+              aria-label="오늘의 루틴 완료율"
               value={routineCompletedPercent}
               className="mt-3 h-2 bg-white/10"
             />

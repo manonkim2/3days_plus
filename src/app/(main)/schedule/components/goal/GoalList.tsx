@@ -86,7 +86,7 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
             <span className="text-xs text-muted-foreground">Progress</span>
             <span className="text-xs text-muted-foreground">{percent}%</span>
           </div>
-          <Progress value={percent} />
+          <Progress value={percent} aria-label={`${tab} 할일 완료율`} />
 
           {percent === 100 && (
             <p className="text-sm text-green-500 font-semibold">

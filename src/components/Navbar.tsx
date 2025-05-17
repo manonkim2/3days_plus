@@ -37,7 +37,11 @@ const Navbar = async () => {
             height={36}
           />
         ) : (
-          <CircleUser className="h-8 w-8 opacity-70" strokeWidth={1.3} />
+          <CircleUser
+            className="h-8 w-8 opacity-70"
+            strokeWidth={1.3}
+            aria-label="user_icon"
+          />
         )}
       </Link>
     </nav>
