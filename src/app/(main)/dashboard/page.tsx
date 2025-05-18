@@ -4,19 +4,25 @@ import Title from './compnents/Title'
 import News from './compnents/News'
 import DashboardSummary from './compnents/DashboardSummary'
 import { getUserInfo } from '@/lib/supabase/actions'
-import { getWeather } from '@/lib/weather'
+import { IWeatherData } from '@/lib/getWeather'
 import {
   getRoutineLog,
   getRoutines,
 } from '../schedule/components/routine/actions'
 import { getTask } from '../schedule/components/task/actions'
-import { getPinnedQuote, getQuotes } from './actions'
+import { getPinnedQuote, IQuotes } from './actions'
 
 const DashBoardPage = async () => {
-  const [user, weather] = await Promise.all([
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
+
+  const [user, weatherRes, quotesRes] = await Promise.all([
     getUserInfo(),
-    getWeather('Seoul'),
+    fetch(`${baseUrl}/api/weather`),
+    fetch(`${baseUrl}/api/quotes`),
   ])
+
+  const weather: IWeatherData = await weatherRes.json()
+  const quotes: IQuotes[] = await quotesRes.json()
 
   if (!user?.id) {
     return (
@@ -28,7 +34,7 @@ const DashBoardPage = async () => {
             routines={[]}
             routineLog={[]}
             tasks={[]}
-            quotes={[]}
+            quotes={quotes}
             pinnedQuote={null}
           />
         </div>
@@ -37,11 +43,10 @@ const DashBoardPage = async () => {
     )
   }
 
-  const [routines, routinelog, tasks, quotes, pinnedQuote] = await Promise.all([
+  const [routines, routinelog, tasks, pinnedQuote] = await Promise.all([
     getRoutines(),
     getRoutineLog(new Date()),
     getTask(),
-    getQuotes(),
     getPinnedQuote(),
   ])
 

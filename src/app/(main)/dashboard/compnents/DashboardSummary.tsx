@@ -11,7 +11,7 @@ import RoutineDetail from './detail/RoutineDetail'
 import MotivationDetail from './detail/MotivationDetail'
 import TasksDetail from './detail/TaskDetail'
 import { getPinnedQuote, IQuotes } from '../actions'
-import { IWeatherData } from '@/lib/weather'
+import { IWeatherData } from '@/lib/getWeather'
 import { Progress } from '@/components/ui/progress'
 import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
 
@@ -51,15 +51,14 @@ const DashboardSummary = ({
     queryKey: ['pinned-quote'],
     queryFn: getPinnedQuote,
     initialData: { quoteId: pinnedQuote },
+    enabled: Boolean(pinnedQuote),
   })
 
   const randomQuote = useMemo(() => {
     if (!quotes.length) return null
     const pinnedId = pinnedQuoteData?.quoteId
 
-    return pinnedId
-      ? quotes.find((q) => q.id === pinnedId)
-      : quotes[Math.floor(Math.random() * quotes.length)]
+    return pinnedId ? quotes.find((q) => q.id === pinnedId) : quotes[1]
   }, [pinnedQuoteData, quotes])
 
   return (

@@ -1,7 +1,7 @@
 'use client'
 
 import { useWeatherSuggestion } from '@/lib/useWeatherSuggestion'
-import { IWeatherData } from '@/lib/weather'
+import { IWeatherData } from '@/lib/getWeather'
 import Image from 'next/image'
 
 interface WeatherDetailProps {

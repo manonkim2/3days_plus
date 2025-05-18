@@ -14,15 +14,15 @@ export async function serverCreateClient() {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
-            )
-          } catch (error) {
-            console.error('[Supabase Cookie Set Error]:', error)
-          }
-        },
+        // setAll(cookiesToSet) {
+        //   try {
+        //     cookiesToSet.forEach(({ name, value, options }) =>
+        //       cookieStore.set(name, value, options),
+        //     )
+        //   } catch (error) {
+        //     console.error('[Supabase Cookie Set Error]:', error)
+        //   }
+        // },
       },
     },
   )

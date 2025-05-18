@@ -8,7 +8,7 @@ import NewsCardSkeleton from './NewsSkeleton'
 import { Pagination } from '@/components/Pagination'
 import { getFormattedDate } from '@/utils/formmattedDate'
 import { useNewsContext } from '@/context/NewsContext'
-import { getNews } from '@/lib/naver'
+import { getNews } from '@/lib/getNews'
 import { INaverNews } from '@/app/api/naver/news/route'
 
 const NewsList = () => {
