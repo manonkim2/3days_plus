@@ -8,6 +8,7 @@ const OAuthHandler = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
+  const provider = searchParams.get('provider')
 
   useEffect(() => {
     const handleOAuth = async () => {
@@ -21,16 +22,21 @@ const OAuthHandler = () => {
       if (error || !user) {
         console.error('[OAuth Error|getUser]:', error?.message)
         router.push('/login')
+
         return
       }
 
-      const identity = user.identities?.[0]
+      const identity =
+        user.identities && user.identities.length > 1
+          ? user.identities?.find((item) => item.provider === provider)
+          : user.identities?.[0]
+
       const payload = {
         id: identity?.identity_id || '',
         email: user.email || '',
         name: user.user_metadata?.name || '',
         image_url: user.user_metadata?.avatar_url || '',
-        social: identity?.provider || '',
+        social: provider,
       }
 
       try {

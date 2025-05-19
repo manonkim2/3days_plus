@@ -8,10 +8,7 @@ import { supabase } from '@/lib/supabase/client'
 
 const Login = () => {
   const handleOAuthLogin = async (provider: 'google' | 'kakao') => {
-    const redirectTo =
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000/oauth/complete'
-        : 'https://3daysplus.vercel.app/oauth/complete'
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/oauth/complete?provider=${provider}`
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,

@@ -2,6 +2,7 @@
 
 import { serverCreateClient } from './server'
 import db from '../db'
+import { getSiteEnv } from '../env'
 
 const getUserInfo = async () => {
   try {
@@ -20,6 +21,7 @@ const getUserInfo = async () => {
     const userInfo = await db.user.findUnique({
       where: {
         id: socialLogin.identity_id,
+        environment: getSiteEnv(),
       },
 
       select: {

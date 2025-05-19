@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import db from '@/lib/db'
+import { getSiteEnv } from '@/lib/env'
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,6 +22,7 @@ export async function POST(request: NextRequest) {
         name,
         image_url,
         social,
+        environment: getSiteEnv(),
       },
     })
 
