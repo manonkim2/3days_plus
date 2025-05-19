@@ -40,8 +40,8 @@ const Title = ({ user }: { user: string }) => {
 
   return (
     <div className="hidden md:flex container justify-between items-end mb-[64px] h-full">
-      <TitleImageSheet />
-      <div className=" flex flex-col items-end">
+      {/* <TitleImageSheet /> */}
+      <div className="flex flex-col items-end w-full">
         <TypingText
           text={`Hello, ${user || 'Everybody'}`}
           onComplete={() => setShowDate(true)}

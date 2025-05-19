@@ -21,10 +21,17 @@ const Navbar = async () => {
   return (
     <nav
       className={cn(
-        `flex items-center justify-between container h-[var(--navbar-height)] fixed top-0 left-0 right-0 z-40`,
+        `flex items-center justify-between container h-[var(--navbar-height)] fixed top-0 left-0 right-0 z-40 bg-white/40 backdrop-blur-md border border-black/10 rounded-full px-xxl mt-md`,
       )}
     >
-      <Link href="/">Title</Link>
+      <Link href="/">
+        <div className="flex items-center gap-xs">
+          <Image src={'/favicon.ico'} width={32} height={32} alt="web_icon" />
+          <span className="text-xl font-extrabold font-montserrat text-primary">
+            Days+
+          </span>
+        </div>
+      </Link>
 
       <NavButtons />
 

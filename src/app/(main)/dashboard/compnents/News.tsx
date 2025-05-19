@@ -109,7 +109,7 @@ const NewsCard = ({ item, index }: { item: NewsCardItem; index: number }) => {
   return (
     <motion.div
       layout
-      className="sticky h-screen"
+      className="sticky h-screen pt-xxl"
       style={{
         zIndex: index,
         scale: finalScale,
@@ -141,9 +141,9 @@ const NewsCard = ({ item, index }: { item: NewsCardItem; index: number }) => {
         <div className="flex px-xxl py-xl gap-xl items-center">
           <span className="text-6xl">{index + 1}</span>
           <div>
-            <h1 className="text-[22px] font-semibold mb-2 group-hover:text-blue-600">
+            <h2 className="text-[22px] font-semibold mb-2 group-hover:text-blue-600">
               {item.title}
-            </h1>
+            </h2>
             <p className="text-base text-fontSecondary">
               {item.contentSnippet}
             </p>

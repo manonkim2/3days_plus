@@ -8,7 +8,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const buttonTheme = {
   variant: {
-    primary: 'bg-primary text-fontSecondary',
+    primary: 'bg-primary text-fontTertiary',
     secondary: 'border-primary border text-fontPrimary',
     tertiary: 'text-fontPrimary',
   },

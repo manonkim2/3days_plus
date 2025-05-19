@@ -21,7 +21,7 @@ const SchedulePage = async () => {
       <h1 className="sr-only">
         3Days+ | 일정 & 할일 & 루틴 관리 (Daily Schedule & Tasks & Routine)
       </h1>
-      <main className="grid grid-cols-[1fr_2.5fr_1fr] gap-md container h-screen pt-[var(--navbar-height)] pb-xl">
+      <main className="grid grid-cols-[1fr_2.5fr_1fr] gap-md container h-screen pt-[var(--navbar-height)] pb-xxl mt-xl">
         <div className="flex flex-col justify-between">
           <Calendar />
           <GoalManager />
