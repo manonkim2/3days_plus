@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import DashBoardPage from './(main)/dashboard/page'
 
 export default function Home() {

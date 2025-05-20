@@ -2,7 +2,6 @@
 
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
-import TitleImageSheet from './TitleImageSheet'
 
 const TypingText = ({
   text,
