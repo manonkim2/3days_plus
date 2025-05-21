@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { Montserrat, Poppins } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -8,13 +8,6 @@ import Footer from '@/components/Footer'
 import ReactQueryProvider from '@/components/ReactQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { ToastProvider } from '@/components/ui/toast'
-
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['200', '400', '500'],
-  style: ['normal', 'italic'],
-  variable: '--montserrat-text',
-})
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -65,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} ${poppins.variable}`}>
+      <body className={`${poppins.variable}`}>
         <ReactQueryProvider>
           <ToastProvider>
             <Navbar />

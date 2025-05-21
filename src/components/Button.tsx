@@ -28,7 +28,7 @@ const Button = ({
 }: IButtonProps) => {
   return (
     <button
-      className={`${buttonTheme.variant[variant]} ${buttonTheme.size[size]}  rounded-full text-base ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} font-montserrat`}
+      className={`${buttonTheme.variant[variant]} ${buttonTheme.size[size]}  rounded-full text-base ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} font-poppins`}
       disabled={disabled}
       {...rest}
     >

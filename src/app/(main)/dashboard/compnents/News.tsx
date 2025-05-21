@@ -135,6 +135,7 @@ const NewsCard = ({ item, index }: { item: NewsCardItem; index: number }) => {
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover"
+              loading="lazy"
             />
           </div>
         )}

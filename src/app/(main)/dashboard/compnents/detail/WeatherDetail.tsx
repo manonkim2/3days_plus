@@ -40,7 +40,9 @@ const WeatherDetail = ({ weather }: WeatherDetailProps) => {
           alt="weather icon"
           width={140}
           height={140}
+          priority
           className="self-center"
+          loading="lazy"
         />
       </div>
 

@@ -27,7 +27,7 @@ const Navbar = async () => {
       <Link href="/">
         <div className="flex items-center gap-xs">
           <Image src={'/favicon.ico'} width={32} height={32} alt="web_icon" />
-          <span className="text-xl font-extrabold font-montserrat text-primary">
+          <span className="text-xl font-extrabold font-poppins text-primary">
             Days+
           </span>
         </div>
