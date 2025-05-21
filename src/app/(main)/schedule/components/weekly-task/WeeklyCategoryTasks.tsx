@@ -12,11 +12,24 @@ import { Badge } from '@/components/ui'
 import AlertButton from '@/components/AlertButton'
 import { getShortDate } from '@/utils/formmattedDate'
 import { useTasks } from '../task/useTasks'
-import { useTaskContext } from '@/context/TaskContext'
+import { useScheduleContext } from '@/context/ScheduleContext'
+import { useQueryClient } from '@tanstack/react-query'
+import { deleteCategory } from '../task/actions'
+import { useCallback } from 'react'
 
 const WeeklyCategoryTasks = () => {
-  const { setSelectedCategoryId, weekTaskList } = useTaskContext()
-  const { categories, handleOnClickDelete } = useTasks()
+  const queryClient = useQueryClient()
+  const { setSelectedCategoryId, week } = useScheduleContext()
+  const { categories, tasks } = useTasks({ dates: week })
+
+  const handleOnClickDelete = useCallback(
+    async (id: number) => {
+      if (!id) return
+      await deleteCategory(id)
+      queryClient.invalidateQueries({ queryKey: ['category'] })
+    },
+    [queryClient],
+  )
 
   return (
     <div className="flex flex-col min-w-[180px] w-[300px] overflow-y-auto border-l pl-md max-h-[35vh] min-h-[200px]">
@@ -32,9 +45,7 @@ const WeeklyCategoryTasks = () => {
         }
       >
         {categories?.map(({ id, title }) => {
-          const filteredTasks = weekTaskList.filter(
-            (task) => task.categoryId === id,
-          )
+          const filteredTasks = tasks.filter((task) => task.categoryId === id)
           const completedTasks = filteredTasks.filter((task) => task.completed)
           const inProgressTasks = filteredTasks.filter(
             (task) => !task.completed,

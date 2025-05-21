@@ -2,10 +2,10 @@
 
 import { useMemo } from 'react'
 import { Calendar as CalendarUI } from '@/components/ui'
-import { useTaskContext } from '@/context/TaskContext'
+import { useScheduleContext } from '@/context/ScheduleContext'
 
 const Calendar = () => {
-  const { date, week, handleClickDate } = useTaskContext()
+  const { date, week, handleClickDate } = useScheduleContext()
 
   const memoizedModifiers = useMemo(
     () => ({
