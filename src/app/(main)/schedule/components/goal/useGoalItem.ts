@@ -2,6 +2,7 @@
 
 import { GoalType } from '@/prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import {
   createGoalItem,
   deleteGoalItem,
@@ -13,7 +14,7 @@ import {
 export const useGoalItems = (type: GoalType, date: Date) => {
   const queryClient = useQueryClient()
 
-  const queryKey = ['goalItems', type, date.toISOString()]
+  const queryKey = ['goalItems', type, format(date, 'yyyy-MM-dd')]
 
   const { data = [], isLoading } = useQuery<GoalItem[]>({
     queryKey,

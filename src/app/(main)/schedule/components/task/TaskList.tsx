@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Pencil, Save, Trash2 } from 'lucide-react'
+import { format } from 'date-fns'
 import {
   createCategory,
   createTask,
@@ -10,13 +11,13 @@ import {
   updateCheckTask,
   updateContentTask,
 } from './actions'
+import { useTasks } from './useTasks'
 import Checkbox from '@/components/Checkbox'
 import FormActionWrapper from '@/components/FormActionWrapper'
+import LoadingOverlay from '@/components/LoadingOverlay'
 import { Input } from '@/components/ui'
 import { Combobox } from '@/app/(main)/schedule/components/task/Combobox'
 import { useScheduleContext } from '@/context/ScheduleContext'
-import { useTasks } from './useTasks'
-import LoadingOverlay from '@/components/LoadingOverlay'
 
 const TaskList = () => {
   const queryClient = useQueryClient()
@@ -37,7 +38,9 @@ const TaskList = () => {
   } | null>(null)
 
   const refreshTasks = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ['tasks', date.toISOString()] })
+    queryClient.invalidateQueries({
+      queryKey: ['tasks', format(date, 'yyyy-MM-dd')],
+    })
   }, [queryClient, date])
 
   const createCategoryMutation = useMutation({
@@ -115,8 +118,8 @@ const TaskList = () => {
   if (isLoading) return <LoadingOverlay />
 
   return (
-    <div className="flex flex-col gap-md w-full pl-md max-h-[40vh] overflow-auto">
-      <div className="grid grid-cols-[1fr_3fr] gap-sm h-9">
+    <div className="flex flex-col gap-md w-full overflow-auto">
+      <div className="grid grid-cols-[1fr_3fr] gap-sm">
         <Combobox
           items={categories?.map(({ id, title }) => ({
             id,
@@ -154,15 +157,14 @@ const TaskList = () => {
             <div key={id}>
               {isEditing ? (
                 <div className="flex justify-between w-full px-xs">
-                  <div
+                  <Checkbox
+                    id={`task-${id}`}
+                    checked={completed}
+                    text={content}
+                    badge={category?.title}
                     onClick={() => toggleTaskMutation.mutate({ id, completed })}
-                  >
-                    <Checkbox
-                      checked={completed}
-                      text={content}
-                      badge={category?.title}
-                    />
-                  </div>
+                  />
+
                   <div className="flex items-center gap-sm">
                     <Pencil
                       className="h-4 w-4 opacity-50 cursor-pointer"

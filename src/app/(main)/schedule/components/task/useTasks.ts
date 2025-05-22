@@ -1,9 +1,10 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import { getCategory, getTask, ICategory } from './actions'
 import { ITask } from '@/types/schedule'
-import { useMemo } from 'react'
 
 type UseTasksParams =
   | { date: Date; dates?: undefined }
@@ -18,7 +19,8 @@ export const useTasks = (params: UseTasksParams) => {
   }, [params])
 
   const dateKeys = useMemo(
-    () => dates.map((day) => day?.toISOString()),
+    () =>
+      dates !== undefined ? dates.map((day) => format(day!, 'yyyy-MM-dd')) : [],
     [dates],
   )
 

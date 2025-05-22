@@ -42,7 +42,6 @@ const WeatherDetail = ({ weather }: WeatherDetailProps) => {
           height={140}
           priority
           className="self-center"
-          loading="lazy"
         />
       </div>
 

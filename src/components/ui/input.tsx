@@ -12,7 +12,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, icon, button, errors, onSave, ...props }, ref) => {
     const handleKeyDown = (event: React.KeyboardEvent) => {
       if (event.key === 'Enter' && onSave) {
-        onSave() // 엔터 키를 누르면 onSave 함수 호출
+        event.preventDefault()
+        onSave()
       }
     }
 
@@ -40,7 +41,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
           {button && (
             <button
-              type="submit"
+              type="button"
               className="absolute right-2 top-1/2 -translate-y-1/2 transition-opacity disabled:opacity-50"
               onClick={onSave}
             >

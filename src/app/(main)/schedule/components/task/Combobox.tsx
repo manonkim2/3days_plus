@@ -41,7 +41,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[160px] justify-between"
+          className="min-w-[128px] w-[150px] justify-between"
         >
           {value
             ? items.find((items) => items.id === value.id)?.value
@@ -49,7 +49,7 @@ export function Combobox({
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[160px] p-0">
+      <PopoverContent className="w-[150px] p-0">
         {commandInput}
         <Command>
           <CommandList>

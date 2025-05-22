@@ -20,8 +20,11 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
   const { goalItems, addGoal, toggleGoal, deleteGoal, isLoading } =
     useGoalItems(tab, date)
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value)
+  }
+
   const handleAdd = () => {
-    if (!input.trim()) return
     addGoal.mutate(input)
     setInput('')
   }
@@ -117,13 +120,16 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
                   opacity: { duration: 0.25 },
                   y: { duration: 0.3, ease: 'easeOut' },
                 }}
-                className={`flex justify-between items-center px-3 py-xs shadow-sm transition ${
+                className={`flex justify-between items-center py-xs shadow-sm transition ${
                   goal.completed ? 'opacity-60' : 'bg-card hover:bg-accent'
                 }`}
               >
-                <div onClick={() => handleToggle(goal.id, goal.completed)}>
-                  <Checkbox checked={goal.completed} text={goal.content} />
-                </div>
+                <Checkbox
+                  id={`goal-${tab}-${goal.id}`}
+                  checked={goal.completed}
+                  text={goal.content}
+                  onClick={() => handleToggle(goal.id, goal.completed)}
+                />
                 <Trash2
                   className="w-4 h-4 opacity-50 cursor-pointer"
                   onClick={() => handleDelete(goal.id)}
@@ -138,8 +144,7 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
         className="h-8 text-sm"
         placeholder="Enter a new goal"
         value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+        onChange={handleInputChange}
         button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
         onSave={handleAdd}
         disabled={isLoading}
