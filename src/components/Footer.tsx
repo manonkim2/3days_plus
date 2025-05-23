@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 const Footer = () => (
-  <footer className="container flex justify-between h-[280px] p-xxl text-sm text-fontSecondary font-poppins">
+  <footer className="container flex justify-between h-[280px] p-[64px] text-sm text-fontSecondary font-poppins">
     <div className="flex flex-col justify-end">
       <div>Logo</div>
       <p className="font-light">© 2025 Wonyoung Kim. All rights reserved.</p>

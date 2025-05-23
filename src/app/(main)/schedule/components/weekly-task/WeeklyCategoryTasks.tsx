@@ -32,7 +32,7 @@ const WeeklyCategoryTasks = () => {
   )
 
   return (
-    <div className="flex flex-col min-w-[180px] w-[300px] overflow-y-auto border-l pl-md max-h-[35vh] min-h-[200px]">
+    <div className="flex flex-col min-w-[180px] w-[300px] overflow-y-auto border-l pl-md max-h-[30vh]">
       <span className="text-sm font-semibold py-sm">
         Weekly Tasks by Category
       </span>

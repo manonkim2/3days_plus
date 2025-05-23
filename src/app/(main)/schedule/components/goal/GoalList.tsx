@@ -76,79 +76,73 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
   }
 
   return (
-    <div className="flex flex-col justify-between h-full pb-sm">
+    <div className="flex flex-col pb-sm gap-md h-full overflow-auto">
       <div className="flex flex-col gap-sm">
-        <div>
-          <span className="text-sm font-semibold text-fontPrimary">
-            {getPeriodLabel(tab, date)}
-          </span>
-        </div>
-
+        <span className="text-sm font-semibold text-fontPrimary">
+          {getPeriodLabel(tab, date)}
+        </span>
         <div className="flex flex-col gap-xs">
           <div className="flex justify-between items-center">
             <span className="text-xs text-muted-foreground">Progress</span>
             <span className="text-xs text-muted-foreground">{percent}%</span>
           </div>
           <Progress value={percent} aria-label={`${tab} 할일 완료율`} />
-
           {percent === 100 && (
             <p className="text-sm text-green-500 font-semibold">
               🎉 All goals completed!
             </p>
           )}
         </div>
-
-        <ul className="flex flex-col gap-xs overflow-auto max-h-[180px]">
-          {goalItems.length === 0 && (
-            <div className="">
-              <p className="text-sm text-muted-foreground text-center">
-                No goals yet. Start by adding one!
-              </p>
-            </div>
-          )}
-
-          <AnimatePresence>
-            {sortedGoals.map((goal) => (
-              <motion.li
-                key={goal.id}
-                layout
-                initial={false}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{
-                  layout: { type: 'spring', stiffness: 500, damping: 30 },
-                  opacity: { duration: 0.25 },
-                  y: { duration: 0.3, ease: 'easeOut' },
-                }}
-                className={`flex justify-between items-center py-xs shadow-sm transition ${
-                  goal.completed ? 'opacity-60' : 'bg-card hover:bg-accent'
-                }`}
-              >
-                <Checkbox
-                  id={`goal-${tab}-${goal.id}`}
-                  checked={goal.completed}
-                  text={goal.content}
-                  onClick={() => handleToggle(goal.id, goal.completed)}
-                />
-                <Trash2
-                  className="w-4 h-4 opacity-50 cursor-pointer"
-                  onClick={() => handleDelete(goal.id)}
-                />
-              </motion.li>
-            ))}
-          </AnimatePresence>
-        </ul>
+        <Input
+          className="h-8 text-sm"
+          placeholder="Enter a new goal"
+          value={input}
+          onChange={handleInputChange}
+          button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
+          onSave={handleAdd}
+          disabled={isLoading}
+        />
       </div>
+      <ul className="flex flex-col h-full gap-xs overflow-y-scroll">
+        {goalItems.length === 0 && (
+          <div className="flex flex-col justify-center h-[150px]">
+            <p className="text-sm text-muted-foreground text-center">
+              No goals yet. Start by adding one!
+            </p>
+          </div>
+        )}
 
-      <Input
-        className="h-8 text-sm"
-        placeholder="Enter a new goal"
-        value={input}
-        onChange={handleInputChange}
-        button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
-        onSave={handleAdd}
-        disabled={isLoading}
-      />
+        <AnimatePresence>
+          {sortedGoals.map((goal) => (
+            <motion.li
+              key={goal.id}
+              layout
+              initial={false}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{
+                layout: { type: 'spring', stiffness: 500, damping: 30 },
+                opacity: { duration: 0.25 },
+                y: { duration: 0.3, ease: 'easeOut' },
+              }}
+              className={`flex justify-between items-center py-xs shadow-sm transition ${
+                goal.completed ? 'opacity-60' : 'bg-card hover:bg-accent'
+              }`}
+            >
+              <Checkbox
+                id={`goal-${tab}-${goal.id}`}
+                checked={goal.completed}
+                text={goal.content}
+                onClick={() => handleToggle(goal.id, goal.completed)}
+              />
+              <Trash2
+                className="w-4 h-4 opacity-50 cursor-pointer"
+                onClick={() => handleDelete(goal.id)}
+              />
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </ul>
     </div>
   )
 }

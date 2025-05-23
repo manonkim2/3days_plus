@@ -26,13 +26,13 @@ const Box = ({
   children,
 }: PropsWithChildren<IBoxProps>) => {
   return (
-    <Card className={cn('flex flex-col py-sm', className)}>
-      <CardHeader className="pb-0">
+    <Card className={cn('flex flex-col', className)}>
+      <CardHeader>
         {title && <CardTitle>{title}</CardTitle>}
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
 
-      <CardContent className="flex-1">{children}</CardContent>
+      <CardContent className="flex-1 overflow-hidden">{children}</CardContent>
 
       {footer && <CardFooter className="flex-col text-sm">{footer}</CardFooter>}
     </Card>

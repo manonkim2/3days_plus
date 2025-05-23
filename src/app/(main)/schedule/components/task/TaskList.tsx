@@ -118,7 +118,7 @@ const TaskList = () => {
   if (isLoading) return <LoadingOverlay />
 
   return (
-    <div className="flex flex-col gap-md w-full overflow-auto">
+    <div className="flex flex-col h-full gap-md w-full overflow-y-scroll max-h-[35vh]">
       <div className="grid grid-cols-[1fr_3fr] gap-sm">
         <Combobox
           items={categories?.map(({ id, title }) => ({
@@ -148,7 +148,7 @@ const TaskList = () => {
         </p>
       )}
 
-      <div className="flex flex-col gap-xs">
+      <div className="flex flex-col h-full gap-xs overflow-auto">
         {tasks.map(({ id, completed, content, categoryId }) => {
           const category = categories.find((c) => c.id === categoryId)
           const isEditing = editTask?.id !== id

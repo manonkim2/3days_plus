@@ -70,7 +70,7 @@ const WeeklyTasksChart = () => {
   }, [tasksByDay, week, selectedCategoryId])
 
   return (
-    <div className="w-full">
+    <div className="hidden lg:block w-full">
       <ChartContainer config={chartConfig}>
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />

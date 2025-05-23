@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Box from '@/components/Box'
 
 const WeeklyCategoryTasks = dynamic(() => import('./WeeklyCategoryTasks'), {
   ssr: false,
@@ -11,7 +12,7 @@ const WeeklyTasksChart = dynamic(() => import('./WeeklyTasksChart'), {
 
 const WeeklyTaskManager = () => {
   return (
-    <div>
+    <Box className="flex flex-1">
       <h2 className="text-xl font-semibold text-fontPrimary">
         This Week&apos;s Task Success Rate
       </h2>
@@ -22,7 +23,7 @@ const WeeklyTaskManager = () => {
         <WeeklyTasksChart />
         <WeeklyCategoryTasks />
       </div>
-    </div>
+    </Box>
   )
 }
 

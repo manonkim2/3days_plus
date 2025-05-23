@@ -80,7 +80,7 @@ const RoutineCard = ({
   return (
     <div
       className={cn(
-        'flex flex-col justify-between relative border gap-sm rounded-lg h-[100px] min-w-[160px] p-lg overflow-hidden ',
+        'flex flex-col justify-between relative border gap-sm rounded-lg h-[100px] min-w-[144px] p-sm lg:p-lg mt-md',
       )}
     >
       <motion.div

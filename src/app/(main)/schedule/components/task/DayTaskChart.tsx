@@ -57,7 +57,7 @@ const DayTaskChart = () => {
   }, [percentage])
 
   return (
-    <div>
+    <div className="hidden lg:block">
       <ChartContainer
         config={chartConfig}
         className="mx-auto aspect-square max-w-[300px]"
