@@ -38,7 +38,7 @@ const Title = ({ user }: { user: string }) => {
   const [showDate, setShowDate] = useState(false)
 
   return (
-    <div className="hidden md:flex container justify-between items-end mb-[64px] h-full">
+    <div className="hidden lg:flex container justify-between items-end h-full">
       {/* <TitleImageSheet /> */}
       <div className="flex flex-col items-end w-full">
         <TypingText

@@ -36,7 +36,7 @@ const News = () => {
       style={{ backgroundColor: bgColor, borderRadius, width }}
     >
       <div className="flex justify-between container">
-        <div className="sticky top-0 w-[400px] h-screen flex flex-col items-center justify-center text-6xl font-poppins">
+        <div className="hidden md:flex sticky top-0 w-[400px] h-screen flex-col items-center justify-center text-6xl font-poppins">
           <motion.div
             className="border p-xxl"
             style={{ borderColor: animatedColor }}
@@ -109,7 +109,7 @@ const NewsCard = ({ item, index }: { item: NewsCardItem; index: number }) => {
   return (
     <motion.div
       layout
-      className="sticky h-screen pt-xxl"
+      className="sticky h-screen pt-[80px]"
       style={{
         zIndex: index,
         scale: finalScale,

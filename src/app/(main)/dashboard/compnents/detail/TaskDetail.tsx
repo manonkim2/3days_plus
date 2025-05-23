@@ -6,17 +6,22 @@ import Link from 'next/link'
 const TasksDetail = ({ tasks }: { tasks: ITask[] }) => {
   return (
     <div className="flex flex-col justify-between h-full">
-      <div className="flex flex-col gap-md overflow-hidden">
+      <div className="flex flex-col gap-md overflow-hidden h-full">
         <h2 className="text-xl text-fontTertiary">
-          📋 Today’s Tasks Completion
+          📝 Today&apos;s Tasks Completion
         </h2>
-        <div className="flex flex-col gap-sm overflow-y-scroll">
+        <div className="flex flex-col gap-sm overflow-y-scroll h-full">
+          {!tasks.length && (
+            <div className="flex justify-center items-center text-fontSecondary border border-dashed rounded-md h-full text-base">
+              Let&apos;s plan your day!
+            </div>
+          )}
           {tasks.map((task) => (
             <TaskCard key={task.id} task={task} />
           ))}
         </div>
       </div>
-      <Button asChild className="w-full mt-md">
+      <Button asChild className="w-full mt-md" variant="outline">
         <Link href="/schedule">Go to Task Schedule Page</Link>
       </Button>
     </div>
