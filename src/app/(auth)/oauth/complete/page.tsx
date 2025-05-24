@@ -60,7 +60,7 @@ const OAuthHandler = () => {
     }
 
     handleOAuth()
-  }, [code, router])
+  }, [code, provider, router])
 
   return <div>로그인 처리 중...</div>
 }

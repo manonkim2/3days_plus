@@ -33,4 +33,4 @@ export type NewsItem = Pick<
   'no' | 'title' | 'content' | 'pubDate' | 'link' | 'contentSnippet'
 >
 
-export type NewsCardItem = NewsItem & { enclosureUrl?: string }
+export type RssNewsType = NewsItem & { enclosureUrl?: string }

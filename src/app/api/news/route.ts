@@ -1,4 +1,4 @@
-import { NewsCardItem, RssFeed } from '@/types/rss'
+import { RssNewsType, RssFeed } from '@/types/rss'
 import { NextResponse } from 'next/server'
 import Parser from 'rss-parser'
 
@@ -13,7 +13,7 @@ export const GET = async () => {
     'https://www.mk.co.kr/rss/30000001/',
   )) as RssFeed
 
-  const newsCardItems: NewsCardItem[] = news.items
+  const newsCardItems: RssNewsType[] = news.items
     .map((item) => ({
       no: item.no,
       title: item.title,

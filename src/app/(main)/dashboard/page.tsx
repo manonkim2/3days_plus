@@ -11,18 +11,21 @@ import {
 } from '../schedule/components/routine/actions'
 import { getTask } from '../schedule/components/task/actions'
 import { getPinnedQuote, IQuotes } from './actions'
+import { RssNewsType } from '@/types/rss'
 
 const DashBoardPage = async () => {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
 
-  const [user, weatherRes, quotesRes] = await Promise.all([
+  const [user, weatherRes, quotesRes, newsRes] = await Promise.all([
     getUserInfo(),
     fetch(`${baseUrl}/api/weather`),
     fetch(`${baseUrl}/api/quotes`),
+    fetch(`${baseUrl}/api/news`),
   ])
 
   const weather: IWeatherData = await weatherRes.json()
   const quotes: IQuotes[] = await quotesRes.json()
+  const news: RssNewsType[] = await newsRes.json()
 
   if (!user?.id) {
     return (
@@ -38,7 +41,7 @@ const DashBoardPage = async () => {
             pinnedQuote={null}
           />
         </div>
-        <News />
+        <News news={news} />
       </div>
     )
   }
@@ -63,7 +66,7 @@ const DashBoardPage = async () => {
           pinnedQuote={pinnedQuote?.quoteId || null}
         />
       </div>
-      <News />
+      <News news={news} />
     </div>
   )
 }

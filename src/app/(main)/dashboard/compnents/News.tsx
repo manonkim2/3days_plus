@@ -3,14 +3,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
-import { NewsCardItem } from '@/types/rss'
+import { RssNewsType } from '@/types/rss'
 import { getFormattedDate } from '@/utils/formmattedDate'
 import { Button } from '@/components/ui'
 import { useRef } from 'react'
-import { useDashboardNews } from '@/lib/useDashboardNews'
 
-const News = () => {
-  const { data: newsItems, isLoading, isError } = useDashboardNews()
+const News = ({ news }: { news: RssNewsType[] }) => {
   const { scrollYProgress } = useScroll()
 
   const bgColor = useTransform(scrollYProgress, [0, 1], ['#ffffff', '#1E1E1E'])
@@ -22,13 +20,6 @@ const News = () => {
 
   const borderRadius = useTransform(scrollYProgress, [0.9, 1], ['0px', '36px'])
   const width = useTransform(scrollYProgress, [0.9, 1], ['100vw', '90vw'])
-
-  if (isLoading) return <div className="text-center py-10">Loading news...</div>
-
-  if (isError)
-    return (
-      <div className="text-center py-10 text-red-500">Failed to load news.</div>
-    )
 
   return (
     <motion.article
@@ -69,7 +60,7 @@ const News = () => {
         </div>
 
         <div className="grid grid-flow-row w-[780px]">
-          {newsItems?.map((item, index) => {
+          {news?.map((item, index) => {
             return <NewsCard key={item.no} item={item} index={index} />
           })}
         </div>
@@ -78,7 +69,7 @@ const News = () => {
   )
 }
 
-const NewsCard = ({ item, index }: { item: NewsCardItem; index: number }) => {
+const NewsCard = ({ item, index }: { item: RssNewsType; index: number }) => {
   const ref = useRef(null)
 
   const { scrollYProgress } = useScroll({
