@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Analytics } from '@vercel/analytics/next'
 import { Poppins } from 'next/font/google'
 
 import Navbar from '@/components/Navbar'
@@ -62,7 +64,11 @@ export default function RootLayout({
         <ReactQueryProvider>
           <ToastProvider>
             <Navbar />
-            <main>{children}</main>
+            <main>
+              {children}
+              <SpeedInsights />
+              <Analytics />
+            </main>
             <Toaster />
             <Footer />
           </ToastProvider>
