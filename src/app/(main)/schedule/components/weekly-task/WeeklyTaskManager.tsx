@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import Box from '@/components/Box'
+import { useState } from 'react'
 
 const WeeklyCategoryTasks = dynamic(() => import('./WeeklyCategoryTasks'), {
   ssr: false,
@@ -11,6 +12,14 @@ const WeeklyTasksChart = dynamic(() => import('./WeeklyTasksChart'), {
 })
 
 const WeeklyTaskManager = () => {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null,
+  )
+
+  const handleChangeCategory = (categoryId: string) => {
+    setSelectedCategoryId(categoryId ? Number(categoryId) : null)
+  }
+
   return (
     <Box className="flex flex-1">
       <h2 className="text-xl font-semibold text-fontPrimary">
@@ -20,8 +29,8 @@ const WeeklyTaskManager = () => {
         Showing completion rates for all tasks and selected category
       </p>
       <div className="flex gap-xl pt-xl">
-        <WeeklyTasksChart />
-        <WeeklyCategoryTasks />
+        <WeeklyTasksChart selectedCategoryId={selectedCategoryId} />
+        <WeeklyCategoryTasks handleChangeCategory={handleChangeCategory} />
       </div>
     </Box>
   )

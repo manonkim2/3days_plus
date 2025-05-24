@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { format } from 'date-fns'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
-import { useScheduleContext } from '@/context/ScheduleContext'
+
 import {
   ChartConfig,
   ChartContainer,
@@ -13,6 +13,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { useTasks } from '../task/useTasks'
+import { useDateStore } from '@/stores/useDateStore'
 
 const chartConfig = {
   completionRate: {
@@ -25,9 +26,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-const WeeklyTasksChart = () => {
-  const { week, selectedCategoryId } = useScheduleContext()
-  const { tasks } = useTasks({ dates: week })
+const WeeklyTasksChart = ({
+  selectedCategoryId,
+}: {
+  selectedCategoryId: number | null
+}) => {
+  const { week } = useDateStore()
+  const { tasks } = useTasks('week')
 
   const tasksByDay = useMemo(() => {
     return week.reduce(

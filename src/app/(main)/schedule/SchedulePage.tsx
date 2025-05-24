@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { DateProvider } from '@/context/ScheduleContext'
 import Calendar from './components/Calendar'
 import GoalManager from './components/goal/GoalManager'
 import RoutineManager from './components/routine/RoutineManager'
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 
 const SchedulePage = async () => {
   return (
-    <DateProvider>
+    <>
       <h1 className="sr-only">
         3Days+ | 일정 & 할일 & 루틴 관리 (Daily Schedule & Tasks & Routine)
       </h1>
@@ -32,7 +31,7 @@ const SchedulePage = async () => {
           <RoutineManager />
         </div>
       </div>
-    </DateProvider>
+    </>
   )
 }
 

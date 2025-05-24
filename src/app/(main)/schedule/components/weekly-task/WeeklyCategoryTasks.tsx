@@ -1,7 +1,8 @@
 'use client'
 
+import { useCallback } from 'react'
 import { Trash2 } from 'lucide-react'
-
+import { useQueryClient } from '@tanstack/react-query'
 import {
   Accordion,
   AccordionContent,
@@ -12,15 +13,16 @@ import { Badge } from '@/components/ui'
 import AlertButton from '@/components/AlertButton'
 import { getShortDate } from '@/utils/formmattedDate'
 import { useTasks } from '../task/useTasks'
-import { useScheduleContext } from '@/context/ScheduleContext'
-import { useQueryClient } from '@tanstack/react-query'
 import { deleteCategory } from '../task/actions'
-import { useCallback } from 'react'
 
-const WeeklyCategoryTasks = () => {
+const WeeklyCategoryTasks = ({
+  handleChangeCategory,
+}: {
+  handleChangeCategory: (value: string) => void
+}) => {
   const queryClient = useQueryClient()
-  const { setSelectedCategoryId, week } = useScheduleContext()
-  const { categories, tasks } = useTasks({ dates: week })
+
+  const { categories, tasks } = useTasks('week')
 
   const handleOnClickDelete = useCallback(
     async (id: number) => {
@@ -37,13 +39,7 @@ const WeeklyCategoryTasks = () => {
         Weekly Tasks by Category
       </span>
 
-      <Accordion
-        type="single"
-        collapsible
-        onValueChange={(value) =>
-          setSelectedCategoryId(value ? Number(value) : null)
-        }
-      >
+      <Accordion type="single" collapsible onValueChange={handleChangeCategory}>
         {categories?.map(({ id, title }) => {
           const filteredTasks = tasks.filter((task) => task.categoryId === id)
           const completedTasks = filteredTasks.filter((task) => task.completed)

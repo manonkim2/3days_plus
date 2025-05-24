@@ -9,12 +9,12 @@ import { ko } from 'date-fns/locale'
 import { useGoalItems } from './useGoalItem'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
-import { useScheduleContext } from '@/context/ScheduleContext'
 import { GoalType } from '@/prisma/client'
 import Checkbox from '@/components/Checkbox'
+import { useDateStore } from '@/stores/useDateStore'
 
 const GoalList = ({ tab }: { tab: GoalType }) => {
-  const { date } = useScheduleContext()
+  const { date } = useDateStore()
   const [input, setInput] = useState('')
 
   const { goalItems, addGoal, toggleGoal, deleteGoal, isLoading } =

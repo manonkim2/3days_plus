@@ -3,12 +3,12 @@
 import RoutineCard from './RoutineCard'
 import { useRoutineManager } from './useRoutineManager'
 import { getDateWithWeek } from '@/utils/formmattedDate'
-import { useScheduleContext } from '@/context/ScheduleContext'
 import FormActionWrapper from '@/components/FormActionWrapper'
 import Box from '@/components/Box'
+import { useDateStore } from '@/stores/useDateStore'
 
 const RoutineManager = () => {
-  const { date, week } = useScheduleContext()
+  const { date, week } = useDateStore()
 
   const {
     routinesWithLogId,

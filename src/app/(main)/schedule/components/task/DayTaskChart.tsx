@@ -10,7 +10,6 @@ import {
 } from 'recharts'
 import { ChartContainer } from '@/components/ui/chart'
 import { useTasks } from './useTasks'
-import { useScheduleContext } from '@/context/ScheduleContext'
 
 const chartConfig = {
   completed: {
@@ -20,8 +19,7 @@ const chartConfig = {
 }
 
 const DayTaskChart = () => {
-  const { date } = useScheduleContext()
-  const { tasks } = useTasks({ date })
+  const { tasks } = useTasks()
 
   const completedRoutineRatio = useMemo(() => {
     if (tasks.length === 0) return 0

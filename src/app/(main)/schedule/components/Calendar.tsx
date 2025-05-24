@@ -2,10 +2,10 @@
 
 import { useMemo } from 'react'
 import { Calendar as CalendarUI } from '@/components/ui'
-import { useScheduleContext } from '@/context/ScheduleContext'
+import { useDateStore } from '@/stores/useDateStore'
 
 const Calendar = () => {
-  const { date, week, handleClickDate } = useScheduleContext()
+  const { date, week, setDate } = useDateStore()
 
   const memoizedModifiers = useMemo(
     () => ({
@@ -26,7 +26,7 @@ const Calendar = () => {
   return (
     <div className="flex w-auto justify-center">
       <CalendarUI
-        onDayClick={handleClickDate}
+        onDayClick={setDate}
         modifiers={memoizedModifiers}
         modifiersStyles={memoizedModifiersStyles}
       />

@@ -17,12 +17,12 @@ import FormActionWrapper from '@/components/FormActionWrapper'
 import LoadingOverlay from '@/components/LoadingOverlay'
 import { Input } from '@/components/ui'
 import { Combobox } from '@/app/(main)/schedule/components/task/Combobox'
-import { useScheduleContext } from '@/context/ScheduleContext'
+import { useDateStore } from '@/stores/useDateStore'
 
 const TaskList = () => {
   const queryClient = useQueryClient()
-  const { date } = useScheduleContext()
-  const { tasks, categories, isLoading } = useTasks({ date })
+  const { date } = useDateStore()
+  const { tasks, categories, isLoading } = useTasks()
 
   const [category, setCategory] = useState<{
     value: string
