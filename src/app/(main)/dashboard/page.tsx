@@ -20,7 +20,7 @@ const DashBoardPage = async () => {
     getUserInfo(),
     fetch(`${baseUrl}/api/weather`),
     fetch(`${baseUrl}/api/quotes`),
-    fetch(`${baseUrl}/api/news`),
+    fetch(`${baseUrl}/api/rss`),
   ])
 
   const weather: IWeatherData = await weatherRes.json()

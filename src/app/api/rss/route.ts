@@ -13,7 +13,7 @@ export const GET = async () => {
     'https://www.mk.co.kr/rss/30000001/',
   )) as RssFeed
 
-  const newsCardItems: RssNewsType[] = news.items
+  const newsItems: RssNewsType[] = news.items
     .map((item) => ({
       no: item.no,
       title: item.title,
@@ -24,9 +24,9 @@ export const GET = async () => {
       enclosureUrl: item['media:content']?.$?.url,
     }))
     .filter((item) => item.enclosureUrl)
-    .slice(0, 10)
+    .slice(0, 21)
 
-  return NextResponse.json(newsCardItems, {
+  return NextResponse.json(newsItems, {
     status: 200,
     headers: {
       'Cache-Control': 's-maxage=1800, stale-while-revalidate=1200', // 30분 캐싱, 20분 revalidate

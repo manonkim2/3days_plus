@@ -3,12 +3,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
-import { RssNewsType } from '@/types/rss'
+import { NewsItem, RssNewsType } from '@/types/rss'
 import { getFormattedDate } from '@/utils/formmattedDate'
 import { Button } from '@/components/ui'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 const News = ({ news }: { news: RssNewsType[] }) => {
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    queryClient.setQueryData(['rss-news'], news)
+  }, [news, queryClient])
+
   const { scrollYProgress } = useScroll()
 
   const bgColor = useTransform(scrollYProgress, [0, 1], ['#ffffff', '#1E1E1E'])
@@ -17,7 +24,6 @@ const News = ({ news }: { news: RssNewsType[] }) => {
     [0, 0.7, 1],
     ['#000000', '#1E1E1E', '#ffffff'],
   )
-
   const borderRadius = useTransform(scrollYProgress, [0.9, 1], ['0px', '36px'])
   const width = useTransform(scrollYProgress, [0.9, 1], ['100vw', '90vw'])
 
@@ -60,7 +66,7 @@ const News = ({ news }: { news: RssNewsType[] }) => {
         </div>
 
         <div className="grid grid-flow-row w-[780px]">
-          {news?.map((item, index) => {
+          {news?.slice(0, 10).map((item, index) => {
             return <NewsCard key={item.no} item={item} index={index} />
           })}
         </div>
@@ -69,7 +75,13 @@ const News = ({ news }: { news: RssNewsType[] }) => {
   )
 }
 
-const NewsCard = ({ item, index }: { item: RssNewsType; index: number }) => {
+const NewsCard = ({
+  item,
+  index,
+}: {
+  item: NewsItem & { enclosureUrl?: string }
+  index: number
+}) => {
   const ref = useRef(null)
 
   const { scrollYProgress } = useScroll({
