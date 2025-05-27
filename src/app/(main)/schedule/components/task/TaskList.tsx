@@ -131,14 +131,14 @@ const TaskList = () => {
             <FormActionWrapper
               placeholder="Add category name"
               formAction={createCategoryMutation.mutate}
-              isPending={createCategoryMutation.isPending}
+              disabled={createCategoryMutation.isPending}
             />
           }
         />
         <FormActionWrapper
           formAction={createTaskMutation.mutate}
           placeholder="Add your task"
-          isPending={createTaskMutation.isPending}
+          disabled={createTaskMutation.isPending}
         />
       </div>
 

@@ -5,14 +5,14 @@ import { Plus } from 'lucide-react'
 interface IFormActionWrapperProps {
   formAction: (payload: FormData) => void
   placeholder: string
-  isPending: boolean
+  disabled: boolean
   errors?: string[]
 }
 
 const FormActionWrapper = ({
   formAction,
   placeholder,
-  isPending,
+  disabled,
   errors,
 }: IFormActionWrapperProps) => {
   return (
@@ -24,7 +24,7 @@ const FormActionWrapper = ({
           type="text"
           placeholder={placeholder}
           className="pr-12"
-          disabled={isPending}
+          disabled={disabled}
           errors={errors}
           button={<Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />}
         />

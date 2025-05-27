@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const NewsCardSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 container">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-xl container">
       {Array.from({ length: 12 }).map((_, index) => (
         <div
           className="bg-white border rounded-md p-4 shadow-lg hover:shadow-xl transition-all"

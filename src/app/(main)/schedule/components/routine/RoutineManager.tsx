@@ -36,7 +36,7 @@ const RoutineManager = () => {
       <FormActionWrapper
         formAction={formAction}
         placeholder="Add your routine"
-        isPending={isPending}
+        disabled={isPending}
       />
       <div className="overflow-y-auto h-full">
         {routinesWithLogId?.map((routine) => (

@@ -1,105 +1,69 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
-import { RefreshCcw } from 'lucide-react'
 
-import NewsCardSkeleton from './NewsSkeleton'
-import { Pagination } from '@/components/Pagination'
+import KeywordNews from './KeywordNews'
+import { getRssNews } from '@/lib/getRssNews'
+import { useNewsStore } from '@/stores/useNewsStore'
 import { getFormattedDate } from '@/utils/formmattedDate'
-import { useNewsContext } from '@/context/NewsContext'
-import { getNews } from '@/lib/getNews'
-import { INaverNews } from '@/app/api/naver/news/route'
+import { RssNewsType } from '@/types/rss'
 
-const NewsList = () => {
-  const { selectedKeyword, page, setPage } = useNewsContext()
+const Keyword = dynamic(() => import('./Keyword'))
 
-  const {
-    data: news,
-    isLoading,
-    refetch,
-  } = useQuery<INaverNews>({
-    queryKey: ['news', selectedKeyword, page],
-    queryFn: () => getNews(selectedKeyword, page),
-    enabled: !!selectedKeyword,
-    staleTime: 60 * 60 * 1000, // 1시간
+const NewsList = ({ isUser }: { isUser: boolean }) => {
+  const selectedKeyword = useNewsStore((s) => s.selectedKeyword)
+
+  const { data: todayNews } = useQuery({
+    queryKey: ['rss-news'],
+    queryFn: getRssNews,
+    staleTime: 1000 * 60 * 60, // 1시간
   })
 
-  const removeHtmlTags = (str: string) =>
-    str.replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, '')
-
-  if (isLoading) return <NewsCardSkeleton />
-
   return (
-    <div className="container">
-      {!news?.total ? (
-        <div className="text-center text-gray-500 text-sm py-8">
-          No news found for this keyword.
-          <br />
-          Try exploring other topics!
+    <>
+      <Keyword />
+
+      {!selectedKeyword ? (
+        <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-xl">
+          {todayNews?.map((item) => <NewsCard item={item} key={item.no} />)}
         </div>
       ) : (
-        <div className="flex justify-end items-center pb-sm gap-sm">
-          <span className="text-sm text-gray-400">
-            last update : {getFormattedDate(news?.lastBuildDate)}
-          </span>
-          <RefreshCcw
-            className="mr-2 h-4 w-4 shrink-0 opacity-70 cursor-pointer"
-            onClick={() => refetch()}
-          />
-        </div>
+        <KeywordNews isUser={isUser} />
       )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {news?.items.map((item) => (
-          <NewsCard
-            key={item.link}
-            news={item}
-            removeHtmlTags={removeHtmlTags}
-          />
-        ))}
-      </div>
-
-      {news && (
-        <div className="flex w-full my-16">
-          <Pagination
-            totalPages={news.total}
-            currentPage={page}
-            setCurrentPage={setPage}
-          />
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 
-const NewsCard = ({
-  news,
-  removeHtmlTags,
-}: {
-  news: INaverNews['items'][number]
-  removeHtmlTags: (str: string) => string
-}) => {
+const NewsCard = ({ item }: { item: RssNewsType }) => {
   return (
     <Link
-      href={news.link}
+      href={item.link || ''}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex flex-col justify-between bg-white border rounded-md p-4 shadow-lg hover:shadow-xl transition-all cursor-pointer min-h-[200px]"
+      className="group block transform transition-all hover:scale-[1.01]"
     >
-      <div>
-        <h3 className="text-md font-semibold text-gray-800">
-          {removeHtmlTags(news.title)}
-        </h3>
-        <p className="text-xs text-gray-500 mb-2">
-          {getFormattedDate(news.pubDate)}
+      {item.enclosureUrl && (
+        <div className="relative w-full aspect-[4/3]">
+          <Image
+            src={item.enclosureUrl}
+            alt={item.title || ''}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover"
+            loading="eager"
+          />
+        </div>
+      )}
+
+      <div className="absolute w-full bottom-0 left-0 p-md group-hover:bg-black/40 backdrop-blur-lg">
+        <p className="text-white text-xl font-semibold">{item.title}</p>
+        <p className="text-xs text-zinc-300">
+          {getFormattedDate(item.pubDate)}
         </p>
-        <p
-          className="text-sm text-gray-700 mb-md"
-          dangerouslySetInnerHTML={{ __html: news.description }}
-        />
       </div>
-      <span className="text-blue-500 hover:underline text-xs">Read more</span>
     </Link>
   )
 }

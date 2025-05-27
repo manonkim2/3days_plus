@@ -5,13 +5,16 @@ import { Trash2 } from 'lucide-react'
 import React, { useActionState } from 'react'
 import { createNewsKeyword, deleteNewsCategory, INewsKeyword } from '../actions'
 import { Button } from '@/components/ui'
-import { DEFAULT_KEYWORD, useNewsContext } from '@/context/NewsContext'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getNewsKeyword } from '../actions'
+import { useNewsStore } from '@/stores/useNewsStore'
 
-const NewsKeyword = () => {
+const Keyword = () => {
   const queryClient = useQueryClient()
-  const { selectedKeyword, setSelectedKeyword, setPage } = useNewsContext()
+
+  const selectedKeyword = useNewsStore((s) => s.selectedKeyword)
+  const setSelectedKeyword = useNewsStore((s) => s.setSelectedKeyword)
+  const setPage = useNewsStore((s) => s.setPage)
 
   const { data: keywords = [], isLoading } = useQuery<INewsKeyword[] | null>({
     queryKey: ['news-keywords'],
@@ -31,7 +34,7 @@ const NewsKeyword = () => {
     { errors: [] },
   )
 
-  const handleClickKeyword = (keyword: string) => {
+  const handleClickKeyword = (keyword: string | null) => {
     setPage(1)
     setSelectedKeyword(keyword)
   }
@@ -40,26 +43,26 @@ const NewsKeyword = () => {
     event.stopPropagation()
     await deleteNewsCategory(id)
     await queryClient.invalidateQueries({ queryKey: ['news-keywords'] })
-    setSelectedKeyword(DEFAULT_KEYWORD)
+    setSelectedKeyword(null)
   }
 
   return (
-    <div className="flex flex-col items-center gap-md py-xxl">
+    <div className="flex flex-col items-center gap-md py-[40px]">
       <FormActionWrapper
         formAction={formAction}
         placeholder="관심 있는 뉴스 키워드를 등록하고 소식을 받아보세요."
-        isPending={isPending}
+        disabled={isPending}
         errors={formState.errors}
       />
 
       <div className="flex flex-wrap justify-center gap-sm w-[80vw]">
         <Button
           className="cursor-pointer text-sm"
-          onClick={() => handleClickKeyword(DEFAULT_KEYWORD)}
-          variant={selectedKeyword === DEFAULT_KEYWORD ? 'default' : 'outline'}
+          onClick={() => handleClickKeyword(null)}
+          variant={selectedKeyword === null ? 'default' : 'outline'}
           size={'sm'}
         >
-          {DEFAULT_KEYWORD}
+          오늘의 뉴스
         </Button>
         {keywords?.length === 0 && !isLoading && (
           <div className="border border-dashed rounded-md text-sm text-gray-400 px-sm flex items-center justify-center">
@@ -91,4 +94,4 @@ const NewsKeyword = () => {
   )
 }
 
-export default NewsKeyword
+export default Keyword
