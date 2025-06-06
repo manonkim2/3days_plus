@@ -11,9 +11,7 @@ const NavButtons = () => {
     const _menu = menu.toLowerCase()
     const isDashboard = _menu === 'dashboard'
 
-    const isCurrent = isDashboard
-      ? pathName === '/' || pathName === '/dashboard'
-      : `/${_menu}` === pathName
+    const isCurrent = isDashboard ? pathName === '/' : `/${_menu}` === pathName
 
     const href = isDashboard ? '/' : `/${_menu}`
     const variant = isCurrent ? 'primary' : 'tertiary'

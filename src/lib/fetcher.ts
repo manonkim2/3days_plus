@@ -6,13 +6,17 @@ interface IFetcherOptions extends RequestInit {
   baseUrl?: string
   fallbackErrorMessage?: string
   showToastOnError?: boolean
+  cache?: RequestCache
+  nextOptions?: {
+    revalidate?: number
+  }
 }
 
 export const fetcher = async <T = unknown>(
   endpoint: string,
   options?: IFetcherOptions,
 ): Promise<T> => {
-  const baseUrl = options?.baseUrl || ''
+  const baseUrl = options?.baseUrl || process.env.NEXT_PUBLIC_SITE_URL
   let finalUrl = `${baseUrl}${endpoint}`
 
   if (options?.query) {
@@ -32,6 +36,8 @@ export const fetcher = async <T = unknown>(
   try {
     const res = await fetch(finalUrl, {
       ...options,
+      cache: options?.cache || 'default',
+      next: options?.nextOptions,
       headers: {
         'Content-Type': 'application/json',
         ...(options?.headers || {}),
