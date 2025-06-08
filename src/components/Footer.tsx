@@ -1,9 +1,9 @@
 import Link from 'next/link'
 
 const Footer = () => (
-  <footer className="container flex justify-between h-[280px] p-[64px] text-sm text-fontSecondary font-poppins">
+  <footer className="container flex justify-between h-[280px] p-[56px] text-sm text-fontTertiary font-poppins">
     <div className="flex flex-col justify-end">
-      <div>Logo</div>
+      <p className="text-md font-bold">3DAYS+</p>
       <p className="font-light">© 2025 Wonyoung Kim. All rights reserved.</p>
       <p className="font-light">
         Built with Next.js, Prisma, Tailwind CSS, Framer Motion
@@ -12,7 +12,7 @@ const Footer = () => (
 
     <div className="flex gap-[48px]">
       <div className="flex flex-col gap-sm">
-        <span className="text-sm font-semibold">SITE</span>
+        <p className="text-fontSecondary font-bold">SITE</p>
         <nav className="flex flex-col">
           <Link href="/">Dashboard</Link>
           <Link href="/schedule">Schedule</Link>
@@ -21,7 +21,7 @@ const Footer = () => (
       </div>
 
       <div className="flex flex-col gap-sm">
-        <span className="text-sm font-semibold">SOCIAL</span>
+        <p className="text-fontSecondary font-bold">SOCIAL</p>
         <div className="flex flex-col">
           <Link
             href="https://github.com/manonkim2"

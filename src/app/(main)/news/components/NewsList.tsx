@@ -19,7 +19,7 @@ const NewsList = ({ isUser }: { isUser: boolean }) => {
   const { data: todayNews } = useQuery({
     queryKey: ['rss-news'],
     queryFn: getRssNews,
-    staleTime: 1000 * 60 * 60, // 1시간
+    staleTime: 1000 * 60 * 30, // 30분
   })
 
   return (

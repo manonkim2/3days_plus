@@ -31,27 +31,28 @@ const DashBoardPage = async () => {
     : [[], [], [], null]
 
   return (
-    <div className="relative h-screen bg-black/40">
-      <Image
-        src="/background.jpg"
-        alt="fullscreen background"
-        fill
-        className="fixed inset-0 object-cover -z-50 left-0"
-        priority
-      />
-      <div className="relative z-10 h-full overflow-y-auto">
-        <DashboardClient
-          user={user?.name || ''}
-          weather={weather}
-          quotes={quotes}
-          news={news}
-          routines={routines}
-          routineLog={routinelog}
-          tasks={tasks}
-          pinnedQuote={pinnedQuote?.quoteId || null}
+    <>
+      <div className="absolute bg-black/30 inset-0">
+        <Image
+          src="/background.jpg"
+          alt="fullscreen background"
+          fill
+          className="fixed inset-0 object-cover -z-50"
+          priority
         />
       </div>
-    </div>
+
+      <DashboardClient
+        user={user?.name || ''}
+        weather={weather}
+        quotes={quotes}
+        news={news}
+        routines={routines}
+        routineLog={routinelog}
+        tasks={tasks}
+        pinnedQuote={pinnedQuote?.quoteId || null}
+      />
+    </>
   )
 }
 
