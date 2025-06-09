@@ -3,16 +3,13 @@ export const dynamic = 'force-dynamic'
 import Image from 'next/image'
 import LogoutButton from './LogoutButton'
 import { getUserInfo } from '@/lib/supabase/actions'
+import { redirect } from 'next/navigation'
 
 const ProfilePage = async () => {
   const user = await getUserInfo()
 
   if (!user) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-muted-foreground">Loading user info...</p>
-      </div>
-    )
+    redirect('/login')
   }
 
   return (

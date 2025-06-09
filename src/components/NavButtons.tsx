@@ -39,7 +39,7 @@ const NavButtons = () => {
   }
 
   return (
-    <div className="flex gap-xs sm:gap-md">
+    <div className="flex gap-xs md:gap-xl">
       {navButton('Dashboard')}
       {navButton('Schedule')}
       {navButton('News')}

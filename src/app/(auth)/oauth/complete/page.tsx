@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
+import { Loader2 } from 'lucide-react'
 
 const OAuthHandler = () => {
   const router = useRouter()
@@ -62,12 +63,24 @@ const OAuthHandler = () => {
     handleOAuth()
   }, [code, provider, router])
 
-  return <div>로그인 처리 중...</div>
+  return (
+    <div className="flex items-center justify-center h-screen font-poppins gap-sm">
+      <Loader2 className="w-5 h-5 animate-spin text-fontPrimary" />
+      <p className="text-fontPrimary">Loading user info...</p>
+    </div>
+  )
 }
 
 const OAuthCompletePage = () => {
   return (
-    <Suspense fallback={<div>로그인 처리 중...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen font-poppins gap-sm">
+          <Loader2 className="w-5 h-5 animate-spin text-fontPrimary" />
+          <p className="text-fontPrimary">Loading user info...</p>
+        </div>
+      }
+    >
       <OAuthHandler />
     </Suspense>
   )
