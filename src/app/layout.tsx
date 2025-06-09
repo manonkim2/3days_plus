@@ -5,16 +5,14 @@ import { Analytics } from '@vercel/analytics/next'
 import { Poppins } from 'next/font/google'
 
 import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-
 import ReactQueryProvider from '@/components/ReactQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { ToastProvider } from '@/components/ui/toast'
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['100', '200', '400', '500'],
-  style: ['normal', 'italic'],
+  weight: ['200', '400', '500'],
+  style: ['normal'],
   variable: '--poppins-text',
 })
 
@@ -70,7 +68,6 @@ export default function RootLayout({
               <Analytics />
             </main>
             <Toaster />
-            <Footer />
           </ToastProvider>
         </ReactQueryProvider>
       </body>

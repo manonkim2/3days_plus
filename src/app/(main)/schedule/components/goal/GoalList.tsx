@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trash2, Plus } from 'lucide-react'
 import { format, getWeek, startOfMonth } from 'date-fns'
@@ -20,23 +20,6 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
   const { goalItems, addGoal, toggleGoal, deleteGoal, isLoading } =
     useGoalItems(tab, date)
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(event.target.value)
-  }
-
-  const handleAdd = () => {
-    addGoal.mutate(input)
-    setInput('')
-  }
-
-  const handleToggle = (id: number, completed: boolean) => {
-    toggleGoal.mutate({ id, completed: !completed })
-  }
-
-  const handleDelete = (id: number) => {
-    deleteGoal.mutate(id)
-  }
-
   const sortedGoals = useMemo(() => {
     return [...goalItems].sort(
       (a, b) => Number(a.completed) - Number(b.completed),
@@ -48,7 +31,7 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
   const percent =
     totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100)
 
-  const getWeekOfMonth = (date: Date): number => {
+  const getWeekOfMonth = useCallback((date: Date): number => {
     const weekOfDate = getWeek(date, { weekStartsOn: 1, locale: ko })
     const weekOfStart = getWeek(startOfMonth(date), {
       weekStartsOn: 1,
@@ -56,9 +39,9 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
     })
 
     return weekOfDate - weekOfStart + 1
-  }
+  }, [])
 
-  const getPeriodLabel = (tab: GoalType, date: Date): string => {
+  const getPeriodLabel = useMemo((): string => {
     const year = date.getFullYear()
     const monthName = format(date, 'MMMM')
     const week = getWeekOfMonth(date)
@@ -73,13 +56,40 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
       default:
         return ''
     }
-  }
+  }, [date, getWeekOfMonth, tab])
+
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setInput(event.target.value)
+    },
+    [],
+  )
+
+  const handleAdd = useCallback(() => {
+    if (!input.trim()) return
+    addGoal.mutate(input.trim())
+    setInput('')
+  }, [addGoal, input])
+
+  const handleToggle = useCallback(
+    (id: number, completed: boolean) => {
+      toggleGoal.mutate({ id, completed: !completed })
+    },
+    [toggleGoal],
+  )
+
+  const handleDelete = useCallback(
+    (id: number) => {
+      deleteGoal.mutate(id)
+    },
+    [deleteGoal],
+  )
 
   return (
     <div className="flex flex-col pb-sm gap-md h-full overflow-auto">
       <div className="flex flex-col gap-sm">
         <span className="text-sm font-semibold text-fontPrimary">
-          {getPeriodLabel(tab, date)}
+          {getPeriodLabel}
         </span>
         <div className="flex flex-col gap-xs">
           <div className="flex justify-between items-center">
@@ -103,9 +113,9 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
           disabled={isLoading}
         />
       </div>
-      <ul className="flex flex-col h-full gap-xs overflow-y-scroll">
+      <ul className="flex flex-col gap-xs overflow-y-scroll h-[100px] md:h-full">
         {goalItems.length === 0 && (
-          <div className="flex flex-col justify-center h-[150px]">
+          <div className="flex flex-col justify-center min-h-[80px]">
             <p className="text-sm text-muted-foreground text-center">
               No goals yet. Start by adding one!
             </p>

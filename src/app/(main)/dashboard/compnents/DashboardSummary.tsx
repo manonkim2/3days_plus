@@ -1,27 +1,16 @@
 'use client'
 
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
+
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { MapPin } from 'lucide-react'
 
-import WeatherDetail from './detail/WeatherDetail'
 import SummaryCard from './SummaryCard'
 import { getPinnedQuote, IQuotes } from '../actions'
 import { IWeatherData } from '@/lib/getWeather'
 import { Progress } from '@/components/ui/progress'
 import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
-
-const RoutineDetail = dynamic(() => import('./detail/RoutineDetail'), {
-  ssr: false,
-})
-const MotivationDetail = dynamic(() => import('./detail/MotivationDetail'), {
-  ssr: false,
-})
-const TasksDetail = dynamic(() => import('./detail/TaskDetail'), {
-  ssr: false,
-})
 
 interface DashboardSummaryProps {
   weather: IWeatherData
@@ -161,17 +150,3 @@ const DashboardSummary = ({
 }
 
 export default DashboardSummary
-
-{
-  /* <div className="hidden sm:block rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-md h-[50vh] lg:h-full overflow-hidden">
-          {activeCard === 'weather' && <WeatherDetail weather={weather} />}
-          {activeCard === 'task' && <TasksDetail tasks={tasks} />}
-          {activeCard === 'routine' && (
-            <RoutineDetail
-              routines={routines}
-              completedRoutines={completedRoutines}
-            />
-          )}
-          {activeCard === 'motivation' && <MotivationDetail quotes={quotes} />}
-        </div> */
-}
