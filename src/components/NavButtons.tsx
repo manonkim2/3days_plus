@@ -1,8 +1,16 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import Button from './Button'
 import Link from 'next/link'
+import { cn } from '@/utils/cn'
+
+const buttonTheme = {
+  variant: {
+    primary: 'bg-primary text-fontTertiary',
+    secondary: 'border-primary border text-fontPrimary',
+    tertiary: 'text-fontTertiary',
+  },
+}
 
 const NavButtons = () => {
   const pathName = usePathname()
@@ -18,13 +26,20 @@ const NavButtons = () => {
 
     return (
       <Link href={href}>
-        <Button text={menu} variant={variant} />
+        <button
+          className={cn(
+            'rounded-full font-poppins text-sm sm:text-base py-xs sm:py-sm px-md sm:px-lg',
+            buttonTheme.variant[variant],
+          )}
+        >
+          {menu}
+        </button>
       </Link>
     )
   }
 
   return (
-    <div className="gap-2 sm:gap-10 flex">
+    <div className="flex gap-xs sm:gap-md">
       {navButton('Dashboard')}
       {navButton('Schedule')}
       {navButton('News')}

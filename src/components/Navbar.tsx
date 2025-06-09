@@ -21,13 +21,19 @@ const Navbar = async () => {
   return (
     <nav
       className={cn(
-        `flex items-center justify-between container h-[var(--navbar-height)] fixed top-0 left-0 right-0 z-40 bg-white/40 backdrop-blur-md border border-black/10 rounded-full px-xxl mt-md`,
+        `container flex items-center justify-between py-sm sm:h-[var(--navbar-height)] fixed top-0 left-0 right-0 z-40 bg-white/10 backdrop-blur-md border border-black/10 rounded-full px-md sm:px-xxl mt-sm sm:mt-md`,
       )}
     >
       <Link href="/">
         <div className="flex items-center gap-xs">
-          <Image src={'/favicon.ico'} width={32} height={32} alt="web_icon" />
-          <span className="text-xl font-extrabold font-poppins text-primary">
+          <Image
+            src={'/favicon.ico'}
+            width={32}
+            height={32}
+            alt="web_icon"
+            unoptimized
+          />
+          <span className="hidden sm:block text-xl font-extrabold font-poppins text-fontTertiary">
             Days+
           </span>
         </div>

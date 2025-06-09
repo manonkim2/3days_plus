@@ -21,7 +21,7 @@ const WeeklyTaskManager = () => {
   }
 
   return (
-    <Box className="flex flex-1">
+    <Box className="hidden md:flex flex-1">
       <h2 className="text-xl font-semibold text-fontPrimary">
         This Week&apos;s Task Success Rate
       </h2>

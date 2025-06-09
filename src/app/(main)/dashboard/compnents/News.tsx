@@ -28,9 +28,9 @@ const News = ({ news }: { news: RssNewsType[] }) => {
   }, [news, queryClient])
 
   return (
-    <div className="relative w-full flex flex-col items-center pb-xxl">
+    <div className="relative w-full flex flex-col items-center py-20 sm:py-32">
       <motion.div
-        className="absolute inset-0 bg-black -z-10"
+        className="hidden sm:block absolute inset-0 bg-black -z-10"
         style={{ opacity: bgOpacity }}
         animate={{
           width: isLastIndex ? '90%' : '100%',
@@ -40,9 +40,10 @@ const News = ({ news }: { news: RssNewsType[] }) => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       />
       <motion.article
-        className="flex mx-auto container w-full justify-around"
+        className="flex flex-col lg:flex-row mx-auto container w-full justify-around"
         ref={ref}
       >
+        {/* news title */}
         <div className="flex sticky top-0 h-screen flex-col items-center justify-center text-6xl font-poppins">
           <motion.div
             initial={{ opacity: 0, y: 100 }}
@@ -56,14 +57,16 @@ const News = ({ news }: { news: RssNewsType[] }) => {
             </p>
             <p className="font-light leading-none tracking-[0.08em]">NEWS</p>
 
-            <Link href="/news">
+            <Link href="/news" className="hidden lg:block">
               <Button variant="outline" size="lg" className="w-full">
                 More news
               </Button>
             </Link>
           </motion.div>
         </div>
-        <div className="grid grid-flow-row w-[740px]">
+
+        {/* news card */}
+        <div className="grid grid-flow-row justify-center">
           {news?.slice(0, 10).map((item, index) => {
             return (
               <NewsCard
@@ -106,7 +109,7 @@ const NewsCard = ({
   return (
     <div
       ref={ref}
-      className="sticky h-screen pt-[70px]"
+      className="sticky pt-[70px] max-w-[700px] w-[85vw]"
       style={{
         zIndex: index,
         scale: baseScale,

@@ -23,17 +23,21 @@ const NewsList = ({ isUser }: { isUser: boolean }) => {
   })
 
   return (
-    <>
+    <div className="container px-lg">
+      <h2 className="pt-[15vh] text-4xl sm:text-6xl font-poppins text-center">
+        Keyword News
+      </h2>
+
       <Keyword />
 
       {!selectedKeyword ? (
-        <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
           {todayNews?.map((item) => <NewsCard item={item} key={item.no} />)}
         </div>
       ) : (
         <KeywordNews isUser={isUser} />
       )}
-    </>
+    </div>
   )
 }
 

@@ -31,8 +31,8 @@ const TypingText = ({
 
   return (
     <span
-      className={`${
-        showDashboard ? 'text-4xl' : 'text-5xl'
+      className={`text-2xl sm:text-3xl ${
+        showDashboard ? 'md:text-4xl' : 'md:text-5xl'
       } font-poppins text-fontTertiary font-extralight transition-all duration-700`}
     >
       {displayed}
@@ -53,8 +53,10 @@ const Title = ({
 
   return (
     <div
-      className={`transition-all duration-700 ease-in-out overflow-hidden ${
-        showDashboard ? 'h-[40vh] pt-[var(--navbar-height)]' : 'h-screen'
+      className={`transition-all duration-700 ease-in-out overflow-hidden  ${
+        showDashboard
+          ? 'h-[30vh] sm:h-[40vh] pt-[var(--navbar-height)]'
+          : 'h-screen'
       }`}
     >
       <div className="flex flex-col items-center justify-center h-full w-full">

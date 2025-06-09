@@ -33,7 +33,7 @@ const KeywordNews = ({ isUser }: { isUser: boolean }) => {
   if (isLoading) return <NewsCardSkeleton />
 
   return (
-    <div className="container">
+    <div>
       {!keywordNews?.items?.length ? (
         <div className="h-[40vh] flex justify-center items-center text-fontSecondary text-sm text-center">
           No news found for this keyword.
@@ -52,7 +52,7 @@ const KeywordNews = ({ isUser }: { isUser: boolean }) => {
           />
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
         {keywordNews?.items.map((item) => (
           <NewsCard
             key={item.link}

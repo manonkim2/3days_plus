@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { getUserInfo } from '@/lib/supabase/actions'
 import NewsList from './components/NewsList'
+import Footer from '@/components/Footer'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,10 +19,8 @@ const NewsPage = async () => {
       <h1 className="sr-only">
         3Days+ | 키워드 뉴스 구독 (Personalized News Feed)
       </h1>
-      <h2 className="pt-[20vh] text-6xl font-poppins text-center">
-        Keyword News
-      </h2>
       <NewsList isUser={Boolean(user)} />
+      <Footer />
     </>
   )
 }

@@ -47,14 +47,15 @@ const Keyword = () => {
   }
 
   return (
-    <div className="flex flex-col items-center gap-md py-[40px]">
-      <FormActionWrapper
-        formAction={formAction}
-        placeholder="관심 있는 뉴스 키워드를 등록하고 소식을 받아보세요."
-        disabled={isPending}
-        errors={formState.errors}
-      />
-
+    <div className="flex flex-col items-center gap-md py-[5vh]">
+      <div className="w-full sm:w-[480px]">
+        <FormActionWrapper
+          formAction={formAction}
+          placeholder="관심 있는 뉴스 키워드를 등록하고 소식을 받아보세요."
+          disabled={isPending}
+          errors={formState.errors}
+        />
+      </div>
       <div className="flex flex-wrap justify-center gap-sm w-[80vw]">
         <Button
           className="cursor-pointer text-sm"

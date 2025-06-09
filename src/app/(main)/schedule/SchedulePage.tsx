@@ -4,6 +4,7 @@ import GoalManager from './components/goal/GoalManager'
 import RoutineManager from './components/routine/RoutineManager'
 import TaskManager from './components/task/TaskManager'
 import WeeklyTaskManager from './components/weekly-task/WeeklyTaskManager'
+import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: '3Days+ | Daily Schedule & Routine',
@@ -17,9 +18,9 @@ const SchedulePage = async () => {
       <h1 className="sr-only">
         3Days+ | 일정 & 할일 & 루틴 관리 (Daily Schedule & Tasks & Routine)
       </h1>
-      <div className="flex container h-screen pt-[calc(var(--navbar-height)+24px)] pb-md">
-        <div className="grid grid-cols-[1.1fr_1.2fr_1fr] lg:grid-cols-[1.1fr_2.5fr_1fr] gap-md">
-          <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex container sm:h-screen pt-[calc(var(--navbar-height)+24px)] pb-md px-lg sm:px-0">
+        <div className="grid md:grid-cols-[1.1fr_1.2fr_1fr] lg:grid-cols-[1.1fr_2.5fr_1fr] gap-md grid-cols-1">
+          <div className="flex flex-col sm:flex-row md:flex-col h-full overflow-hidden gap-md min-h-[240px]">
             <Calendar />
             <GoalManager />
           </div>
@@ -31,6 +32,7 @@ const SchedulePage = async () => {
           <RoutineManager />
         </div>
       </div>
+      <Footer />
     </>
   )
 }

@@ -7,7 +7,7 @@ const DayTaskChart = dynamic(() => import('./DayTaskChart'), { ssr: false })
 
 const TaskManager = () => {
   return (
-    <Box className="overflow-hidden flex flex-col flex-1">
+    <Box className="overflow-hidden flex flex-col flex-1 min-h-[240px]">
       <h2 className="text-xl font-semibold text-fontPrimary pb-md">
         Today&apos;s Tasks
       </h2>

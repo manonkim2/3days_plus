@@ -42,7 +42,7 @@ const DashboardClient = ({
   }
 
   return (
-    <div className="relative z-10 h-screen overflow-y-auto" ref={ref}>
+    <div className="relative z-10 h-screen overflow-y-auto px-md" ref={ref}>
       <Title
         user={user}
         onTypingDone={() => setShowDashboard(true)}

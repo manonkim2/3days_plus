@@ -16,7 +16,7 @@ const FormActionWrapper = ({
   errors,
 }: IFormActionWrapperProps) => {
   return (
-    <form action={formAction} className="relative w-full max-w-md">
+    <form action={formAction} className="relative w-full">
       <div className="relative flex items-center">
         <Input
           id="content"

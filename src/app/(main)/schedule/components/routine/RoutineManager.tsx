@@ -23,10 +23,10 @@ const RoutineManager = () => {
 
   return (
     <Box
-      className="overflow-hidden h-full min-w-[180px]"
+      className="overflow-hidden h-full min-w-[180px] min-h-[240px]"
       title={
-        <div className="flex flex-col xl:flex-row justify-between items-baseline px-xs pt-sm">
-          <h1 className="text-fontPrimary text-2xl">Routines</h1>
+        <div className="flex flex-row md:flex-col xl:flex-row justify-between items-baseline px-xs pt-sm">
+          <h1 className="text-fontPrimary text-xl md:text-2xl">Routines</h1>
           <span className="pr-md text-fontPrimary text-md">
             {getDateWithWeek(date)}
           </span>

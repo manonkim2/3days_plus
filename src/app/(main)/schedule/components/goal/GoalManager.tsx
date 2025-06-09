@@ -16,13 +16,13 @@ const GoalManager = () => {
   }
 
   return (
-    <Box className="flex flex-col flex-1 overflow-hidden">
+    <Box className="flex flex-col flex-1 overflow-hidden min-h-[240px]">
       <h2 className="text-fontPrimary text-xl font-semibold">My Goals</h2>
-      <div className="h-full min-w-[180px]">
+      <div className="h-full">
         <Tabs
           defaultValue={tab}
           onValueChange={handleChangeTab}
-          className="flex flex-col pb-sm"
+          className="flex flex-col"
         >
           <TabsList className="grid w-full grid-cols-3 mt-sm mb-md">
             <TabsTrigger value="YEAR">Year</TabsTrigger>

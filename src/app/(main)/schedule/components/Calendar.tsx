@@ -24,7 +24,7 @@ const Calendar = () => {
   )
 
   return (
-    <div className="flex w-auto justify-center">
+    <div className="flex justify-center">
       <CalendarUI
         onDayClick={setDate}
         modifiers={memoizedModifiers}
