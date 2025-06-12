@@ -1,12 +1,16 @@
 'use client'
 
-import FormActionWrapper from '@/components/FormActionWrapper'
-import { Trash2 } from 'lucide-react'
 import React, { useActionState } from 'react'
-import { createNewsKeyword, deleteNewsCategory, INewsKeyword } from '../actions'
-import { Button } from '@/components/ui'
+import { Trash2 } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getNewsKeyword } from '../actions'
+
+import {
+  createNewsKeyword,
+  deleteNewsCategory,
+  getNewsKeyword,
+  INewsKeyword,
+} from '../actions'
+import { Button, FormActionWrapper } from '@/components/shared'
 import { useNewsStore } from '@/stores/useNewsStore'
 
 const Keyword = () => {

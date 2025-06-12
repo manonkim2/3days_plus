@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { format } from 'date-fns'
 
-import { Button } from '@/components/ui'
+import { Button } from '@/components/shared'
 import { cn } from '@/utils/cn'
 import DropDown from '@/components/DropDown'
 import { IRoutine } from '@/types/schedule'

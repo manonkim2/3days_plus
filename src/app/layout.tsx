@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { Poppins } from 'next/font/google'
 
 import Navbar from '@/components/Navbar'
-import ReactQueryProvider from '@/components/ReactQueryProvider'
+import ReactQueryProvider from '@/lib/ReactQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { ToastProvider } from '@/components/ui/toast'
 

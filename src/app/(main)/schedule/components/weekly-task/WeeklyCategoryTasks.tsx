@@ -9,11 +9,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { Badge } from '@/components/ui'
+
 import AlertButton from '@/components/AlertButton'
 import { getShortDate } from '@/utils/formmattedDate'
 import { useTasks } from '../task/useTasks'
 import { deleteCategory } from '../task/actions'
+import { Badge } from '@/components/shared'
 
 const WeeklyCategoryTasks = ({
   handleChangeCategory,

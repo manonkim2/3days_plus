@@ -1,7 +1,11 @@
 'use client'
 
-import { Button, Input } from '@/components/ui'
-import { Skeleton } from '@/components/ui/skeleton'
+import Image from 'next/image'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { Search } from 'lucide-react'
+
+import { Button, Input, Skeleton } from '@/components/shared'
 import {
   Sheet,
   SheetTrigger,
@@ -12,10 +16,6 @@ import {
 } from '@/components/ui/sheet'
 import { IPhotos } from '@/types/unsplash'
 import { fetcher } from '@/lib/fetcher'
-import { useQuery } from '@tanstack/react-query'
-import { Search } from 'lucide-react'
-import Image from 'next/image'
-import { useState } from 'react'
 
 const TitleImageSheet = () => {
   const [search, setSearch] = useState('')

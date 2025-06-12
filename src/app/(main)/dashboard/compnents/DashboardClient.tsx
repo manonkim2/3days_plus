@@ -7,10 +7,10 @@ import { IQuotes } from '../actions'
 import DashboardSummary from './DashboardSummary'
 import News from './News'
 import Title from './Title'
-import Footer from '@/components/Footer'
 import { IWeatherData } from '@/lib/getWeather'
 import { RssNewsType } from '@/types/rss'
 import { IRoutine, IroutineLog, ITask } from '@/types/schedule'
+import { Footer } from '@/components/shared'
 
 interface DashboardClientProps {
   user: string

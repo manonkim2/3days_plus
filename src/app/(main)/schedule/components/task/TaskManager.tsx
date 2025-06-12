@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import TaskList from './TaskList'
-import Box from '@/components/Box'
+import Box from '@/components/shared/Box'
 const DayTaskChart = dynamic(() => import('./DayTaskChart'), { ssr: false })
 
 const TaskManager = () => {

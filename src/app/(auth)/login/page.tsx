@@ -2,7 +2,7 @@
 
 import GoogleIcon from '@/components/icons/GoogleIcon'
 import KakaoIcon from '@/components/icons/KakaoIcon'
-import { Button } from '@/components/ui'
+import { Button } from '@/components/shared'
 import { supabase } from '@/lib/supabase/client'
 
 const Login = () => {

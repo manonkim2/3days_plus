@@ -1,8 +1,9 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Calendar as CalendarUI } from '@/components/ui'
+
 import { useDateStore } from '@/stores/useDateStore'
+import { Calendar as CalendarUI } from '@/components/ui/calendar'
 
 const Calendar = () => {
   const { date, week, setDate } = useDateStore()

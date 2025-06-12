@@ -1,6 +1,7 @@
 import React from 'react'
-import { Input } from '@ui'
+
 import { Plus } from 'lucide-react'
+import { Input } from '.'
 
 interface IFormActionWrapperProps {
   formAction: (payload: FormData) => void

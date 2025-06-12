@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import Box from '@/components/Box'
+import Box from '@/components/shared/Box'
 import { useState } from 'react'
 
 const WeeklyCategoryTasks = dynamic(() => import('./WeeklyCategoryTasks'), {

@@ -4,7 +4,7 @@ import GoalManager from './components/goal/GoalManager'
 import RoutineManager from './components/routine/RoutineManager'
 import TaskManager from './components/task/TaskManager'
 import WeeklyTaskManager from './components/weekly-task/WeeklyTaskManager'
-import Footer from '@/components/Footer'
+import { Footer } from '@/components/shared'
 
 export const metadata: Metadata = {
   title: '3Days+ | Daily Schedule & Routine',

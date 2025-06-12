@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { GoalType } from '@/prisma/client'
 
-import Box from '@/components/Box'
+import Box from '@/components/shared/Box'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
 const GoalList = dynamic(() => import('./GoalList'))
 
 const GoalManager = () => {

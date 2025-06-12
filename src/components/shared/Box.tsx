@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from './ui/card'
+} from '../ui/card'
 import { cn } from '@/utils/cn'
 
 interface IBoxProps {

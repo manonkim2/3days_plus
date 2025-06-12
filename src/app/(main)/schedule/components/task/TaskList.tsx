@@ -12,12 +12,10 @@ import {
   updateContentTask,
 } from './actions'
 import { useTasks } from './useTasks'
-import Checkbox from '@/components/Checkbox'
-import FormActionWrapper from '@/components/FormActionWrapper'
 import LoadingOverlay from '@/components/LoadingOverlay'
-import { Input } from '@/components/ui'
 import { Combobox } from '@/app/(main)/schedule/components/task/Combobox'
 import { useDateStore } from '@/stores/useDateStore'
+import { FormActionWrapper, Input, CustomCheckbox } from '@/components/shared'
 
 const TaskList = () => {
   const queryClient = useQueryClient()
@@ -157,7 +155,7 @@ const TaskList = () => {
             <div key={id}>
               {isEditing ? (
                 <div className="flex justify-between w-full px-xs">
-                  <Checkbox
+                  <CustomCheckbox
                     id={`task-${id}`}
                     checked={completed}
                     text={content}

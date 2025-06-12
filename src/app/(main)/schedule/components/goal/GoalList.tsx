@@ -10,8 +10,9 @@ import { useGoalItems } from './useGoalItem'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { GoalType } from '@/prisma/client'
-import Checkbox from '@/components/Checkbox'
+
 import { useDateStore } from '@/stores/useDateStore'
+import { CustomCheckbox } from '@/components/shared'
 
 const GoalList = ({ tab }: { tab: GoalType }) => {
   const { date } = useDateStore()
@@ -139,7 +140,7 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
                 goal.completed ? 'opacity-60' : 'bg-card hover:bg-accent'
               }`}
             >
-              <Checkbox
+              <CustomCheckbox
                 id={`goal-${tab}-${goal.id}`}
                 checked={goal.completed}
                 text={goal.content}

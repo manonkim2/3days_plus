@@ -8,7 +8,7 @@ import { motion, useInView } from 'framer-motion'
 
 import { NewsItem, RssNewsType } from '@/types/rss'
 import { getFormattedDate } from '@/utils/formmattedDate'
-import { Button } from '@/components/ui'
+import { Button } from '@/components/shared'
 
 const News = ({ news }: { news: RssNewsType[] }) => {
   const queryClient = useQueryClient()

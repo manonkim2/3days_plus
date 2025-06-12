@@ -3,9 +3,8 @@
 import RoutineCard from './RoutineCard'
 import { useRoutineManager } from './useRoutineManager'
 import { getDateWithWeek } from '@/utils/formmattedDate'
-import FormActionWrapper from '@/components/FormActionWrapper'
-import Box from '@/components/Box'
 import { useDateStore } from '@/stores/useDateStore'
+import { Box, FormActionWrapper } from '@/components/shared'
 
 const RoutineManager = () => {
   const { date, week } = useDateStore()

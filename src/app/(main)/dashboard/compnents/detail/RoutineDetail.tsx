@@ -4,7 +4,7 @@ import Link from 'next/link'
 import RoutineChart from './RoutineChart'
 import { IRoutine, IroutineLog } from '@/types/schedule'
 import { cn } from '@/utils/cn'
-import { Button } from '@/components/ui'
+import { Button } from '@/components/shared'
 
 interface IRoutineDetail {
   routines: IRoutine[]

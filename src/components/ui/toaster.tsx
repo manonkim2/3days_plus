@@ -1,6 +1,6 @@
 'use client'
 
-import { useToast } from '../useToast'
+import { useToast } from '@/lib/useToast'
 import {
   Toast,
   ToastClose,

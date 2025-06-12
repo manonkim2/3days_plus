@@ -1,7 +1,7 @@
 'use client'
 
-import { Badge } from './ui/badge'
-import { Checkbox as CheckboxUI } from './ui/checkbox'
+import { Badge } from '../ui/badge'
+import { Checkbox } from '../ui/checkbox'
 
 interface ICheckboxProps {
   id: string
@@ -12,7 +12,7 @@ interface ICheckboxProps {
   onClick?: () => void
 }
 
-const Checkbox = ({
+const CustomCheckbox = ({
   id,
   text,
   checked,
@@ -23,7 +23,7 @@ const Checkbox = ({
   return (
     <div className="flex items-center space-x-2 py-sm">
       <div onClick={onClick} className="flex">
-        <CheckboxUI id={id} checked={checked} disabled={disabled} />
+        <Checkbox id={id} checked={checked} disabled={disabled} />
       </div>
       {badge && <Badge variant="outline">{badge}</Badge>}
       <label
@@ -36,4 +36,4 @@ const Checkbox = ({
   )
 }
 
-export default Checkbox
+export default CustomCheckbox

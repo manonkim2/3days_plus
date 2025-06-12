@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import { cn } from '@/utils/cn'
 import { ITask } from '@/types/schedule'
-import { Button } from '@/components/ui'
-import Link from 'next/link'
+import { Button } from '@/components/shared'
 
 const TasksDetail = ({ tasks }: { tasks: ITask[] }) => {
   return (

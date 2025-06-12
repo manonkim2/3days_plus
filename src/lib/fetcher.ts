@@ -1,4 +1,4 @@
-import { toast } from '@/components/useToast'
+import { toast } from '@/lib/useToast'
 import { RequestInit } from 'next/dist/server/web/spec-extension/request'
 
 interface IFetcherOptions extends RequestInit {

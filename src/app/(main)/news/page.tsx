@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { getUserInfo } from '@/lib/supabase/actions'
+import { Footer } from '@/components/shared'
 import NewsList from './components/NewsList'
-import Footer from '@/components/Footer'
 
 export const dynamic = 'force-dynamic'
 
