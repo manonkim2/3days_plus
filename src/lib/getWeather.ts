@@ -10,6 +10,8 @@ export interface IWeatherData {
   wind: number
   sunrise: number
   sunset: number
+  temp_min: number
+  temp_max: number
 }
 
 export const getWeather = async (city: string): Promise<IWeatherData> => {
@@ -38,6 +40,8 @@ export const getWeather = async (city: string): Promise<IWeatherData> => {
       wind: data.wind.speed,
       sunrise: data.sys.sunrise,
       sunset: data.sys.sunset,
+      temp_max: data.main.temp_max,
+      temp_min: data.main.temp_min,
     }
   } catch (error) {
     console.error('[getWeather Error]', error)
@@ -52,6 +56,8 @@ export const getWeather = async (city: string): Promise<IWeatherData> => {
       wind: 0,
       sunrise: 0,
       sunset: 0,
+      temp_max: 0,
+      temp_min: 0,
     }
   }
 }

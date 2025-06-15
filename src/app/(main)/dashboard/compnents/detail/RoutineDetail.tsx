@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import RoutineChart from './RoutineChart'
+import { useRouter } from 'next/navigation'
 import { IRoutine, IroutineLog } from '@/types/schedule'
 import { cn } from '@/utils/cn'
 import { Button } from '@/components/shared'
@@ -12,11 +11,10 @@ interface IRoutineDetail {
 }
 
 const RoutineDetail = ({ completedRoutines, routines }: IRoutineDetail) => {
+  const router = useRouter()
+
   return (
     <div className="flex flex-col justify-between h-full">
-      <h2 className="text-xl text-fontTertiary">
-        🔁 Today&apos;s Routine Completion
-      </h2>
       <div className="flex flex-col gap-md overflow-hidden h-full justify-center">
         {routines.length === 0 ? (
           <div className="flex justify-center items-center text-fontSecondary border border-dashed rounded-md h-full text-base mt-md">
@@ -24,24 +22,21 @@ const RoutineDetail = ({ completedRoutines, routines }: IRoutineDetail) => {
             <br /> Let&apos;s set one up and start building great habits!
           </div>
         ) : (
-          <div className="grid grid-cols-[1fr_2fr] gap-md">
-            <div className="flex flex-col gap-sm">
-              {routines.map(({ name, id }) => (
-                <RoutineCard
-                  key={id}
-                  title={name}
-                  completed={completedRoutines.some(
-                    (log) => log.routineId === id,
-                  )}
-                />
-              ))}
-            </div>
-            <RoutineChart totalRoutines={routines.length} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-sm overflow-y-scroll">
+            {routines.map(({ name, id }) => (
+              <RoutineCard
+                key={id}
+                title={name}
+                completed={completedRoutines.some(
+                  (log) => log.routineId === id,
+                )}
+              />
+            ))}
           </div>
         )}
       </div>
-      <Button asChild className="w-full mt-md" variant="outline">
-        <Link href="/schedule">Go to Task Schedule Page</Link>
+      <Button onClick={() => router.push('/schedule')}>
+        Go to Schedule Page
       </Button>
     </div>
   )

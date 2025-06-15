@@ -16,9 +16,9 @@ import { getTask } from './(main)/schedule/components/task/actions'
 const DashBoardPage = async () => {
   const [user, weather, quotes, news] = await Promise.all([
     getUserInfo(),
-    fetcher<IWeatherData>('/api/weather', { cache: 'force-cache' }),
+    fetcher<IWeatherData>('/api/weather', { next: { revalidate: 300 } }),
     fetcher<IQuotes[]>('/api/quotes', { cache: 'force-cache' }),
-    fetcher<RssNewsType[]>('/api/rss', { cache: 'force-cache' }),
+    fetcher<RssNewsType[]>('/api/rss', { next: { revalidate: 1200 } }),
   ])
 
   const [routines, routinelog, tasks, pinnedQuote] = user?.id
@@ -34,7 +34,7 @@ const DashBoardPage = async () => {
     <>
       <div className="absolute bg-black/30 inset-0">
         <Image
-          src="/background.jpg"
+          src="/back.jpg"
           alt="fullscreen background"
           fill
           className="fixed inset-0 object-cover -z-50"
@@ -43,7 +43,7 @@ const DashBoardPage = async () => {
       </div>
 
       <DashboardClient
-        user={user?.name || ''}
+        user={user?.name || null}
         weather={weather}
         quotes={quotes}
         news={news}

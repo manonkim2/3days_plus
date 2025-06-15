@@ -3,17 +3,16 @@
 import { serverCreateClient } from './server'
 import db from '../db'
 import { getSiteEnv } from '../env'
+import { cache } from 'react'
 
-const getUserInfo = async () => {
+const getUserInfo = cache(async () => {
   try {
     const supabase = await serverCreateClient()
     const {
       data: { user },
     } = await supabase.auth.getUser()
 
-    if (!user) {
-      return null
-    }
+    if (!user) return null
 
     const identity = user.identities || []
     const socialLogin = identity?.length > 1 ? identity[1] : identity[0]
@@ -33,16 +32,12 @@ const getUserInfo = async () => {
       },
     })
 
-    if (!userInfo?.id) {
-      return null
-    }
-
-    return userInfo
+    return userInfo ?? null
   } catch (error) {
     console.error('Error fetching user info:', error)
     return null
   }
-}
+})
 
 const signOut = async () => {
   const supabase = await serverCreateClient()

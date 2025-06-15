@@ -45,7 +45,7 @@ const Title = ({
   onTypingDone,
   showDashboard,
 }: {
-  user: string
+  user: string | null
   onTypingDone?: () => void
   showDashboard: boolean
 }) => {

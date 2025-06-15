@@ -17,6 +17,8 @@ export const useWeatherSuggestion = (weather?: IWeatherData) => {
           description: weather.description,
           humidity: weather.humidity,
           wind: weather.wind,
+          min: weather.temp_min,
+          max: weather.temp_max,
         }),
       })
 
@@ -26,6 +28,6 @@ export const useWeatherSuggestion = (weather?: IWeatherData) => {
       return data.suggestion as string
     },
     enabled: !!weather,
-    staleTime: 1000 * 60 * 60 * 12,
+    staleTime: 1000 * 60 * 60 * 3,
   })
 }

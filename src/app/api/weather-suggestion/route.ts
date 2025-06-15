@@ -7,17 +7,22 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { temperature, feels_like, description, humidity, wind } = body
+  const { temperature, feels_like, description, humidity, wind, min, max } =
+    body
+  const now = new Date()
 
   const prompt = `
   현재 날씨 정보는 다음과 같아:
-  - 기온: ${temperature}°C
-  - 체감 온도: ${feels_like}°C
-  - 날씨 상태: ${description}
-  - 습도: ${humidity}%
-  - 바람: ${wind} m/s
-  
-  이 날씨에 맞는 옷차림을 친절하고 따뜻한 말투로 60자이내로 한 문장만 추천해줘`
+  기온: ${temperature}°C
+  체감 온도: ${feels_like}°C
+  날씨 상태: ${description}
+  습도: ${humidity}%
+  바람: ${wind} m/s
+  최저기온 : ${min}°C
+  최고기온 : ${max}°C
+  현재시간 : ${now}
+
+  지금 날씨에 맞는 옷차림을 친절하고 따뜻한 말투로 60자이내로 한 문장만 추천해줘`
 
   try {
     const response = await openai.chat.completions.create({

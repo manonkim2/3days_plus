@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowUpCircle } from 'lucide-react'
 
 import { IQuotes } from '../actions'
@@ -13,7 +13,7 @@ import { IRoutine, IroutineLog, ITask } from '@/types/schedule'
 import { Footer } from '@/components/shared'
 
 interface DashboardClientProps {
-  user: string
+  user: string | null
   weather: IWeatherData
   quotes: IQuotes[]
   news: RssNewsType[]
@@ -35,22 +35,35 @@ const DashboardClient = ({
 }: DashboardClientProps) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const [showDashboard, setShowDashboard] = useState(false)
+  const [showSummary, setShowSummary] = useState(false)
 
   const scrollToTop = () => {
     ref.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const handleTypingComplete = () => {
+    sessionStorage.setItem('visitedDashboard', 'true')
+    setShowSummary(true)
+  }
+
+  useEffect(() => {
+    const visited = sessionStorage.getItem('visitedDashboard') === 'true'
+
+    if (visited) {
+      setShowSummary(true)
+    }
+  }, [])
+
   return (
     <div className="relative z-10 h-screen overflow-y-auto px-md" ref={ref}>
       <Title
         user={user}
-        onTypingDone={() => setShowDashboard(true)}
-        showDashboard={showDashboard}
+        onTypingDone={handleTypingComplete}
+        showDashboard={showSummary}
       />
       <div
         className={`transition-opacity duration-700 ease-in-out ${
-          showDashboard ? 'opacity-100' : 'opacity-0'
+          showSummary ? 'opacity-100' : 'opacity-0'
         }`}
       >
         <DashboardSummary
@@ -60,6 +73,7 @@ const DashboardClient = ({
           tasks={tasks}
           quotes={quotes}
           pinnedQuote={pinnedQuote}
+          isLogin={Boolean(user)}
         />
       </div>
 
