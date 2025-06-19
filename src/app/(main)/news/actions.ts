@@ -29,8 +29,9 @@ export const createNewsKeyword = async (formData: FormData) => {
     return { errors: [] }
   }
 
+  const userId = await getUserIdOrThrow()
   const existing = await db.newsKeyword.findFirst({
-    where: { keyword },
+    where: { keyword, userId },
   })
 
   if (existing) {
@@ -42,8 +43,6 @@ export const createNewsKeyword = async (formData: FormData) => {
   }
 
   try {
-    const userId = await getUserIdOrThrow()
-
     const newKeyword = await db.newsKeyword.create({
       data: {
         keyword,

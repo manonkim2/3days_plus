@@ -9,9 +9,9 @@ const TaskDetail = ({ tasks }: { tasks: ITask[] }) => {
 
   return (
     <div className="flex flex-col justify-between h-full">
-      <div className="grid grid-cols-1 overflow-y-scroll gap-sm">
+      <div className="grid grid-cols-1 overflow-y-scroll gap-sm h-full">
         {!tasks.length && (
-          <div className="flex justify-center items-center text-fontSecondary border border-dashed rounded-md h-full text-base">
+          <div className="flex justify-center items-center text-fontTertiary border border-dashed rounded-md text-base mb-sm">
             Let&apos;s plan your day!
           </div>
         )}

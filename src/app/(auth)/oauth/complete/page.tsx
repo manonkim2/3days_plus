@@ -4,6 +4,7 @@ import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { Loader2 } from 'lucide-react'
+import { signOut } from '@/lib/supabase/actions'
 
 const OAuthHandler = () => {
   const router = useRouter()
@@ -13,6 +14,7 @@ const OAuthHandler = () => {
 
   useEffect(() => {
     const handleOAuth = async () => {
+      await signOut()
       if (!code) return
 
       const {

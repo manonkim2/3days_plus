@@ -17,7 +17,7 @@ const RoutineDetail = ({ completedRoutines, routines }: IRoutineDetail) => {
     <div className="flex flex-col justify-between h-full">
       <div className="flex flex-col gap-md overflow-hidden h-full justify-center">
         {routines.length === 0 ? (
-          <div className="flex justify-center items-center text-fontSecondary border border-dashed rounded-md h-full text-base mt-md">
+          <div className="flex justify-center items-center text-fontTertiary border border-dashed rounded-md text-base mb-sm h-full">
             No routines yet?
             <br /> Let&apos;s set one up and start building great habits!
           </div>
