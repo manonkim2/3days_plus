@@ -34,10 +34,7 @@ export const metadata: Metadata = {
     siteName: '3Days+',
     images: [
       {
-        /**
-         * @todo og-image public에 넣기
-         */
-        url: '/og-image.png',
+        url: 'https://3daysplus.vercel.app/og-thumbnail.webp',
         width: 1200,
         height: 630,
         alt: '3Days+ OG Image',
