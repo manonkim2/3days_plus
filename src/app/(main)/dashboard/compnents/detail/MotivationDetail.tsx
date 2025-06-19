@@ -27,7 +27,7 @@ const MotivationDetail = ({ quotes }: IRoutineDetail) => {
 
   return (
     <div className="flex flex-col gap-md overflow-hidden h-full">
-      <h2 className="text-xl text-fontTertiary">
+      <h2 className="text-base text-fontTertiary">
         🔥 Pick Your Favorite Quote for the Day
       </h2>
       <div className="flex flex-col gap-sm overflow-y-scroll">

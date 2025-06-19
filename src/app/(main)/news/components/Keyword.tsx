@@ -13,7 +13,7 @@ import {
 import { Button, FormActionWrapper } from '@/components/shared'
 import { useNewsStore } from '@/stores/useNewsStore'
 
-const Keyword = () => {
+const Keyword = ({ isUser }: { isUser: boolean }) => {
   const queryClient = useQueryClient()
 
   const selectedKeyword = useNewsStore((s) => s.selectedKeyword)
@@ -55,8 +55,8 @@ const Keyword = () => {
       <div className="w-full sm:w-[480px]">
         <FormActionWrapper
           formAction={formAction}
-          placeholder="관심 있는 뉴스 키워드를 등록하고 소식을 받아보세요."
-          disabled={isPending}
+          placeholder={`${!isUser ? '로그인 후' : ''} 나만의 뉴스 키워드를 등록하고 맞춤 소식을 받아보세요!`}
+          disabled={isPending || !isUser}
           errors={formState.errors}
         />
       </div>
@@ -69,7 +69,7 @@ const Keyword = () => {
         >
           오늘의 뉴스
         </Button>
-        {keywords?.length === 0 && !isLoading && (
+        {((keywords?.length === 0 && !isLoading) || !isUser) && (
           <div className="border border-dashed rounded-md text-sm text-gray-400 px-sm flex items-center justify-center">
             ex. 삼성전자
           </div>
