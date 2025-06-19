@@ -28,14 +28,13 @@
 ## 🛠️ 기술 스택
 
 ```txt
-⚛️ Next.js (App Router)
-🚀 React Query
-🛠️ Prisma
-☁️ Supabase
-🎨 Tailwind CSS
-🎬 Framer Motion
-🖼️ Unsplash API, Naver News API
-📡 RSS Feed (실시간 뉴스 제공)
+• Framework: Next.js 15 (App Router), TypeScript
+• Styling: TailwindCSS, Shadcn, clsx
+• State Management: React Query, Zustand
+• Data Layer: Prisma (ORM), Supabase (Auth + DB)
+• Animation: Framer Motion
+• Form & Validation: Zod 기반 타입 유효성 검사
+• Etc: Yarn, Github Action, Vercel, RSS Parser, ESLint, Prettier,  
 ```
 
 <br>
