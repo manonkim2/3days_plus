@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.png',
   },
 }
 

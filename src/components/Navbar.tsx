@@ -27,10 +27,10 @@ const Navbar = async () => {
       <Link href="/">
         <div className="flex items-center gap-xs">
           <Image
-            src={'/favicon.ico'}
-            width={32}
-            height={32}
-            alt="web_icon"
+            src={'/favicon.png'}
+            width={28}
+            height={28}
+            alt="3days_favicon"
             unoptimized
           />
           <span className="hidden sm:block text-xl font-extrabold font-poppins text-fontTertiary">
