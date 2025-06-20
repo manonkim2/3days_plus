@@ -142,6 +142,7 @@ const DashboardSummary = ({
         <Progress
           aria-label="오늘의 할일 완료율"
           value={tasksCompletedPercent}
+          className="bg-white/10"
         />
       </SummaryCard>
 
@@ -168,6 +169,7 @@ const DashboardSummary = ({
         <Progress
           aria-label="오늘의 루틴 완료율"
           value={routineCompletedPercent}
+          className="bg-white/10"
         />
       </SummaryCard>
     </div>

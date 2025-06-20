@@ -7,15 +7,16 @@ import { format } from 'date-fns'
 import {
   createCategory,
   createTask,
+  deleteCategory,
   deleteTask,
   updateCheckTask,
   updateContentTask,
 } from './actions'
 import { useTasks } from './useTasks'
 import LoadingOverlay from '@/components/LoadingOverlay'
-import { Combobox } from '@/app/(main)/schedule/components/task/Combobox'
 import { useDateStore } from '@/stores/useDateStore'
 import { FormActionWrapper, Input, CustomCheckbox } from '@/components/shared'
+import Combobox from './Combobox'
 
 const TaskList = () => {
   const queryClient = useQueryClient()
@@ -113,6 +114,15 @@ const TaskList = () => {
     }
   }
 
+  const handleDeleteCategory = useCallback(
+    async (id: number) => {
+      if (!id) return
+      await deleteCategory(id)
+      queryClient.invalidateQueries({ queryKey: ['category'] })
+    },
+    [queryClient],
+  )
+
   if (isLoading) return <LoadingOverlay />
 
   return (
@@ -125,9 +135,10 @@ const TaskList = () => {
           }))}
           value={category}
           setStateAction={setCategory}
-          commandInput={
+          handleDeleteCategory={handleDeleteCategory}
+          inputSlot={
             <FormActionWrapper
-              placeholder="Add category name"
+              placeholder="Add category"
               formAction={createCategoryMutation.mutate}
               disabled={createCategoryMutation.isPending}
             />
@@ -183,6 +194,7 @@ const TaskList = () => {
                     }))}
                     value={editCategory}
                     setStateAction={setEditCategory}
+                    handleDeleteCategory={handleDeleteCategory}
                   />
                   <Input
                     type="text"
