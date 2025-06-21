@@ -136,13 +136,7 @@ const TaskList = () => {
           value={category}
           setStateAction={setCategory}
           handleDeleteCategory={handleDeleteCategory}
-          inputSlot={
-            <FormActionWrapper
-              placeholder="Add category"
-              formAction={createCategoryMutation.mutate}
-              disabled={createCategoryMutation.isPending}
-            />
-          }
+          formAction={createCategoryMutation.mutate}
         />
         <FormActionWrapper
           formAction={createTaskMutation.mutate}
@@ -195,6 +189,7 @@ const TaskList = () => {
                     value={editCategory}
                     setStateAction={setEditCategory}
                     handleDeleteCategory={handleDeleteCategory}
+                    formAction={createCategoryMutation.mutate}
                   />
                   <Input
                     type="text"
