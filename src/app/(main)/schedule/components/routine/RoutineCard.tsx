@@ -4,9 +4,9 @@ import { useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { format } from 'date-fns'
 
+import Dropdown from './Dropdown'
 import { Button } from '@/components/shared'
 import { cn } from '@/utils/cn'
-import DropDown from '@/components/DropDown'
 import { IRoutine } from '@/types/schedule'
 
 interface IRoutineCardProps {
@@ -80,21 +80,21 @@ const RoutineCard = ({
   return (
     <div
       className={cn(
-        'flex flex-col justify-between relative border gap-sm rounded-lg h-[100px] min-w-[144px] p-sm lg:p-lg mt-md',
+        'flex flex-col justify-between relative border gap-sm rounded-lg h-[100px] min-w-[144px] p-lg lg:p-lg mt-md',
       )}
     >
       <motion.div
         initial={{ clipPath: 'circle(0% at 0% 0%)' }}
         animate={controls}
         className="absolute left-0 top-0 h-full w-full bg-black opacity-10 pointer-events-none"
-      ></motion.div>
+      />
 
       <div className="flex justify-between items-center">
         <span className="text-lg font-semibold">{routine.name}</span>
-        <DropDown
+        <Dropdown
           disabled={Boolean(!routine.logId)}
-          onClickUndo={() => onClickUndo(routine.logId)}
-          onClickDelete={() => onClickDelete(routine.id)}
+          onUndo={() => onClickUndo(routine.logId)}
+          onDelete={() => onClickDelete(routine.id)}
         />
       </div>
 
