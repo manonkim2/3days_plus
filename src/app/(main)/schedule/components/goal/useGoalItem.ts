@@ -10,11 +10,26 @@ import {
   GoalItem,
   toggleGoalItem,
 } from './actions'
+import { useDateStore } from '@/stores/useDateStore'
+import { getWeekKey } from '@/utils/formmattedDate'
 
-export const useGoalItems = (type: GoalType, date: Date) => {
+export const useGoalItems = (type: GoalType) => {
   const queryClient = useQueryClient()
+  const { date } = useDateStore()
 
-  const queryKey = ['goalItems', type, format(date, 'yyyy-MM-dd')]
+  const getDateKey = () => {
+    if (type === 'WEEK') {
+      return getWeekKey(date)
+    }
+    if (type === 'MONTH') {
+      return format(date, 'yyyy-MM')
+    }
+    if (type === 'YEAR') {
+      return format(date, 'yyyy')
+    }
+  }
+
+  const queryKey = ['goalItems', type, getDateKey()]
 
   const { data = [], isLoading } = useQuery<GoalItem[]>({
     queryKey,

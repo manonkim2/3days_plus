@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 const Footer = () => (
-  <footer className="container flex justify-between h-[280px] py-[56px] px-lg text-sm text-fontTertiary font-poppins">
+  <footer className="container flex justify-between h-[280px] py-[56px] px-lg text-sm text-fontTertiary font-poppins bg-transparent">
     <div className="flex flex-col justify-end">
       <p className="text-md font-bold">3DAYS+</p>
       <p className="font-light">© 2025 Wonyoung Kim. All rights reserved.</p>
@@ -32,7 +32,7 @@ const Footer = () => (
           </Link>
           <Link href="mailto:kim.manon2@gmail.com">Email</Link>
           <Link
-            href="https://manon-kim.tistory.com/"
+            href="https://manon-kim.tistory.com/category/Project"
             target="_blank"
             rel="noopener noreferrer"
           >

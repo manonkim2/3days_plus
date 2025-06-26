@@ -1,7 +1,7 @@
 'use server'
 
 import db from '@/lib/db'
-import { endOfDay, startOfDay } from 'date-fns'
+import { addDays, startOfDay } from 'date-fns'
 import { getKoreanTime } from '@/utils/formmattedDate'
 import { getUserIdOrThrow } from '@/lib/auth'
 import { ITask } from '@/types/schedule'
@@ -46,15 +46,15 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
   try {
     const userId = await getUserIdOrThrow()
     const selectedDate = date || new Date()
-    const startDate = getKoreanTime(startOfDay(selectedDate))
-    const endDate = getKoreanTime(endOfDay(selectedDate))
+    const start = startOfDay(selectedDate)
+    const end = addDays(start, 1)
 
     return db.task.findMany({
       where: {
         userId,
         date: {
-          gte: startDate,
-          lt: endDate,
+          gte: start,
+          lt: end,
         },
       },
       select: {

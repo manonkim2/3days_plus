@@ -1,10 +1,17 @@
-import { format } from 'date-fns'
+import { format, startOfWeek } from 'date-fns'
 
 /**
  * @returns MM/DD 형식 변환 (예: "02/04")
  */
 export function getShortDate(date: Date = new Date()): string {
   return format(date, 'MM/dd')
+}
+
+/**
+ * @returns yyyy-MM-dd 형식 변환 (예: "2025-06-26")
+ */
+export function getDate(date: Date = new Date()): string {
+  return format(date, 'yyyy-MM-dd')
 }
 
 /**
@@ -36,4 +43,12 @@ export function getFormattedDate(dateString: string | undefined): string {
  */
 export function getKoreanTime(date: Date = new Date()): Date {
   return new Date(date.getTime() + 9 * 60 * 60 * 1000)
+}
+
+/**
+ * date 해당주의 시작일 (일요일부터 시작)
+ * @return yyyy-MM-dd
+ */
+export function getWeekKey(date: Date) {
+  return format(startOfWeek(date, { weekStartsOn: 0 }), 'yyyy-MM-dd')
 }

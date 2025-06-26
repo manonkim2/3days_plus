@@ -1,7 +1,7 @@
 'use server'
 
 import db from '@/lib/db'
-import { endOfDay, startOfDay } from 'date-fns'
+import { endOfWeek, startOfDay, startOfWeek } from 'date-fns'
 import { Prisma } from '@/prisma/client'
 import { getKoreanTime } from '@/utils/formmattedDate'
 import { getUserIdOrThrow } from '@/lib/auth'
@@ -40,21 +40,32 @@ export const getRoutines = async (): Promise<IRoutine[]> => {
   }
 }
 
+/**
+ *
+ * @param date
+ * @param isWeek default:flase / true = 일주일 치 routine log
+ * @returns
+ */
 export const getRoutineLog = async (
-  day?: Date,
-  week?: Date[],
+  date: Date,
+  isWeek: boolean = false,
 ): Promise<IroutineLog[]> => {
   try {
     const userId = await getUserIdOrThrow()
     const whereCondition: Prisma.RoutineLogWhereInput = { userId }
 
-    if (day) {
-      whereCondition.date = getKoreanTime(startOfDay(day))
-    } else if (week && week.length > 0) {
+    const koreanTime = getKoreanTime(date)
+
+    const start = startOfWeek(koreanTime, { weekStartsOn: 0 })
+    const end = endOfWeek(koreanTime, { weekStartsOn: 0 })
+
+    if (isWeek)
       whereCondition.date = {
-        gte: getKoreanTime(startOfDay(week[0])),
-        lt: getKoreanTime(endOfDay(week[6])),
+        gte: start,
+        lt: end,
       }
+    else {
+      whereCondition.date = startOfDay(date)
     }
 
     return db.routineLog.findMany({

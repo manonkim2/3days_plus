@@ -5,43 +5,61 @@ import dynamic from 'next/dynamic'
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { MapPin } from 'lucide-react'
+import { format } from 'date-fns'
 
 import SummaryCard from './SummaryCard'
 import { getPinnedQuote, IQuotes } from '../actions'
 import { IWeatherData } from '@/lib/getWeather'
 import { Progress } from '@/components/ui/progress'
-import { ITask, IRoutine, IroutineLog } from '@/types/schedule'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/shared'
 import RoutineDetail from './detail/RoutineDetail'
 import MotivationDetail from './detail/MotivationDetail'
+import {
+  getRoutineLog,
+  getRoutines,
+} from '../../schedule/components/routine/actions'
+import { IRoutine, IroutineLog, ITask } from '@/types/schedule'
+import { getTask } from '../../schedule/components/task/actions'
 
 const WeatherDetail = dynamic(() => import('./detail/WeatherDetail'))
 const TaskDetail = dynamic(() => import('./detail/TaskDetail'))
 
 interface DashboardSummaryProps {
   weather: IWeatherData
-  routines: IRoutine[]
-  routineLog: IroutineLog[]
-  tasks: ITask[]
   quotes: IQuotes[]
-  pinnedQuote: number | null
   isLogin: boolean
 }
 
 const DashboardSummary = ({
   weather,
-  routines,
-  routineLog: completedRoutines,
-  tasks,
   quotes,
-  pinnedQuote,
   isLogin,
 }: DashboardSummaryProps) => {
   const router = useRouter()
+  const today = new Date()
+  const todayKey = format(today, 'yyyy-MM-dd')
+
+  const { data: completedRoutines = [] } = useQuery<IroutineLog[]>({
+    queryKey: ['routine-logs-day', todayKey],
+    queryFn: () => getRoutineLog(today),
+  })
+
+  const { data: routines = [] } = useQuery<IRoutine[]>({
+    queryKey: ['routines'],
+    queryFn: getRoutines,
+  })
+
+  const { data: tasks = [] as ITask[] } = useQuery<ITask[]>({
+    queryKey: ['tasks', todayKey],
+    queryFn: ({ queryKey }) => {
+      const [, date] = queryKey
+      return getTask(new Date(date as string))
+    },
+  })
 
   const routineCompletedPercent = Math.round(
-    (completedRoutines.length / routines?.length) * 100,
+    (completedRoutines?.length / routines?.length) * 100,
   )
 
   const tasksCompletedPercent =
@@ -54,8 +72,7 @@ const DashboardSummary = ({
   const { data: pinnedQuoteData } = useQuery({
     queryKey: ['pinned-quote'],
     queryFn: getPinnedQuote,
-    initialData: { quoteId: pinnedQuote },
-    enabled: Boolean(pinnedQuote),
+    enabled: isLogin,
   })
 
   const randomQuote = useMemo(() => {

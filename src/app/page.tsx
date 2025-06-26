@@ -12,23 +12,41 @@ import {
   getRoutineLog,
 } from './(main)/schedule/components/routine/actions'
 import { getTask } from './(main)/schedule/components/task/actions'
+import { format } from 'date-fns'
+import { prefetch } from '@/lib/prefetch'
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query'
+import { IRoutine, IroutineLog, ITask } from '@/types/schedule'
+import { getKoreanTime } from '@/utils/formmattedDate'
 
 const DashBoardPage = async () => {
+  const queryClient = new QueryClient()
+
   const [user, weather, quotes, news] = await Promise.all([
     getUserInfo(),
-    fetcher<IWeatherData>('/api/weather', { next: { revalidate: 300 } }),
-    fetcher<IQuotes[]>('/api/quotes', { cache: 'force-cache' }),
-    fetcher<RssNewsType[]>('/api/rss', { next: { revalidate: 1200 } }),
+    fetcher<IWeatherData>('/api/weather'),
+    fetcher<IQuotes[]>('/api/quotes'),
+    fetcher<RssNewsType[]>('/api/rss'),
   ])
 
-  const [routines, routinelog, tasks, pinnedQuote] = user?.id
-    ? await Promise.all([
-        getRoutines(),
-        getRoutineLog(new Date()),
-        getTask(),
+  if (user?.id) {
+    const today = getKoreanTime(new Date())
+    const todayKey = format(today, 'yyyy-MM-dd')
+
+    await Promise.all([
+      prefetch<IRoutine[]>(queryClient, ['routines'], () => getRoutines()),
+      prefetch<IroutineLog[]>(queryClient, ['routine-logs-day', todayKey], () =>
+        getRoutineLog(today),
+      ),
+      prefetch<ITask[]>(queryClient, ['tasks', todayKey], () => getTask()),
+      prefetch<{ quoteId: number } | null>(queryClient, ['pinned-quote'], () =>
         getPinnedQuote(),
-      ])
-    : [[], [], [], null]
+      ),
+    ])
+  }
 
   return (
     <>
@@ -42,16 +60,14 @@ const DashBoardPage = async () => {
         />
       </div>
 
-      <DashboardClient
-        user={user?.name || null}
-        weather={weather}
-        quotes={quotes}
-        news={news}
-        routines={routines}
-        routineLog={routinelog}
-        tasks={tasks}
-        pinnedQuote={pinnedQuote?.quoteId || null}
-      />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <DashboardClient
+          user={user?.name || null}
+          weather={weather}
+          quotes={quotes}
+          news={news}
+        />
+      </HydrationBoundary>
     </>
   )
 }

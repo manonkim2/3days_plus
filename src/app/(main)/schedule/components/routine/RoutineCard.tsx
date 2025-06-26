@@ -8,6 +8,7 @@ import Dropdown from './Dropdown'
 import { Button } from '@/components/shared'
 import { cn } from '@/utils/cn'
 import { IRoutine } from '@/types/schedule'
+import { getDate } from '@/utils/formmattedDate'
 
 interface IRoutineCardProps {
   routine: IRoutine & { logId?: number }
@@ -44,9 +45,9 @@ const RoutineCard = ({
       <div className="flex justify-between">
         {week.map((date, index) => {
           const day = format(date, 'EEE')[0]
-          const dateKey = format(date, 'yyyy-MM-dd')
-          const isCompleted = completedDay[dateKey]?.has(routine.id)
-          const isToday = dateKey === today
+          const selectedDate = getDate(date)
+          const isCompleted = completedDay[selectedDate]?.has(routine.id)
+          const isToday = selectedDate === today
 
           return (
             <span

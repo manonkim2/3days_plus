@@ -9,7 +9,6 @@ import News from './News'
 import Title from './Title'
 import { IWeatherData } from '@/lib/getWeather'
 import { RssNewsType } from '@/types/rss'
-import { IRoutine, IroutineLog, ITask } from '@/types/schedule'
 import { Footer } from '@/components/shared'
 
 interface DashboardClientProps {
@@ -17,10 +16,6 @@ interface DashboardClientProps {
   weather: IWeatherData
   quotes: IQuotes[]
   news: RssNewsType[]
-  routines: IRoutine[]
-  routineLog: IroutineLog[]
-  tasks: ITask[]
-  pinnedQuote: number | null
 }
 
 const DashboardClient = ({
@@ -28,10 +23,6 @@ const DashboardClient = ({
   weather,
   quotes,
   news,
-  routines,
-  routineLog,
-  tasks,
-  pinnedQuote,
 }: DashboardClientProps) => {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -68,11 +59,7 @@ const DashboardClient = ({
       >
         <DashboardSummary
           weather={weather}
-          routines={routines}
-          routineLog={routineLog}
-          tasks={tasks}
           quotes={quotes}
-          pinnedQuote={pinnedQuote}
           isLogin={Boolean(user)}
         />
       </div>

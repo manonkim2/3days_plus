@@ -19,7 +19,7 @@ const GoalList = ({ tab }: { tab: GoalType }) => {
   const [input, setInput] = useState('')
 
   const { goalItems, addGoal, toggleGoal, deleteGoal, isLoading } =
-    useGoalItems(tab, date)
+    useGoalItems(tab)
 
   const sortedGoals = useMemo(() => {
     return [...goalItems].sort(

@@ -11,11 +11,12 @@ import {
   unCompleteRoutine,
   deleteRoutine,
 } from './actions'
+import { getDate, getWeekKey } from '@/utils/formmattedDate'
 
 export const useRoutineManager = (date: Date, week: Date[]) => {
   const queryClient = useQueryClient()
-  const dateKey = format(date, 'yyyy-MM-dd')
-  const weekKey = week.map((d) => format(d, 'yyyy-MM-dd'))
+  const dateKey = getDate(date)
+  const weekKey = getWeekKey(week[0])
 
   const { data: routines = [] } = useQuery({
     queryKey: ['routines'],
@@ -23,8 +24,8 @@ export const useRoutineManager = (date: Date, week: Date[]) => {
   })
 
   const { data: logs = [] } = useQuery({
-    queryKey: ['routineLogs', ...weekKey],
-    queryFn: () => getRoutineLog(undefined, week),
+    queryKey: ['routine-logs-week', weekKey],
+    queryFn: () => getRoutineLog(week[0], true),
     enabled: week.length > 0,
   })
 
