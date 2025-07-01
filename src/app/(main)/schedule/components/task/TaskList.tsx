@@ -3,7 +3,6 @@
 import React, { useCallback, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Pencil, Save, Trash2 } from 'lucide-react'
-import { format } from 'date-fns'
 import {
   createCategory,
   createTask,
@@ -17,10 +16,11 @@ import LoadingOverlay from '@/components/LoadingOverlay'
 import { useDateStore } from '@/stores/useDateStore'
 import { FormActionWrapper, Input, CustomCheckbox } from '@/components/shared'
 import Combobox from './Combobox'
+import { getDate } from '@/utils/formmattedDate'
 
 const TaskList = () => {
   const queryClient = useQueryClient()
-  const { date } = useDateStore()
+  const { date, week } = useDateStore()
   const { tasks, categories, isLoading } = useTasks()
 
   const [category, setCategory] = useState<{
@@ -38,9 +38,12 @@ const TaskList = () => {
 
   const refreshTasks = useCallback(() => {
     queryClient.invalidateQueries({
-      queryKey: ['tasks', format(date, 'yyyy-MM-dd')],
+      queryKey: ['tasks', getDate(date)],
     })
-  }, [queryClient, date])
+    queryClient.invalidateQueries({
+      queryKey: ['tasks-week', getDate(week.start)],
+    })
+  }, [queryClient, date, week.start])
 
   const createCategoryMutation = useMutation({
     mutationFn: (formData: FormData) => createCategory(formData),

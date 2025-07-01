@@ -1,6 +1,5 @@
 'use client'
 
-import { useMemo } from 'react'
 import { eachDayOfInterval, format } from 'date-fns'
 import {
   CartesianGrid,
@@ -23,24 +22,35 @@ import { ITask } from '@/types/schedule'
 import { useQuery } from '@tanstack/react-query'
 import { getTask } from '../task/actions'
 import { getDate } from '@/utils/formmattedDate'
+import { getRoutineLog, getRoutines } from '../routine/actions'
 
 const chartConfig = {
   completionRate: {
-    label: 'task_completion_rate',
+    label: 'Task',
     color: 'hsl(var(--chart-2))',
   },
   routineCompletionRate: {
-    label: 'routine_completion_rate',
+    label: 'Routine',
     color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig
 
 const WeeklyTasksChart = () => {
-  const { week } = useDateStore()
+  const { date, week } = useDateStore()
 
   const weekdays = eachDayOfInterval({
     start: week.start,
     end: week.end,
+  })
+
+  const { data: routines = [] } = useQuery({
+    queryKey: ['routines'],
+    queryFn: getRoutines,
+  })
+
+  const { data: logs = [] } = useQuery({
+    queryKey: ['routine-logs-week', getDate(weekdays[0])],
+    queryFn: () => getRoutineLog(date, true),
   })
 
   const { data: tasks = [] } = useQuery<ITask[]>({
@@ -49,47 +59,57 @@ const WeeklyTasksChart = () => {
     enabled: !!week.start,
   })
 
-  const tasksByDay = useMemo(() => {
-    return weekdays.reduce(
-      (acc, day) => {
-        const formattedDay = format(day, 'yyyy-MM-dd')
-        acc[formattedDay] = tasks.filter(
-          (task) => format(task.date, 'yyyy-MM-dd') === formattedDay,
+  const groupByDate = <T extends { date: Date }>(
+    items: T[],
+    dates: Date[],
+  ): Record<string, T[]> => {
+    return dates.reduce(
+      (acc, date) => {
+        const key = format(date, 'yyyy-MM-dd')
+        acc[key] = items.filter(
+          (item) => format(item.date, 'yyyy-MM-dd') === key,
         )
         return acc
       },
-      {} as Record<string, typeof tasks>,
+      {} as Record<string, T[]>,
     )
-  }, [weekdays, tasks])
+  }
 
-  const chartData = useMemo(() => {
-    return weekdays.map((day) => {
-      const formattedDay = format(day, 'yyyy-MM-dd')
-      const tasksForDay = tasksByDay[formattedDay] || []
-      const completedCount = tasksForDay.filter((task) => task.completed).length
+  const tasksByDay = groupByDate(tasks, weekdays)
+  const logsByDay = groupByDate(logs, weekdays)
 
-      return {
-        day: format(day, 'EEE'),
-        completionRate:
-          tasksForDay.length > 0
-            ? Math.round((completedCount / tasksForDay.length) * 100)
-            : 0,
-      }
-    })
-  }, [tasksByDay, weekdays])
+  const chartData = weekdays.map((day) => {
+    const key = format(day, 'yyyy-MM-dd')
+    const tasksForDay = tasksByDay[key] || []
+    const logsForDay = logsByDay[key] || []
+
+    const completedCount = tasksForDay.filter((task) => task.completed).length
+
+    const routineCompletionRate =
+      routines.length > 0
+        ? Math.round((logsForDay.length / routines.length) * 100)
+        : 0
+
+    const completionRate =
+      tasksForDay.length > 0
+        ? Math.round((completedCount / tasksForDay.length) * 100)
+        : 0
+
+    return {
+      day: format(day, 'EEE'),
+      completionRate,
+      routineCompletionRate,
+    }
+  })
 
   return (
-    <ResponsiveContainer
-      width="100%"
-      height="75%"
-      className="block pr-xl"
-      // className="hidden lg:block pr-xl"
-    >
+    <ResponsiveContainer width="100%" height="80%" className="block pr-xl">
       <ChartContainer config={chartConfig}>
         <LineChart
           accessibilityLayer
           data={chartData}
           margin={{
+            top: 20,
             left: 12,
             right: 12,
           }}
@@ -113,50 +133,27 @@ const WeeklyTasksChart = () => {
           >
             <LabelList
               position="top"
-              offset={12}
+              offset={10}
               className="fill-foreground"
               fontSize={12}
             />
           </Line>
-          {/* <Line
-            dataKey="mobile"
+          <Line
+            dataKey="routineCompletionRate"
             type="monotone"
-            stroke="var(--color-mobile)"
+            stroke="var(--color-routineCompletionRate)"
             strokeWidth={2}
-            dot={false}
-          /> */}
+            dot={{ fill: 'var(--color-routineCompletionRate' }}
+          >
+            <LabelList
+              position="top"
+              offset={10}
+              className="fill-foreground"
+              fontSize={12}
+            />
+          </Line>
         </LineChart>
       </ChartContainer>
-      {/* <ChartContainer config={chartConfig}>
-        <BarChart accessibilityLayer data={chartData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="day"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-          <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-          <ChartLegend content={<ChartLegendContent />} />
-          <Bar
-            dataKey="completionRate"
-            fill="var(--color-completionRate)"
-            radius={[4, 4, 0, 0]}
-            barSize={16}
-            opacity={0.85}
-          />
-          {selectedCategoryId && (
-            <Bar
-              dataKey="categoryCompletionRate"
-              fill="var(--color-categoryCompletionRate)"
-              radius={[4, 4, 0, 0]}
-              barSize={16}
-              opacity={0.85}
-            />
-          )}
-        </BarChart>
-      </ChartContainer> */}
     </ResponsiveContainer>
   )
 }
