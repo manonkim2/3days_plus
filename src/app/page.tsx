@@ -20,7 +20,6 @@ import {
   QueryClient,
 } from '@tanstack/react-query'
 import { IRoutine, IroutineLog, ITask } from '@/types/schedule'
-import { getKoreanTime } from '@/utils/formmattedDate'
 
 const DashBoardPage = async () => {
   const queryClient = new QueryClient()
@@ -33,7 +32,7 @@ const DashBoardPage = async () => {
   ])
 
   if (user?.id) {
-    const today = getKoreanTime(new Date())
+    const today = new Date()
     const todayKey = format(today, 'yyyy-MM-dd')
 
     await Promise.all([
@@ -41,7 +40,9 @@ const DashBoardPage = async () => {
       prefetch<IroutineLog[]>(queryClient, ['routine-logs-day', todayKey], () =>
         getRoutineLog(today),
       ),
-      prefetch<ITask[]>(queryClient, ['tasks', todayKey], () => getTask()),
+      prefetch<ITask[]>(queryClient, ['tasks', todayKey], () =>
+        getTask(new Date()),
+      ),
       prefetch<{ quoteId: number } | null>(queryClient, ['pinned-quote'], () =>
         getPinnedQuote(),
       ),

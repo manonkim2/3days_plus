@@ -2,13 +2,14 @@
 
 import { useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
-import { format } from 'date-fns'
+import { eachDayOfInterval, endOfWeek, format, startOfWeek } from 'date-fns'
 
 import Dropdown from './Dropdown'
 import { Button } from '@/components/shared'
 import { cn } from '@/utils/cn'
 import { IRoutine } from '@/types/schedule'
 import { getDate } from '@/utils/formmattedDate'
+import { useDateStore } from '@/stores/useDateStore'
 
 interface IRoutineCardProps {
   routine: IRoutine & { logId?: number }
@@ -16,7 +17,6 @@ interface IRoutineCardProps {
   onClickUndo: (id: number | undefined) => void
   onClickDelete: (id: number) => void
   completedDay: Record<string, Set<number>>
-  week: Date[]
   percent: number
 }
 
@@ -26,9 +26,14 @@ const RoutineCard = ({
   onClickUndo,
   onClickDelete,
   completedDay,
-  week,
   percent,
 }: IRoutineCardProps) => {
+  const { date } = useDateStore()
+  const week = eachDayOfInterval({
+    start: startOfWeek(date),
+    end: endOfWeek(date),
+  })
+
   const controls = useAnimation()
 
   useEffect(() => {

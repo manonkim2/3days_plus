@@ -7,7 +7,7 @@ import { useDateStore } from '@/stores/useDateStore'
 import { Box, FormActionWrapper } from '@/components/shared'
 
 const RoutineManager = () => {
-  const { date, week } = useDateStore()
+  const { date } = useDateStore()
 
   const {
     routinesWithLogId,
@@ -18,7 +18,7 @@ const RoutineManager = () => {
     formAction,
     isPending,
     completionPercents,
-  } = useRoutineManager(date, week)
+  } = useRoutineManager()
 
   return (
     <Box
@@ -46,7 +46,6 @@ const RoutineManager = () => {
             onClickUndo={handleClickUndo}
             onClickDelete={handleOnClickDelete}
             completedDay={completedDay}
-            week={week}
             percent={completionPercents[routine.id] || 0}
           />
         ))}

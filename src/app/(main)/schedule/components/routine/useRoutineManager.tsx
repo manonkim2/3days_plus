@@ -1,7 +1,7 @@
 'use client'
 
 import { useQueryClient, useQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
+import { eachDayOfInterval, endOfWeek, format, startOfWeek } from 'date-fns'
 import { useMemo, useActionState } from 'react'
 import {
   getRoutines,
@@ -11,22 +11,27 @@ import {
   unCompleteRoutine,
   deleteRoutine,
 } from './actions'
-import { getDate, getWeekKey } from '@/utils/formmattedDate'
+import { getDate } from '@/utils/formmattedDate'
+import { useDateStore } from '@/stores/useDateStore'
 
-export const useRoutineManager = (date: Date, week: Date[]) => {
+export const useRoutineManager = () => {
   const queryClient = useQueryClient()
+  const { date } = useDateStore()
+
   const dateKey = getDate(date)
-  const weekKey = getWeekKey(week[0])
+  const weekdays = eachDayOfInterval({
+    start: startOfWeek(date),
+    end: endOfWeek(date),
+  })
 
   const { data: routines = [] } = useQuery({
     queryKey: ['routines'],
     queryFn: getRoutines,
   })
 
-  const { data: logs = [] } = useQuery({
-    queryKey: ['routine-logs-week', weekKey],
-    queryFn: () => getRoutineLog(week[0], true),
-    enabled: week.length > 0,
+  const { data: logs = [], refetch } = useQuery({
+    queryKey: ['routine-logs-week', getDate(weekdays[0])],
+    queryFn: () => getRoutineLog(date, true),
   })
 
   const completedDay = useMemo(() => {
@@ -64,13 +69,13 @@ export const useRoutineManager = (date: Date, week: Date[]) => {
 
   const handleClickComplete = async (id: number) => {
     await completeRoutine(id, date)
-    queryClient.invalidateQueries({ queryKey: ['routineLogs', ...weekKey] })
+    refetch()
   }
 
   const handleClickUndo = async (logId?: number) => {
     if (!logId) return
     await unCompleteRoutine(logId)
-    queryClient.invalidateQueries({ queryKey: ['routineLogs', ...weekKey] })
+    refetch()
   }
 
   const handleOnClickDelete = async (id: number) => {
@@ -81,14 +86,14 @@ export const useRoutineManager = (date: Date, week: Date[]) => {
   const completionPercents = useMemo(() => {
     const map: Record<number, number> = {}
     routines.forEach((routine) => {
-      const completedCount = week.filter((day) => {
+      const completedCount = weekdays.filter((day) => {
         const key = format(day, 'yyyy-MM-dd')
         return completedDay[key]?.has(routine.id)
       }).length
       map[routine.id] = (completedCount / 7) * 100
     })
     return map
-  }, [routines, week, completedDay])
+  }, [routines, weekdays, completedDay])
 
   return {
     routinesWithLogId,

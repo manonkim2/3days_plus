@@ -14,12 +14,12 @@ export const metadata: Metadata = {
 
 const SchedulePage = async () => {
   return (
-    <>
-      <h1 className="sr-only">
-        3Days+ | 일정 & 할일 & 루틴 관리 (Daily Schedule & Tasks & Routine)
-      </h1>
-      <div className="flex container sm:h-screen pt-[calc(var(--navbar-height)+24px)] pb-md px-lg sm:px-0">
-        <div className="grid md:grid-cols-[1.1fr_1.2fr_1fr] lg:grid-cols-[1.1fr_2.5fr_1fr] gap-md grid-cols-1">
+    <div>
+      <div className="container flex flex-col md:h-screen h-full pt-[calc(var(--navbar-height)+24px)] px-lg sm:px-0">
+        <h1 className="sr-only">
+          3Days+ | 일정 & 할일 & 루틴 관리 (Daily Schedule & Tasks & Routine)
+        </h1>
+        <div className="h-full grid md:grid-cols-[1.1fr_1.2fr_1fr] lg:grid-cols-[1.1fr_2.5fr_1fr] gap-md grid-cols-1 pb-md ">
           <div className="flex flex-col sm:flex-row md:flex-col h-full overflow-hidden gap-md min-h-[240px]">
             <Calendar />
             <GoalManager />
@@ -33,7 +33,7 @@ const SchedulePage = async () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   )
 }
 

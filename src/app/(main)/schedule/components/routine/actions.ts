@@ -1,9 +1,8 @@
 'use server'
 
 import db from '@/lib/db'
-import { endOfWeek, startOfDay, startOfWeek } from 'date-fns'
 import { Prisma } from '@/prisma/client'
-import { getKoreanTime } from '@/utils/formmattedDate'
+import { getDateRangeInKST, getWeekRangeInKST } from '@/utils/formmattedDate'
 import { getUserIdOrThrow } from '@/lib/auth'
 import { IRoutine, IroutineLog } from '@/types/schedule'
 
@@ -54,18 +53,15 @@ export const getRoutineLog = async (
     const userId = await getUserIdOrThrow()
     const whereCondition: Prisma.RoutineLogWhereInput = { userId }
 
-    const koreanTime = getKoreanTime(date)
-
-    const start = startOfWeek(koreanTime, { weekStartsOn: 0 })
-    const end = endOfWeek(koreanTime, { weekStartsOn: 0 })
-
+    const { startUtc } = getDateRangeInKST(date)
+    const { startSunUtc, endSatUtc } = getWeekRangeInKST(date)
     if (isWeek)
       whereCondition.date = {
-        gte: start,
-        lt: end,
+        gte: startSunUtc,
+        lt: endSatUtc,
       }
     else {
-      whereCondition.date = startOfDay(date)
+      whereCondition.date = startUtc
     }
 
     return db.routineLog.findMany({
@@ -89,13 +85,14 @@ export const deleteRoutine = async (id: number): Promise<void> => {
 
 export const completeRoutine = async (
   routineId: number,
-  day: Date,
+  date: Date,
 ): Promise<{ id: number; routineId: number; date: Date } | null> => {
   try {
     const userId = await getUserIdOrThrow()
-    const date = getKoreanTime(startOfDay(day))
+    const { startUtc } = getDateRangeInKST(date)
+
     return db.routineLog.create({
-      data: { userId, routineId, date },
+      data: { userId, routineId, date: startUtc },
       select: { id: true, routineId: true, date: true },
     })
   } catch (error) {

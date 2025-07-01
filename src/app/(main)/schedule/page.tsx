@@ -9,12 +9,12 @@ import {
 import SchedulePage from './SchedulePage'
 import { getCategory, getTask } from './components/task/actions'
 import { getRoutineLog, getRoutines } from './components/routine/actions'
-import { getDate, getKoreanTime, getWeekKey } from '@/utils/formmattedDate'
+import { getDate, getWeekKey } from '@/utils/formmattedDate'
 import { prefetch } from '@/lib/prefetch'
 
 const SchedulePageWrapper = async () => {
   const queryClient = new QueryClient()
-  const today = getKoreanTime(new Date())
+  const today = new Date()
 
   await Promise.all([
     prefetch(queryClient, ['tasks', getDate(today)], () => getTask(today)),

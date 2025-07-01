@@ -1,9 +1,9 @@
 import { create } from 'zustand'
-import { eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns'
+import { endOfWeek, startOfWeek } from 'date-fns'
 
 interface IDateState {
   date: Date
-  week: Date[]
+  week: { start: Date; end: Date }
   setDate: (newDate: Date) => void
 }
 
@@ -12,17 +12,17 @@ export const useDateStore = create<IDateState>((set) => {
 
   return {
     date: today,
-    week: eachDayOfInterval({
+    week: {
       start: startOfWeek(today),
       end: endOfWeek(today),
-    }),
+    },
     setDate: (newDate: Date) =>
       set({
         date: newDate,
-        week: eachDayOfInterval({
+        week: {
           start: startOfWeek(newDate),
           end: endOfWeek(newDate),
-        }),
+        },
       }),
   }
 })

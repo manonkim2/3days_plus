@@ -1,10 +1,10 @@
 'use server'
 
 import db from '@/lib/db'
-import { addDays, startOfDay } from 'date-fns'
-import { getKoreanTime } from '@/utils/formmattedDate'
+import { getDateRangeInKST, getWeekRangeInKST } from '@/utils/formmattedDate'
 import { getUserIdOrThrow } from '@/lib/auth'
 import { ITask } from '@/types/schedule'
+import { Prisma } from '@/prisma/client'
 
 export const createTask = async (
   formData: FormData,
@@ -14,7 +14,6 @@ export const createTask = async (
   try {
     const userId = await getUserIdOrThrow()
     const content = formData.get('content') as string
-    const kstTime = getKoreanTime(date)
 
     if (!content || content.trim() === '') return
 
@@ -22,7 +21,7 @@ export const createTask = async (
       data: {
         content,
         userId,
-        date: kstTime,
+        date,
         categoryId: categoryId || null,
         ...(categoryId
           ? {
@@ -42,20 +41,35 @@ export const createTask = async (
   }
 }
 
-export const getTask = async (date?: Date): Promise<ITask[]> => {
+export const getTask = async (
+  date: Date,
+  isWeek: boolean = false,
+): Promise<ITask[]> => {
   try {
     const userId = await getUserIdOrThrow()
-    const selectedDate = date || new Date()
-    const start = startOfDay(selectedDate)
-    const end = addDays(start, 1)
+
+    const whereCondition: Prisma.TaskWhereInput = {
+      userId,
+    }
+
+    if (isWeek) {
+      const { startSunUtc, endSatUtc } = getWeekRangeInKST(date)
+      whereCondition.date = {
+        gte: startSunUtc,
+        lt: endSatUtc,
+      }
+    } else {
+      const { startUtc, endUtc } = getDateRangeInKST(date)
+      whereCondition.date = {
+        gte: startUtc,
+        lt: endUtc,
+      }
+    }
 
     return db.task.findMany({
-      where: {
-        userId,
-        date: {
-          gte: start,
-          lt: end,
-        },
+      where: whereCondition,
+      orderBy: {
+        date: 'asc',
       },
       select: {
         id: true,
@@ -63,9 +77,6 @@ export const getTask = async (date?: Date): Promise<ITask[]> => {
         completed: true,
         categoryId: true,
         date: true,
-      },
-      orderBy: {
-        id: 'asc',
       },
     })
   } catch (error) {
