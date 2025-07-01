@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { supabase } from '@/lib/supabase/client'
+import { createSupabaseClient } from '@/lib/supabase/browser'
 import { Loader2 } from 'lucide-react'
 import { signOut } from '@/lib/supabase/actions'
 
@@ -17,6 +17,7 @@ const OAuthHandler = () => {
       await signOut()
       if (!code) return
 
+      const supabase = createSupabaseClient()
       const {
         data: { user },
         error,

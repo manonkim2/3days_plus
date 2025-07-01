@@ -11,10 +11,17 @@ import { getCategory, getTask } from './components/task/actions'
 import { getRoutineLog, getRoutines } from './components/routine/actions'
 import { getDate, getWeekKey } from '@/utils/formmattedDate'
 import { prefetch } from '@/lib/prefetch'
+import { getUserInfo } from '@/lib/supabase/actions'
+import { redirect } from 'next/navigation'
 
 const SchedulePageWrapper = async () => {
+  const user = await getUserInfo()
   const queryClient = new QueryClient()
   const today = new Date()
+
+  if (!user) {
+    redirect('/login')
+  }
 
   await Promise.all([
     prefetch(queryClient, ['tasks', getDate(today)], () => getTask(today)),

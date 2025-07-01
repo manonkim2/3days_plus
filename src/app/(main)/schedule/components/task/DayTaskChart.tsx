@@ -38,27 +38,11 @@ const DayTaskChart = () => {
     ]
   }, [tasks])
 
-  const percentage = useMemo(() => {
-    return tasks.length === 0 ? 0 : Math.round(completedRoutineRatio * 100)
-  }, [completedRoutineRatio, tasks.length])
-
-  const footerMessage = useMemo(() => {
-    if (percentage === 100) {
-      return "You're a star! All routines completed."
-    } else if (percentage >= 70) {
-      return 'Almost there! Keep up the great work.'
-    } else if (percentage >= 30) {
-      return "Good progress! You're on the right track."
-    } else {
-      return "Ready to start? Let's get moving!"
-    }
-  }, [percentage])
-
   return (
     <div className="hidden lg:block">
       <ChartContainer
         config={chartConfig}
-        className="mx-auto aspect-square max-w-[300px]"
+        className="mx-auto aspect-square max-w-[280px]"
       >
         <RadialBarChart
           data={chartData}
@@ -119,9 +103,6 @@ const DayTaskChart = () => {
           </PolarRadiusAxis>
         </RadialBarChart>
       </ChartContainer>
-      <p className="leading-none text-muted-foreground text-sm text-center">
-        {footerMessage}
-      </p>
     </div>
   )
 }

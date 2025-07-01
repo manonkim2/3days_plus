@@ -4,7 +4,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Analytics } from '@vercel/analytics/next'
 import { Poppins } from 'next/font/google'
 
-import Navbar from '@/components/Navbar'
 import ReactQueryProvider from '@/lib/ReactQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { ToastProvider } from '@/components/ui/toast'
@@ -58,7 +57,6 @@ export default function RootLayout({
       <body className={`${poppins.variable}`}>
         <ReactQueryProvider>
           <ToastProvider>
-            <Navbar />
             <main>
               {children}
               <SpeedInsights />

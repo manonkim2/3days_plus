@@ -1,11 +1,12 @@
 'use client'
 
-import { supabase } from '@/lib/supabase/client'
+import { createSupabaseClient } from '@/lib/supabase/browser'
 import { Button } from '@/components/shared'
 
 export default function LogoutButton() {
   const handleLogout = async () => {
     try {
+      const supabase = createSupabaseClient()
       const { error } = await supabase.auth.signOut()
       if (error) {
         console.error('[Logout Error]:', error.message)

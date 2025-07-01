@@ -5,13 +5,13 @@ import { fetcher } from '@/lib/fetcher'
 import { IWeatherData } from '@/lib/getWeather'
 import { getUserInfo } from '@/lib/supabase/actions'
 import { RssNewsType } from '@/types/rss'
-import { IQuotes, getPinnedQuote } from './(main)/dashboard/actions'
-import DashboardClient from './(main)/dashboard/compnents/DashboardClient'
+import { IQuotes, getPinnedQuote } from './dashboard/actions'
+import DashboardClient from './dashboard/compnents/DashboardClient'
 import {
   getRoutines,
   getRoutineLog,
-} from './(main)/schedule/components/routine/actions'
-import { getTask } from './(main)/schedule/components/task/actions'
+} from './schedule/components/routine/actions'
+import { getTask } from './schedule/components/task/actions'
 import { format } from 'date-fns'
 import { prefetch } from '@/lib/prefetch'
 import {
