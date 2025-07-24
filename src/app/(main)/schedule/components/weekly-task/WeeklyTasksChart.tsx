@@ -58,6 +58,7 @@ const WeeklyTasksChart = () => {
     queryFn: () => getTask(week.start, true),
     enabled: !!week.start,
   })
+  console.log('🚀 ~ WeeklyTasksChart ~ tasks:', tasks)
 
   const groupByDate = <T extends { date: Date }>(
     items: T[],
@@ -101,6 +102,7 @@ const WeeklyTasksChart = () => {
       routineCompletionRate,
     }
   })
+  console.log('🚀 ~ WeeklyTasksChart ~ chartData:', chartData)
 
   return (
     <ResponsiveContainer width="100%" height="80%" className="block pr-xl">
@@ -129,7 +131,7 @@ const WeeklyTasksChart = () => {
             type="monotone"
             stroke="var(--color-completionRate)"
             strokeWidth={2}
-            dot={{ fill: 'var(--color-completionRate' }}
+            dot={{ fill: 'var(--color-completionRate)' }}
           >
             <LabelList
               position="top"
@@ -143,7 +145,7 @@ const WeeklyTasksChart = () => {
             type="monotone"
             stroke="var(--color-routineCompletionRate)"
             strokeWidth={2}
-            dot={{ fill: 'var(--color-routineCompletionRate' }}
+            dot={{ fill: 'var(--color-routineCompletionRate)' }}
           >
             <LabelList
               position="top"
