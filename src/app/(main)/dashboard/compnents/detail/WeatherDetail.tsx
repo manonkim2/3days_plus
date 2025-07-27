@@ -1,7 +1,7 @@
 'use client'
 
 import { useWeatherSuggestion } from '@/lib/useWeatherSuggestion'
-import { IWeatherData } from '@/lib/getWeather'
+import { IWeatherData } from '@/app/api/weather/route'
 
 interface WeatherDetailProps {
   weather: IWeatherData

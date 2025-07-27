@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { IWeatherData } from '@/lib/getWeather'
+import { IWeatherData } from '@/app/api/weather/route'
 
 export const useWeatherSuggestion = (weather?: IWeatherData) => {
   return useQuery({

@@ -7,9 +7,9 @@ import { IQuotes } from '../actions'
 import DashboardSummary from './DashboardSummary'
 import News from './News'
 import Title from './Title'
-import { IWeatherData } from '@/lib/getWeather'
 import { RssNewsType } from '@/types/rss'
 import { Footer } from '@/components/shared'
+import { IWeatherData } from '@/app/api/weather/route'
 
 interface DashboardClientProps {
   user: string | null

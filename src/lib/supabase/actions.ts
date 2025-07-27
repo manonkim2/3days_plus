@@ -5,6 +5,14 @@ import db from '../db'
 import { getSiteEnv } from '../env'
 import { cache } from 'react'
 
+export interface IUserInfo {
+  id: string
+  name: string
+  email: string
+  image_url: string
+  social: string | null
+}
+
 const getUserInfo = cache(async () => {
   try {
     const supabase = await serverCreateClient()

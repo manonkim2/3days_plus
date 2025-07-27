@@ -10,6 +10,7 @@ import {
   QueryClient,
 } from '@tanstack/react-query'
 import { getNewsKeyword } from './actions'
+import { prefetch } from '@/lib/prefetch'
 
 export const metadata: Metadata = {
   title: '3Days+ | Personalized News Feed',
@@ -22,8 +23,7 @@ const NewsPage = async () => {
   const user = await getUserInfo()
 
   if (user) {
-    const keywords = await getNewsKeyword()
-    queryClient.setQueryData(['news-keywords'], keywords)
+    await prefetch(queryClient, ['news-keywords'], getNewsKeyword)
   }
 
   return (

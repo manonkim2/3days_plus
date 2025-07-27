@@ -9,7 +9,7 @@ import { format } from 'date-fns'
 
 import SummaryCard from './SummaryCard'
 import { getPinnedQuote, IQuotes } from '../actions'
-import { IWeatherData } from '@/lib/getWeather'
+import { IWeatherData } from '@/app/api/weather/route'
 import { Progress } from '@/components/ui/progress'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/shared'
