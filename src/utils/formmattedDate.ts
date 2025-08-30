@@ -1,4 +1,11 @@
-import { addDays, endOfWeek, format, startOfDay, startOfWeek } from 'date-fns'
+import {
+  addDays,
+  endOfWeek,
+  format,
+  isValid,
+  startOfDay,
+  startOfWeek,
+} from 'date-fns'
 import { fromZonedTime, toZonedTime } from 'date-fns-tz'
 
 const KOREA_TIMEZONE = 'Asia/Seoul'
@@ -27,14 +34,16 @@ export function getDateWithWeek(date: Date = new Date()): string {
 /**
  * @returns yyyy-MM-dd hh:mm
  */
-export function getFormattedDate(dateString: string | undefined): string {
+export function getFormattedDate(dateString?: string): string {
   if (!dateString) return ''
 
+  const parsedDate = new Date(dateString)
+
+  if (!isValid(parsedDate)) return '날짜 형식 오류'
+
   try {
-    const parsedDate = new Date(dateString)
     return format(parsedDate, 'yyyy-MM-dd a hh:mm')
-  } catch (error) {
-    console.error('Error formatting date:', error)
+  } catch {
     return '날짜 형식 오류'
   }
 }
