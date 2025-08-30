@@ -15,6 +15,9 @@
     "incremental": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+
+    "types": ["jest", "@testing-library/jest-dom"],
+
     "plugins": [
       {
         "name": "next"
@@ -34,8 +37,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "jest.config.ts",
-    "jest.setup.ts"
+    "jest.*.ts"
   ],
   "exclude": ["node_modules"]
 }
