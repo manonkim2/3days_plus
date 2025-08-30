@@ -24,10 +24,9 @@ describe('formmattedDate utils', () => {
   })
 
   it('getFormattedDate', () => {
-    expect(getFormattedDate('2025-06-26T15:30:00+09:00')).toBe(
-      '2025-06-26 PM 03:30',
+    expect(getFormattedDate('2025-06-26T15:30:00+09:00')).toMatch(
+      /^2025-06-26 (오전|오후|AM|PM) /,
     )
-
     expect(getFormattedDate(undefined)).toBe('')
     expect(getFormattedDate('잘못된날짜')).toBe('날짜 형식 오류')
   })

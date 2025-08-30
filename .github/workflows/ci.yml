@@ -1,6 +1,11 @@
 name: 3Days+ CI
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
@@ -10,6 +15,7 @@ jobs:
   build-and-check:
     runs-on: ubuntu-latest
     env:
+      TZ: Asia/Seoul
       NAVER_NEWS_CLIENT_ID: ${{ secrets.NAVER_NEWS_CLIENT_ID }}
       NAVER_NEWS_CLIENT_SECRET: ${{ secrets.NAVER_NEWS_CLIENT_SECRET }}
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -34,10 +40,42 @@ jobs:
           cache: 'yarn'
 
       - name: 📦 Install Dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: 🧹 Lint Check
-        run: yarn lint
+        run: yarn lint --max-warnings=0
+
+      - name: 🔎 Type Check
+        run: yarn tsc --noEmit
+
+      - name: 🧪 Run Tests
+        run: yarn test --ci --runInBand --coverage
 
       - name: 🛠 Build Project
         run: yarn build
+
+  deploy:
+    name: Deploy to Vercel
+    needs: build-and-check
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: production
+
+    steps:
+      - name: 🛎 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🚫 Disable Vercel Telemetry
+        run: echo "VERCEL_CLI_TELEMETRY_DISABLED=1" >> $GITHUB_ENV
+
+      - name: 🚀 Deploy
+        # Vercel 배포 액션 사용(원격 빌드 트리거)
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'

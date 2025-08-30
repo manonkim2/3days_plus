@@ -18,6 +18,24 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+
+  coverageThreshold: {
+    './src/utils/': {
+      statements: 90,
+      branches: 90,
+      functions: 90,
+      lines: 90,
+    },
+    /**
+     * @todo 80% 목표
+     */
+    global: {
+      statements: 0,
+      branches: 0,
+      functions: 0,
+      lines: 0,
+    },
+  },
 }
 
 export default createJestConfig(config)
