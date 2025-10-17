@@ -20,7 +20,9 @@ const UserImage = () => {
       }
 
       if (data.user?.email === 'guest@3days.plus') {
-        setUser('/user.png')
+        setUser(
+          'https://jjrwipnszcsjjwaqmvlc.supabase.co/storage/v1/object/public/Image/user.png',
+        )
       } else {
         setUser(data.user?.user_metadata.avatar_url)
       }
