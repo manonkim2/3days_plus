@@ -1,9 +1,8 @@
 'use server'
 
+import { cache } from 'react'
 import { serverCreateClient } from './server'
 import db from '../db'
-import { getSiteEnv } from '../env'
-import { cache } from 'react'
 
 export interface IUserInfo {
   id: string
@@ -23,12 +22,10 @@ const getUserInfo = cache(async () => {
     if (!user) return null
 
     const identity = user.identities || []
-    const socialLogin = identity?.length > 1 ? identity[1] : identity[0]
 
     const userInfo = await db.user.findUnique({
       where: {
-        id: socialLogin.identity_id,
-        environment: getSiteEnv(),
+        id: identity[0].identity_id,
       },
 
       select: {

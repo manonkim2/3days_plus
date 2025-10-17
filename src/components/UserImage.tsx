@@ -19,7 +19,11 @@ const UserImage = () => {
         return
       }
 
-      setUser(data.user?.user_metadata.avatar_url)
+      if (data.user?.email === 'guest@3days.plus') {
+        setUser('/user.png')
+      } else {
+        setUser(data.user?.user_metadata.avatar_url)
+      }
     }
 
     fetchUser()
